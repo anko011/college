@@ -3,7 +3,7 @@ import {isUser} from "@/entities/user/lib";
 import {GetServerSidePropsContext} from "next";
 import {withAuthRequest} from "@/share/api";
 
-const {origin, nextSelfOrigin} = getBackendHTTPConfig()
+const {origin} = getBackendHTTPConfig()
 
 export const UserBackendRequest = new Request(`${origin}/admin/get-users`, {
     method: 'GET',

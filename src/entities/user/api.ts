@@ -13,14 +13,9 @@ export const UserBackendRequest = new Request(`${origin}/admin/get-users`, {
 })
 
 export const fetchAllUsers = async (req?: GetServerSidePropsContext['req']) => {
-    let response = undefined
+    let response = req ? await fetch(withAuthRequest(UserBackendRequest, req))
+        : await fetch('/admin/get-users')
 
-    if (req) {
-        const request = withAuthRequest(UserBackendRequest, req)
-        response = await fetch(request)
-    } else {
-        response = await fetch('/admin/get-users')
-    }
 
     if (!response.ok) throw new Error('Не удалось загрузить список пользователей')
 

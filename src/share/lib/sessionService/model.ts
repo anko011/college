@@ -1,23 +1,25 @@
 import {GetServerSidePropsContext} from "next";
 import {NextRequest} from "next/server";
-import {ResponseCookies} from "next/dist/compiled/@edge-runtime/cookies";
+import {ResponseCookie} from "next/dist/compiled/@edge-runtime/cookies";
 import {decodeToken, isTokenSet, TokenSet} from "@/share/lib/tokenService";
-import {createCookie, getRequestCookie} from "@/share/lib/cookieService";
+import {getRequestCookies} from "@/share/lib/cookieService";
 import {EncodedSession} from "./types";
 import {getSessionConfig} from "./config";
-import {createContext, useContext} from "react";
+import {getUpdatedTokenSet} from "@/share/api";
 
 
 const {sessionCookieName} = getSessionConfig()
 
-function isEncodedSession(obj: unknown): obj is EncodedSession {
-    return (
-        typeof obj === 'object' && !!obj &&
-        'tokenSet' in obj && !!obj.tokenSet && typeof obj.tokenSet === 'object' && isTokenSet(obj.tokenSet))
-}
+export const createEncodedSession = (tokenSet: TokenSet): EncodedSession => ({tokenSet: tokenSet})
+
+
+const isEncodedSession = (obj: unknown): obj is EncodedSession => (
+    typeof obj === 'object' && !!obj &&
+    'tokenSet' in obj && !!obj.tokenSet && typeof obj.tokenSet === 'object' && isTokenSet(obj.tokenSet))
+
 
 export function getEncodedSession(req: GetServerSidePropsContext['req'] | NextRequest): EncodedSession | null {
-    const cookies = getRequestCookie(req)
+    const cookies = getRequestCookies(req)
     const session = cookies.get('session')
     if (!session) return null
 
@@ -27,45 +29,38 @@ export function getEncodedSession(req: GetServerSidePropsContext['req'] | NextRe
     return null
 }
 
-export function createEncodedSession(tokenSet: TokenSet): EncodedSession {
-    return {tokenSet: tokenSet}
-}
+export const updateSessionCookie = async (session: EncodedSession): Promise<ResponseCookie> => {
+    const tokenSet = await getUpdatedTokenSet(session.tokenSet)
 
-
-export function createCreatingSessionCookie(encodedUserSession: EncodedSession): ResponseCookies {
-    const {exp = Date.now()} = decodeToken(encodedUserSession.tokenSet.refreshToken)
-
-    const cookie = createCookie()
-    cookie.set({
-        name: sessionCookieName,
-        value: JSON.stringify(encodedUserSession),
-        maxAge: Math.floor(exp - Date.now() / 1000)
-    })
-
-    return cookie
-}
-
-export function createDeletingSessionCookie() {
-    const cookie = createCookie()
-    cookie.set({
-        name: sessionCookieName,
-        value: 'deleted',
-        maxAge: -1
-    })
-
-    return cookie
-}
-
-export const SessionContext = createContext<EncodedSession>({
-    tokenSet: {
-        accessToken: '',
-        refreshToken: ''
+    if (tokenSet) {
+        const newSession = createEncodedSession(tokenSet)
+        return createCreatingSessionCookie(newSession)
     }
+
+    return createDeletingSessionCookie()
+}
+
+
+export const createCreatingSessionCookie = (encodedSession: EncodedSession): ResponseCookie => {
+    const {exp = Date.now()} = decodeToken(encodedSession.tokenSet.refreshToken)
+
+    return {
+        httpOnly: true,
+        path: "/",
+        name: sessionCookieName,
+        value: JSON.stringify(encodedSession),
+        maxAge: Math.floor(exp - Date.now() / 1000)
+    }
+}
+
+export const createDeletingSessionCookie = (): ResponseCookie => ({
+    name: sessionCookieName,
+    value: 'deleted',
+    maxAge: -1,
+    httpOnly: true,
+    path: '/'
 })
 
-export function useSession() {
-    return useContext(SessionContext)
-}
 
 
 

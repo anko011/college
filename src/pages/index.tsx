@@ -13,6 +13,12 @@ export default function Home() {
             <main>
                 <h1>Сайт колледжа - Главная страница</h1>
                 <NextLink href='/admin'>Перейти к главной странице админ панели</NextLink>
+                <button onClick={async () => {
+                    const res = await fetch('/api/admin/get-users')
+                    const data = await res.json()
+                    console.log(res.status, data)
+                }}>21312
+                </button>
             </main>
         </>
     )

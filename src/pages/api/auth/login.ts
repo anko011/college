@@ -1,39 +1,31 @@
 import {NextApiRequest, NextApiResponse} from "next";
-import {isTokenSet} from "@/share/lib/tokenService";
+import {ResponseCookies} from "next/dist/compiled/@edge-runtime/cookies";
+import {authenticateByCredentials} from "@/share/api";
 import {createCreatingSessionCookie, createEncodedSession} from "@/share/lib/sessionService";
+import {isTokenSet} from "@/share/lib/tokenService";
+
+const isIncorrectCredentials = (response: Response) => response.status === 403
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     if (req.method === 'POST') {
-        const response = await fetch(`http://188.120.239.41:9991/auth/authenticate`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(req.body)
-        })
+        const response = await authenticateByCredentials(req.body)
 
-
-        if (!response.ok && !response.redirected) {
-            const message = await response.json()
-            return res
-                .status(response.status)
-                .json(message)
-        }
+        if (isIncorrectCredentials(response)) return res.status(403).json(await response.json())
 
         const tokenSet = await response.json()
+        if (!isTokenSet(tokenSet)) throw new Error('Получен некорректный формат токенов')
 
-        if (!isTokenSet(tokenSet)) return res.status(500).json({
-            message: 'Не удалось авторизоваться'
-        })
+        const encodedSession = createEncodedSession(tokenSet)
+        const sessionCookie = createCreatingSessionCookie(encodedSession)
 
-        const encodedUserSession = createEncodedSession(tokenSet)
-        const userSessionCookie = createCreatingSessionCookie(encodedUserSession)
+        const cookies = new ResponseCookies(new Headers())
+        cookies.set(sessionCookie)
 
         return res
             .status(200)
-            .setHeader('Set-Cookie', userSessionCookie.toString())
+            .setHeader('Set-Cookie', cookies.toString())
             .json({
-                message: 'Вы успешно аторизованы'
+                message: 'Авторизация прошла успешно'
             })
     }
 }

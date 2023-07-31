@@ -4,7 +4,7 @@ import {Button, Flex, Input, LoadingOverlay, Paper, PasswordInput, Stack, TextIn
 import {isNotEmpty, useForm} from "@mantine/form";
 import {Notifications} from "@mantine/notifications";
 import {signIn} from "@/features/auth";
-import {useHTTPNotification} from "../../../share/client/hooks";
+import {useHTTPNotification} from "@/share/client/hooks";
 
 export default function AdminLoginPage() {
     const notification = useHTTPNotification('Авторизация')

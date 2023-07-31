@@ -1,51 +1,30 @@
-import {GetServerSidePropsContext} from "next";
-import {createCreatingSessionCookie, createEncodedSession, getEncodedSession,} from "@/share/lib/sessionService";
+import {GetServerSidePropsContext, NextApiRequest} from "next";
+import {NextRequest} from "next/server";
+import {getEncodedSession,} from "@/share/lib/sessionService";
 import {isExpiredToken, TokenSet} from "@/share/lib/tokenService";
-import {getBackendHTTPConfig} from "@/share/config";
 import {getAuthBackendConfig} from "./config";
+import {refreshToken} from "@/share/api/api";
 
 const {authHeaderName, authTokenName} = getAuthBackendConfig()
-const {origin} = getBackendHTTPConfig()
 
-export async function fetchData(
-    ctx: GetServerSidePropsContext,
-    fetchRequest: Request
-) {
-    const encodedUserSession = getEncodedSession(ctx.req)
+type AppRequest = NextApiRequest | NextRequest | GetServerSidePropsContext['req']
 
+const createAuthHeaderString = (token: string) => `${authTokenName} ${token}`
 
-    if (encodedUserSession) {
-        const {tokenSet} = encodedUserSession
-        const newTokenSet = await getUpdatedTokenSet(tokenSet)
+export const withAuthRequest = (fetchRequest: Request, req: AppRequest) => {
+    const session = getEncodedSession(req)
 
-        if (newTokenSet) {
-            const newEncodedUserSession = createEncodedSession(newTokenSet)
-            const cookie = createCreatingSessionCookie(newEncodedUserSession)
-            ctx.res.setHeader('Set-Cookie', cookie.toString())
-
-            const request = new Request(fetchRequest)
-            request.headers.append(authHeaderName, createAuthHeaderString(newTokenSet.accessToken))
-            return fetch(request)
-        }
+    if (session) {
+        fetchRequest.headers.set(authHeaderName, createAuthHeaderString(session.tokenSet.accessToken))
     }
 
-    return fetch(fetchRequest)
+    return fetchRequest
 }
 
-
-function createAuthHeaderString(token: string) {
-    return `${authTokenName} ${token}`
-}
-
-async function getUpdatedTokenSet(tokenSet: TokenSet): Promise<TokenSet | null> {
+export const getUpdatedTokenSet = async (tokenSet: TokenSet): Promise<TokenSet | null> => {
 
     if (isExpiredToken(tokenSet.accessToken)) {
-        const response = await fetch(`${origin}/auth/refresh-token`, {
-            method: 'POST',
-            headers: {
-                [authHeaderName]: `${authTokenName} ${tokenSet.refreshToken}`
-            }
-        })
+        const response = await refreshToken(tokenSet)
         if (!response.ok) return null
 
         return await response.json()

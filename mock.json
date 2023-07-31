@@ -1,0 +1,66 @@
+{
+  "categories": [
+    {
+      "title": "Бухгалтерия",
+      "slug": "accounting",
+      "menuPosition": "RIGHT",
+      "id": 1
+    },
+    {
+      "title": "Информационная безопасность",
+      "slug": "information-security",
+      "menuPosition": null,
+      "id": 2
+    },
+    {
+      "title": "Аналитика",
+      "menuPosition": null,
+      "slug": "analitics",
+      "id": 3
+    }
+  ],
+  "pages": [
+    {
+      "id": 1,
+      "title": "Главная страница",
+      "slug": "",
+      "categoryId": 1
+    },
+    {
+      "id": 2,
+      "title": "Отчетность за 2025 г.",
+      "slug": "reports-2025",
+      "categoryId": 1
+    },
+    {
+      "id": 3,
+      "title": "Отчетность за 2024 г.",
+      "slug": "reports-2024",
+      "categoryId": 1
+    },
+    {
+      "id": 5,
+      "title": "Главная страница",
+      "slug": "",
+      "categoryId": 2
+    },
+    {
+      "id": 6,
+      "title": "Отчетность за 2025 г.",
+      "slug": "reports-2025",
+      "categoryId": 2
+    },
+    {
+      "id": 7,
+      "title": "Отчетность за 2024 г.",
+      "slug": "reports-2024",
+      "categoryId": 2
+    },
+    {
+      "id": 8,
+      "title": "Отчетность за 2023 г.",
+      "slug": "reports-2023",
+      "categoryId": 2
+    }
+  ]
+}

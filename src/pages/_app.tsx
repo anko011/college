@@ -1,6 +1,18 @@
-import '@/styles/globals.css'
-import type { AppProps } from 'next/app'
+import {NextPageWithLayout} from '@/widgets/layout'
+import {AppProps} from "next/app";
+import {SessionContext} from "@/share/lib/sessionService";
 
-export default function App({ Component, pageProps }: AppProps) {
-  return <Component {...pageProps} />
+interface AppPropsWithLayout extends AppProps {
+    Component: NextPageWithLayout,
 }
+
+
+export default function App({Component, pageProps: {session, ...pageProps}}: AppPropsWithLayout) {
+    const getLayout = Component.getLayout ?? ((page) => page)
+    return getLayout(
+        <SessionContext.Provider value={session}>
+            <Component {...pageProps} />
+        </SessionContext.Provider>
+    )
+}
+

@@ -32,3 +32,11 @@ export const getUpdatedTokenSet = async (tokenSet: TokenSet): Promise<TokenSet |
 
     return tokenSet
 }
+
+
+export const getBaseUrlByFetchSide = (req?: GetServerSidePropsContext['req']) => req ? `${origin}` : '/api'
+
+export const createRequestCreatorByFetchSide = (input: RequestInfo | URL, init?: RequestInit): (req?: GetServerSidePropsContext['req']) => Request => (req) => {
+    const request = new Request(input, init)
+    return req ? withAuthRequest(request, req) : request
+}

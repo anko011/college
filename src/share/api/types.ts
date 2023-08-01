@@ -7,3 +7,7 @@ export interface Credentials {
     login: string
     password: string
 }
+
+export interface DataResponseNotOk {
+    message?: string
+}

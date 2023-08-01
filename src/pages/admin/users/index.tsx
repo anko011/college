@@ -4,6 +4,8 @@ import {UserCreateWidget, UserListWidget} from "@/widgets/user";
 import {fetchUsers, getUsersPageFromQuery} from "@/entities/user";
 import {fetchRoles} from "@/entities/role";
 import {parseResponseOrError} from "@/share/api";
+import {Tabs} from "@mantine/core";
+import {useRouter} from "next/router";
 
 
 export async function getServerSideProps({req, query}: GetServerSidePropsContext) {
@@ -18,11 +20,30 @@ export async function getServerSideProps({req, query}: GetServerSidePropsContext
 }
 
 function AdminUsersPage({users, roles}: InferGetServerSidePropsType<typeof getServerSideProps>) {
+    const router = useRouter()
+    const handleTabChange = (value: string) => router.push({
+        pathname: '/admin/users',
+        query: {
+            ...router.query,
+            activeTab: value
+        }
+    })
 
     return (
         <>
-            <UserCreateWidget roles={roles}/>
-            <UserListWidget users={users} roles={roles}/>
+            <Tabs value={router.query.activeTab as string ?? 'createUser'} onTabChange={handleTabChange}>
+                <Tabs.List grow mb="md">
+                    <Tabs.Tab value="createUser">Создание пользователя</Tabs.Tab>
+                    <Tabs.Tab value="userList">Список пользователей</Tabs.Tab>
+                </Tabs.List>
+                <Tabs.Panel value="createUser">
+                    <UserCreateWidget roles={roles}/>
+                </Tabs.Panel>
+                <Tabs.Panel value="userList">
+                    <UserListWidget users={users} roles={roles}/>
+                </Tabs.Panel>
+            </Tabs>
+
         </>
     )
 

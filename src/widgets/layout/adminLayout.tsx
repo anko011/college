@@ -32,7 +32,7 @@ export function AdminLayout({children}: PropsWithChildren) {
 
 
     useEffect(() => {
-        const handleStart = (url: string) => {
+        const handleStart = () => {
             setIsLoadingPage(true)
         }
 

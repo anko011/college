@@ -1,5 +1,6 @@
 import Head from 'next/head'
 import NextLink from 'next/link'
+import {fetchAllUsers} from "@/entities/user";
 
 export default function Home() {
     return (
@@ -13,6 +14,12 @@ export default function Home() {
             <main>
                 <h1>Сайт колледжа - Главная страница</h1>
                 <NextLink href='/admin'>Перейти к главной странице админ панели</NextLink>
+
+                <button onClick={async () => {
+                    const response = await fetchAllUsers()
+                    alert(response)
+                }}>Click me
+                </button>
             </main>
         </>
     )

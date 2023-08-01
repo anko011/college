@@ -39,6 +39,7 @@ export function UserCreateForm({roles}: UserCreateFormProps) {
             const {message} = response
             notification.errorNotify(message)
         }
+        notification.successNotify(dictionary.notification.success)
     }
 
     const selectValues: SelectItem[] = roles.map(role => ({label: role.name, value: role.id.toString()}))

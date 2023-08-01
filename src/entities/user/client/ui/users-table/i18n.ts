@@ -4,6 +4,7 @@ import {deepmerge} from "deepmerge-ts";
 const LOCALE_RU = {
     userTable: {
         header: {
+            login: 'Логин',
             firstName: 'Имя',
             secondName: 'Фамилия',
             patronymic: 'Отчество',

@@ -10,7 +10,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     if (req.method === 'POST') {
         const response = await authenticateByCredentials(req.body)
 
-        if (isIncorrectCredentials(response)) return res.status(403).json(await response.json())
+        if (isIncorrectCredentials(response)) return res.status(response.status).json(await response.json())
 
         const tokenSet = await response.json()
         if (!isTokenSet(tokenSet)) throw new Error('Получен некорректный формат токенов')

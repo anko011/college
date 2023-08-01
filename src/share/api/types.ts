@@ -9,5 +9,10 @@ export interface Credentials {
 }
 
 export interface DataResponseNotOk {
-    message?: string
+    message: string
+}
+
+export interface BackendResponse {
+    status: number
+    data: unknown
 }

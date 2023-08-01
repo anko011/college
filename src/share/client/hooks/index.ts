@@ -1,2 +1,1 @@
-export {useNotify} from './useNotify'
-export {useHTTPNotify, useHTTPNotification} from './useHTTPNotify'
+export * from './useNotification'

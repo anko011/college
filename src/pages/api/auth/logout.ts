@@ -12,7 +12,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
         return res
             .status(200)
             .setHeader('Set-Cookie', cookies.toString())
-            .end()
+            .json({message: 'Вы были успешно вышли из системы'})
     }
-    return res.end()
+    return res.status(400).json({message: `Не поддерживаемый метод ${req.method}`})
 }

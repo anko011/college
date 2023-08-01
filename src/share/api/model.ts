@@ -2,10 +2,12 @@ import {GetServerSidePropsContext, NextApiRequest} from "next";
 import {NextRequest} from "next/server";
 import {getEncodedSession,} from "@/share/lib/sessionService";
 import {isExpiredToken, TokenSet} from "@/share/lib/tokenService";
+import {getBackendHTTPConfig} from "@/share/config";
 import {getAuthBackendConfig} from "./config";
-import {refreshToken} from "@/share/api/api";
+import {refreshToken} from "./api";
 
 const {authHeaderName, authTokenName} = getAuthBackendConfig()
+const {origin} = getBackendHTTPConfig()
 
 type AppRequest = NextApiRequest | NextRequest | GetServerSidePropsContext['req']
 

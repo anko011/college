@@ -6,6 +6,8 @@ import {fetchAllRoles} from "@/entities/role";
 
 export async function getServerSideProps({req}: GetServerSidePropsContext) {
     const users = await fetchAllUsers(req)
+    if ('message' in users) throw new Error(users.message)
+
     const roles = await fetchAllRoles(req)
 
     return {

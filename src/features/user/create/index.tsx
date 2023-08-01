@@ -1,8 +1,9 @@
 import {Box, Button, Group, Input, Select, SelectItem, TextInput} from "@mantine/core";
 import {isNotEmpty, useForm} from "@mantine/form";
-import {getUserCreateFeatureDictionary} from "@/features/user/create/i18n";
 import {Role} from "@/entities/role";
 import {useHTTPNotification} from "@/share/client/hooks";
+import {getUserCreateFeatureDictionary} from "./i18n";
+import {fetchCreateUser} from "@/entities/user";
 
 interface UserCreateFormProps {
     roles: Role[]
@@ -31,8 +32,13 @@ export function UserCreateForm({roles}: UserCreateFormProps) {
         }
     })
 
-    const handleSubmit = (values: typeof form.values) => {
+    const handleSubmit = async (values: typeof form.values) => {
+        const response = await fetchCreateUser({...values, roleId: parseInt(values.roleId)})
 
+        if ('message' in response) {
+            const {message} = response
+            notification.errorNotify(message)
+        }
     }
 
     const selectValues: SelectItem[] = roles.map(role => ({label: role.name, value: role.id.toString()}))

@@ -4,9 +4,12 @@ import {UserCreateForm} from "@/features/user";
 
 interface CreateUserWidgetProps {
     roles: Role[]
+
 }
 
 export function UserCreateWidget({roles}: CreateUserWidgetProps) {
+
+
     return (
         <>
             <Title order={4} mb="md">Создание пользователя</Title>

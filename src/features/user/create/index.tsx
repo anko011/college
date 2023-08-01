@@ -1,18 +1,21 @@
 import {Box, Button, Group, Input, Select, SelectItem, TextInput} from "@mantine/core";
 import {isNotEmpty, useForm} from "@mantine/form";
 import {Role} from "@/entities/role";
-import {useHTTPNotification} from "@/share/client/hooks";
+import {useNotification} from "@/share/client/hooks";
 import {getUserCreateFeatureDictionary} from "./i18n";
-import {fetchCreateUser} from "@/entities/user";
+import {fetchCreateUser, UserWithRole} from "@/entities/user";
+import {isUserWithRole} from "@/entities/user/lib";
 
 interface UserCreateFormProps {
     roles: Role[]
+
+    onCreateUser?(user: UserWithRole): void
 }
 
 const dictionary = getUserCreateFeatureDictionary('ru')
 
-export function UserCreateForm({roles}: UserCreateFormProps) {
-    const notification = useHTTPNotification(dictionary.notification.title)
+export function UserCreateForm({roles, onCreateUser}: UserCreateFormProps) {
+    const notification = useNotification(dictionary.notification.title)
     const form = useForm({
         initialValues: {
             firstName: '',
@@ -34,12 +37,20 @@ export function UserCreateForm({roles}: UserCreateFormProps) {
 
     const handleSubmit = async (values: typeof form.values) => {
         const response = await fetchCreateUser({...values, roleId: parseInt(values.roleId)})
+        const data = await response.json()
 
-        if ('message' in response) {
-            const {message} = response
+        const message = 'message' in data
+            ? data.message
+            : dictionary.notification.error
+
+        if (response.ok && isUserWithRole(data)) {
+            notification.successNotify(dictionary.notification.success)
+            onCreateUser?.(data)
+        } else {
             notification.errorNotify(message)
         }
-        notification.successNotify(dictionary.notification.success)
+
+        form.reset()
     }
 
     const selectValues: SelectItem[] = roles.map(role => ({label: role.name, value: role.id.toString()}))
@@ -81,3 +92,4 @@ export function UserCreateForm({roles}: UserCreateFormProps) {
         </Box>
     )
 }
+

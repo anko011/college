@@ -4,7 +4,7 @@ import {isNotEmpty, useForm} from "@mantine/form";
 import {IconPencil} from "@tabler/icons-react";
 import {UserWithRole} from "@/entities/user";
 import {Role} from "@/entities/role";
-import {useHTTPNotification} from "@/share/client/hooks";
+import {useNotification} from "@/share/client/hooks";
 import {getUserEditFeatureDictionary} from "./i18n";
 
 interface UserProps {
@@ -16,7 +16,7 @@ const dictionary = getUserEditFeatureDictionary('ru')
 
 
 export function EditUserButton({user, roles}: UserProps) {
-    const notification = useHTTPNotification(dictionary.notification.title)
+    const notification = useNotification(dictionary.notification.title)
     const form = useForm({
         initialValues: {
             firstName: user.firstName,

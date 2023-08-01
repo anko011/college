@@ -1,4 +1,4 @@
-import {Group, Table, Text, Title} from "@mantine/core";
+import {Box, Group, Pagination, Table, Text, Title} from "@mantine/core";
 import {DeleteUserButton, EditUserButton} from "@/features/user";
 import {UserTableHeader, UserTableRow} from "@/entities/user/client";
 import {UserWithRole} from "@/entities/user";
@@ -11,7 +11,7 @@ interface UserListWidgetProps {
 
 export function UserListWidget({users, roles}: UserListWidgetProps) {
     return (
-        <>
+        <Box>
             <Title order={4} mb="md">Список пользователей</Title>
             {users && (
                 <Table>
@@ -39,6 +39,7 @@ export function UserListWidget({users, roles}: UserListWidgetProps) {
                     </tbody>
                 </Table>
             )}
-        </>
+            <Pagination total={10} position="center"/>
+        </Box>
     )
 }

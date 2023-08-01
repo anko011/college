@@ -1,27 +1,17 @@
 import {GetServerSidePropsContext} from "next";
-import {getBackendHTTPConfig} from "@/share/config";
-import {withAuthRequest} from "@/share/api";
-import {isRole} from "./lib";
+import {BackendResponse, BodyWithMessage, createRequestCreatorByFetchSide, getBaseUrlByFetchSide} from "@/share/api";
+import {Role} from "./types";
 
-const {origin} = getBackendHTTPConfig()
 
-const BackendRolesRequest = new Request(`${origin}/admin/get-roles`, {
-    method: 'GET',
-    headers: {
-        Accept: 'application/json'
-    }
-})
+export const fetchRoles = async (page: number = 1, req?: GetServerSidePropsContext['req']): Promise<BackendResponse<BodyWithMessage | Role[]>> => {
+    const url = `${getBaseUrlByFetchSide(req)}/admin/get-roles?page=${page}`
 
-export const fetchAllRoles = async (req?: GetServerSidePropsContext['req']) => {
-    let response = req ?
-        await fetch(withAuthRequest(BackendRolesRequest, req))
-        : await fetch('/admin/get-roles');
+    const requestCreator = createRequestCreatorByFetchSide(url, {
+        method: 'GET',
+        headers: {
+            Accept: 'application/json'
+        }
+    })
 
-    if (!response.ok) throw new Error('Не удалось получить список ролей')
-
-    const data = await response.json()
-
-    if (Array.isArray(data) && data.every(isRole)) return data
-
-    throw new Error('Получен не правильный формат списка ролей')
+    return await fetch(requestCreator(req))
 }

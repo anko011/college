@@ -3,8 +3,9 @@ import {deepmerge} from "deepmerge-ts";
 
 const LOCALE_RU = {
     notification: {
+        title: 'Удаление пользователя',
         success: 'Пользователь успешно удален',
-        error: 'Не удалось удалить пользователя'
+        error: 'Не удалось удалить пользователя',
     },
     modal: {
         title: 'Удаление пользователя',

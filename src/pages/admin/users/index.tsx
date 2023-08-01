@@ -1,14 +1,16 @@
 import {GetServerSidePropsContext, InferGetServerSidePropsType} from "next";
 import {withAdminLayout} from "@/widgets/layout";
 import {UserCreateWidget, UserListWidget} from "@/widgets/user";
-import {fetchAllUsers} from "@/entities/user";
-import {fetchAllRoles} from "@/entities/role";
+import {fetchUsers, getUsersPageFromQuery} from "@/entities/user";
+import {fetchRoles} from "@/entities/role";
+import {parseResponseOrError} from "@/share/api";
 
-export async function getServerSideProps({req}: GetServerSidePropsContext) {
-    const users = await fetchAllUsers(req)
-    if ('message' in users) throw new Error(users.message)
 
-    const roles = await fetchAllRoles(req)
+export async function getServerSideProps({req, query}: GetServerSidePropsContext) {
+    const usersPage = getUsersPageFromQuery(query)
+
+    const users = await parseResponseOrError(fetchUsers(usersPage, req))
+    const roles = await parseResponseOrError(fetchRoles(0, req))
 
     return {
         props: {users, roles}
@@ -16,6 +18,7 @@ export async function getServerSideProps({req}: GetServerSidePropsContext) {
 }
 
 function AdminUsersPage({users, roles}: InferGetServerSidePropsType<typeof getServerSideProps>) {
+
     return (
         <>
             <UserCreateWidget roles={roles}/>

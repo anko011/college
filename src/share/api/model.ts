@@ -5,6 +5,7 @@ import {isExpiredToken, TokenSet} from "@/share/lib/tokenService";
 import {getBackendHTTPConfig} from "@/share/config";
 import {getAuthBackendConfig} from "./config";
 import {refreshToken} from "./api";
+import {BackendResponse, BodyWithMessage} from "@/share/api/types";
 
 const {authHeaderName, authTokenName} = getAuthBackendConfig()
 const {origin} = getBackendHTTPConfig()
@@ -41,4 +42,11 @@ export const getBaseUrlByFetchSide = (req?: GetServerSidePropsContext['req']) =>
 export const createRequestCreatorByFetchSide = (input: RequestInfo | URL, init?: RequestInit): (req?: GetServerSidePropsContext['req']) => Request => (req) => {
     const request = new Request(input, init)
     return req ? withAuthRequest(request, req) : request
+}
+
+export const parseResponseOrError = async <T extends {}, >(response: Promise<BackendResponse<T | BodyWithMessage>>) => {
+    const res = await response
+    const data = await res.json()
+    if ('message' in data) throw new Error(data.message)
+    return data
 }

@@ -1,10 +1,10 @@
 import {GetServerSidePropsContext, NextApiRequest} from "next";
-import {createRequestCreatorByFetchSide, DataResponseNotOk, getBaseUrlByFetchSide} from "@/share/api";
+import {BackendResponse, BodyWithMessage, createRequestCreatorByFetchSide, getBaseUrlByFetchSide} from "@/share/api";
 import {CreateUserDto, UserWithRole} from "./types";
 
 
-export const fetchAllUsers = async (req?: GetServerSidePropsContext['req']): Promise<DataResponseNotOk | UserWithRole[]> => {
-    const url = `${getBaseUrlByFetchSide(req)}/admin/get-users`
+export const fetchUsers = async (page: number = 0, req?: GetServerSidePropsContext['req']): Promise<BackendResponse<BodyWithMessage | UserWithRole[]>> => {
+    const url = `${getBaseUrlByFetchSide(req)}/admin/get-users?page=${page}`
 
     const requestCreator = createRequestCreatorByFetchSide(url, {
         method: 'GET',
@@ -13,12 +13,11 @@ export const fetchAllUsers = async (req?: GetServerSidePropsContext['req']): Pro
         }
     })
 
-    const response = await fetch(requestCreator(req))
-    return response.json()
+    return await fetch(requestCreator(req))
+
 }
 
-
-export const fetchCreateUser = async (dto: CreateUserDto, req?: NextApiRequest): Promise<DataResponseNotOk | UserWithRole> => {
+export const fetchCreateUser = async (dto: CreateUserDto, req?: NextApiRequest): Promise<BackendResponse<BodyWithMessage | UserWithRole>> => {
     const url = `${getBaseUrlByFetchSide(req)}/admin/create-user`
     const requestCreator = createRequestCreatorByFetchSide(url, {
         method: 'POST',
@@ -29,11 +28,10 @@ export const fetchCreateUser = async (dto: CreateUserDto, req?: NextApiRequest):
         }
     })
 
-    const response = await fetch(requestCreator(req))
-    return response.json()
+    return await fetch(requestCreator(req))
 }
 
-export const fetchDeleteUser = async (userId: number, req?: NextApiRequest): Promise<DataResponseNotOk | undefined> => {
+export const fetchDeleteUser = async (userId: number, req?: NextApiRequest): Promise<BackendResponse<BodyWithMessage | undefined>> => {
     const url = `${getBaseUrlByFetchSide(req)}/admin/delete-user/${userId}`
     const requestCreator = createRequestCreatorByFetchSide(url, {
         method: 'DELETE',
@@ -43,10 +41,5 @@ export const fetchDeleteUser = async (userId: number, req?: NextApiRequest): Pro
         }
     })
 
-    const response = await fetch(requestCreator(req))
-    console.log(response.status)
-    if (response.status === 200) return undefined
-    return response.json()
+    return await fetch(requestCreator(req))
 }
-
-

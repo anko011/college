@@ -5,6 +5,14 @@ import {isNotEmpty, useForm} from "@mantine/form";
 import {Notifications} from "@mantine/notifications";
 import {signIn} from "@/features/auth";
 import {useNotification} from "@/share/client/hooks";
+import {getBaseDictionary} from "@/share/lib/i18nService";
+
+const dictionary = getBaseDictionary('ru')
+
+const REDIRECT_TIME = 1000
+
+const hasMessage = (data: any) => 'message' in data && typeof data.message === 'string'
+
 
 export default function AdminLoginPage() {
     const notification = useNotification('Авторизация')
@@ -17,8 +25,8 @@ export default function AdminLoginPage() {
             password: ''
         },
         validate: {
-            username: isNotEmpty('Поле не должно быть пустым'),
-            password: isNotEmpty('Поле не должно быть пустым'),
+            username: isNotEmpty(dictionary.form.errors.required),
+            password: isNotEmpty(dictionary.form.errors.required),
         }
     })
 
@@ -27,17 +35,18 @@ export default function AdminLoginPage() {
         setIsLoading(true)
 
         const response = await signIn(values.username, values.password)
-        const {message} = await response.json()
+        const data = await response.json()
 
-        if(response.ok){
+        if (!hasMessage(data)) throw new Error('Ошибка авторизации')
 
-        }
-
-
-        setIsLoading(false)
 
         if (response.ok) {
-            await router.push('/admin')
+            notification.successNotify(data.message)
+            setTimeout(() => router.push('/admin'), REDIRECT_TIME)
+        } else {
+            notification.errorNotify(data.message)
+            setIsLoading(false)
+            form.reset()
         }
     }
 
@@ -72,7 +81,7 @@ export default function AdminLoginPage() {
 AdminLoginPage.getLayout = function (page: ReactNode) {
     return (
         <>
-            <Notifications autoClose={3000}/>
+            <Notifications autoClose={1500}/>
             <Flex
                 justify="center"
                 align="center"

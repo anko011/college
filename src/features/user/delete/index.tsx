@@ -1,19 +1,21 @@
 import {ActionIcon, Text} from "@mantine/core";
 import {IconTrash} from "@tabler/icons-react";
 import {fetchDeleteUser} from "@/entities/user";
-import {useHTTPNotification} from "@/share/client/hooks";
+import {useNotification} from "@/share/client/hooks";
 import {getDeleteUserFeautureDictionary} from "@/features/user/delete/i18n";
 import {modals} from "@mantine/modals";
 
 interface DeleteUserButtonProps {
     userId: number
+
+    onDeleteUser?(): void
 }
 
 const dictionary = getDeleteUserFeautureDictionary('ru')
 
 
-export const DeleteUserButton = ({userId}: DeleteUserButtonProps) => {
-    const notification = useHTTPNotification('Удаление пользователя')
+export const DeleteUserButton = ({userId, onDeleteUser}: DeleteUserButtonProps) => {
+    const notification = useNotification(dictionary.notification.title)
 
     const handleClick = async () => {
         modals.openConfirmModal({
@@ -29,11 +31,13 @@ export const DeleteUserButton = ({userId}: DeleteUserButtonProps) => {
             centered: true,
             onConfirm: async () => {
                 const response = await fetchDeleteUser(userId)
+                const data = await response.json()
 
-                if (response) {
-                    notification.errorNotify(response.message)
+                if (!response.ok) {
+                    notification.errorNotify(data?.message ?? dictionary.notification.error)
                 } else {
                     notification.successNotify(dictionary.notification.success)
+                    onDeleteUser?.()
                 }
             }
         })

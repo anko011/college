@@ -8,11 +8,10 @@ export interface Credentials {
     password: string
 }
 
-export interface DataResponseNotOk {
+export interface BodyWithMessage {
     message: string
 }
 
-export interface BackendResponse {
-    status: number
-    data: unknown
+export interface BackendResponse<T> extends Response {
+    json(): Promise<T>
 }

@@ -1,8 +1,8 @@
 import type {NextRequest} from 'next/server'
 import {NextResponse} from 'next/server'
 import {ResponseCookie} from "next/dist/compiled/@edge-runtime/cookies";
-import {getUserWithRoleFromTokenSet} from "@/entities/user/lib";
 import {EncodedSession, getEncodedSession, updateSessionCookie} from "@/share/lib/sessionService";
+import {getUserWithRoleFromTokenSet} from "@/entities/user";
 
 const ADMIN_ROLE = 'ROLE_ADMIN'
 

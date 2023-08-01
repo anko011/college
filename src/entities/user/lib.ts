@@ -1,5 +1,4 @@
 import {isRole} from '@/entities/role/@x'
-import {decodeToken, TokenSet} from "@/share/lib/tokenService";
 import {User, UserWithRole} from "./types";
 
 
@@ -20,13 +19,3 @@ export function isUserWithRole(obj: unknown): obj is UserWithRole {
     )
 }
 
-export function getUserWithRoleFromTokenSet(tokenSet: TokenSet) {
-    const payload = decodeToken(tokenSet.accessToken)
-
-    if (payload.sub) {
-        const user = JSON.parse(payload.sub)
-        if (isUserWithRole(user)) return user
-    }
-
-    return null
-}

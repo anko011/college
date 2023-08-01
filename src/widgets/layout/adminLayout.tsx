@@ -1,5 +1,5 @@
-import {ComponentType, PropsWithChildren, ReactElement, ReactNode} from "react";
-import {AppShell, Navbar, NavLink} from "@mantine/core";
+import {ComponentType, PropsWithChildren, ReactElement, ReactNode, useEffect, useState} from "react";
+import {AppShell, Container, Navbar, NavLink, Transition} from "@mantine/core";
 import {IconBrandPagekit, IconCategory, IconLogout, IconShieldLock, IconUsers} from "@tabler/icons-react";
 import NextLink from 'next/link'
 import {useRouter} from "next/router";
@@ -20,6 +20,7 @@ const navbarRoutes: Array<Route & { icon: ReactNode }> = [
 
 export function AdminLayout({children}: PropsWithChildren) {
     const router = useRouter()
+    const [isLoadingPage, setIsLoadingPage] = useState(false)
 
     const handleLogout = async () => {
         await fetch('/api/auth/logout/', {
@@ -28,6 +29,27 @@ export function AdminLayout({children}: PropsWithChildren) {
 
         await router.push('/')
     }
+
+
+    useEffect(() => {
+        const handleStart = (url: string) => {
+            setIsLoadingPage(true)
+        }
+
+        const handleStop = () => {
+            setIsLoadingPage(false)
+        }
+
+        router.events.on('routeChangeStart', handleStart)
+        router.events.on('routeChangeComplete', handleStop)
+        router.events.on('routeChangeError', handleStop)
+
+        return () => {
+            router.events.off('routeChangeStart', handleStart)
+            router.events.off('routeChangeComplete', handleStop)
+            router.events.off('routeChangeError', handleStop)
+        }
+    }, [router])
 
     return (
         <MantineProvider>
@@ -56,7 +78,13 @@ export function AdminLayout({children}: PropsWithChildren) {
                     </Navbar>
                 }
             >
-                {children}
+                <Transition transition="fade" mounted={!isLoadingPage}>
+                    {(styles) => (
+                        <Container style={styles} mih="100%">
+                            {children}
+                        </Container>
+                    )}
+                </Transition>
             </AppShell>
         </MantineProvider>
     )

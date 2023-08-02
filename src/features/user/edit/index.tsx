@@ -59,12 +59,13 @@ export const EditUserForm = (
             ? data.message
             : dictionary.notification.error
 
+
         notification.byResponseNotify(response, dictionary.notification.success, errorMessage)
         form.reset()
     }
 
     return (
-        <Box component="form" {...form.onSubmit(handleSubmit)}>
+        <Box component="form" onSubmit={form.onSubmit(handleSubmit)}>
             <BaseUserFormProvider form={form}>
                 <BaseUserFormFields roles={roles}/>
 

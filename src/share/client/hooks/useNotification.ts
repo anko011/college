@@ -1,4 +1,5 @@
 import {notifications} from "@mantine/notifications";
+import {BackendResponse} from "@/share/api";
 
 export function useNotification(title: string) {
 
@@ -9,11 +10,11 @@ export function useNotification(title: string) {
         errorNotify(message: string) {
             notifications.show({title, message, color: 'red'})
         },
-        byStatusNotify(status: boolean | number, successMessage: string, errorMessage: string) {
-            if (status === 200 || status === 201 || status) {
-                this.successNotify(successMessage)
+        byResponseNotify(response: BackendResponse<any>, messageSuccess: string, messageError: string): void {
+            if (response.ok) {
+                this.successNotify(messageSuccess)
             } else {
-                this.errorNotify(errorMessage)
+                this.errorNotify(messageError)
             }
         }
     })

@@ -1,1 +1,2 @@
-export * from './users-table'
+export * from './table'
+export * from './base-form'

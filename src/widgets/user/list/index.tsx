@@ -1,4 +1,4 @@
-import {Box, Group, Pagination, Table, Text} from "@mantine/core";
+import {Button, Group, Input, Pagination, Stack, Table, Text, TextInput} from "@mantine/core";
 import {DeleteUserButton, EditUserButton} from "@/features/user";
 import {UserTableHeader, UserTableRow} from "@/entities/user/client";
 import {getUsersPageFromQuery, UserWithRole} from "@/entities/user";
@@ -25,7 +25,14 @@ export function UserListWidget({users, roles}: UserListWidgetProps) {
     }
 
     return (
-        <Box>
+        <Stack>
+            <Group noWrap>
+                <Input.Wrapper w="100%">
+                    <TextInput placeholder="Введите логин / ФИО"/>
+                </Input.Wrapper>
+                <Button>Поиск</Button>
+            </Group>
+
             <Table>
                 <UserTableHeader actionTitles={[
                     <Group key={1} position="right">
@@ -50,7 +57,7 @@ export function UserListWidget({users, roles}: UserListWidgetProps) {
                 ))}
                 </tbody>
             </Table>
-            <Pagination mt="md" total={2} position="center" value={(page ?? 0) + 1} onChange={handleChangePage}/>
-        </Box>
+            <Pagination total={2} position="center" value={(page ?? 0) + 1} onChange={handleChangePage}/>
+        </Stack>
     )
 }

@@ -1,11 +1,12 @@
 import {GetServerSidePropsContext, InferGetServerSidePropsType} from "next";
 import {withAdminLayout} from "@/widgets/layout";
-import {UserCreateWidget, UserListWidget} from "@/widgets/user";
+import {UserListWidget} from "@/widgets/user";
 import {fetchUsers, getUsersPageFromQuery} from "@/entities/user";
 import {fetchRoles} from "@/entities/role";
 import {parseResponseOrError} from "@/share/api";
 import {Tabs} from "@mantine/core";
 import {useRouter} from "next/router";
+import {UserCreateForm} from "@/features/user";
 
 
 export async function getServerSideProps({req, query}: GetServerSidePropsContext) {
@@ -37,7 +38,7 @@ function AdminUsersPage({users, roles}: InferGetServerSidePropsType<typeof getSe
                     <Tabs.Tab value="userList">Список пользователей</Tabs.Tab>
                 </Tabs.List>
                 <Tabs.Panel value="createUser">
-                    <UserCreateWidget roles={roles}/>
+                    <UserCreateForm roles={roles}/>
                 </Tabs.Panel>
                 <Tabs.Panel value="userList">
                     <UserListWidget users={users} roles={roles}/>

@@ -6,18 +6,19 @@ export interface User {
     login: string
     firstName: string
     secondName: string
+    password: string
 }
 
 export interface UserWithRole extends User {
     role: Role
 }
 
-export interface CreateUserDto {
-    firstName: string
-    secondName: string
-    patronymic: string
-    login: string
-    password: string
+export type BaseUserDto = Omit<User, 'id'> & {
     roleId: number
+}
+
+export type CreateUserDto = BaseUserDto
+export type UpdateUserDto = BaseUserDto & {
+    id: number
 }
 

@@ -5,8 +5,8 @@ import {fetchUsers, getUsersPageFromQuery} from "@/entities/user";
 import {fetchRoles} from "@/entities/role";
 import {parseResponseOrError} from "@/share/api";
 import {Tabs} from "@mantine/core";
-import {useRouter} from "next/router";
 import {UserCreateForm} from "@/features/user";
+import {useAppRouter} from "@/share/client/hooks/useAppRouter";
 
 
 export async function getServerSideProps({req, query}: GetServerSidePropsContext) {
@@ -21,14 +21,8 @@ export async function getServerSideProps({req, query}: GetServerSidePropsContext
 }
 
 function AdminUsersPage({users, roles}: InferGetServerSidePropsType<typeof getServerSideProps>) {
-    const router = useRouter()
-    const handleTabChange = (value: string) => router.push({
-        pathname: '/admin/users',
-        query: {
-            ...router.query,
-            activeTab: value
-        }
-    })
+    const router = useAppRouter()
+    const handleTabChange = (value: string) => router.updateQuery('activeTab', value)
 
     return (
         <>

@@ -4,7 +4,7 @@ import {fetchDeleteUser} from "@/entities/user";
 import {useNotification} from "@/share/client/hooks";
 import {getDeleteUserFeautureDictionary} from "@/features/user/delete/i18n";
 import {modals} from "@mantine/modals";
-import {useRouter} from "next/router";
+import {useAppRouter} from "@/share/client/hooks/useAppRouter";
 
 interface DeleteUserButtonProps {
     userId: number
@@ -15,7 +15,7 @@ const dictionary = getDeleteUserFeautureDictionary('ru')
 
 export const DeleteUserButton = ({userId}: DeleteUserButtonProps) => {
     const notification = useNotification(dictionary.notification.title)
-    const router = useRouter()
+    const router = useAppRouter()
     const handleClick = async () => {
         modals.openConfirmModal({
             title: dictionary.modal.title,
@@ -31,7 +31,7 @@ export const DeleteUserButton = ({userId}: DeleteUserButtonProps) => {
                 const data = await response.json()
 
                 notification.byResponseNotify(response, dictionary.notification.success, data.message ?? dictionary.notification.error)
-                router.replace(router.asPath)
+                router.safeReload()
             }
         })
     }

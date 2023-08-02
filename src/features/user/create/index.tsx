@@ -1,7 +1,5 @@
 import {Box, Button, Group} from "@mantine/core";
 import {Role} from "@/entities/role";
-import {useNotification} from "@/share/client/hooks";
-import {getUserCreateFeatureDictionary} from "./i18n";
 import {fetchCreateUser} from "@/entities/user";
 import {
     BaseUserFormFields,
@@ -9,7 +7,9 @@ import {
     BaseUserFormProvider,
     useBaseUserForm
 } from "@/entities/user/client";
-import {mapToCreateUserDto} from "@/features/user/create/lib";
+import {useNotification} from "@/share/client/hooks";
+import {getUserCreateFeatureDictionary} from "./i18n";
+import {mapToCreateUserDto} from "./lib";
 
 interface UserCreateFormProps {
     roles: Role[]

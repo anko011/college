@@ -45,7 +45,7 @@ export const fetchUpdateUser = async (dto: UpdateUserDto, req?: NextApiRequest):
     return await fetch(requestCreator(req))
 }
 
-export const fetchDeleteUser = async (userId: number, req?: NextApiRequest): Promise<BackendResponse<BodyWithMessage | undefined>> => {
+export const fetchDeleteUser = async (userId: number, req?: NextApiRequest): Promise<BackendResponse<BodyWithMessage>> => {
     const url = `${getBaseUrlByFetchSide(req)}/admin/delete-user/${userId}`
     const requestCreator = createRequestCreatorByFetchSide(url, {
         method: 'DELETE',

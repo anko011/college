@@ -3,16 +3,16 @@ import {modals} from "@mantine/modals";
 import {IconPencil} from "@tabler/icons-react";
 import {fetchUpdateUser, UpdateUserDto, UserWithRole} from "@/entities/user";
 import {Role} from "@/entities/role";
-import {useNotification} from "@/share/client/hooks";
-import {getUserEditFeatureDictionary} from "./i18n";
 import {
     BaseUserFormFields,
     baseUserFormFieldsValidate,
     BaseUserFormProvider,
     useBaseUserForm
 } from "@/entities/user/client";
+import {useNotification} from "@/share/client/hooks";
 
-import {mapToUpdateUserDto} from "@/features/user/edit/lib";
+import {getUserEditFeatureDictionary} from "./i18n";
+import {mapToUpdateUserDto} from "./lib";
 
 interface UserProps {
     user: UserWithRole

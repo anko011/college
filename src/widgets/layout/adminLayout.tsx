@@ -15,7 +15,7 @@ const navbarRoutes: Array<Route & { icon: ReactNode }> = [
     {href: '/admin/page', label: 'Страницы', icon: <IconBrandPagekit/>},
     {href: '/admin/category', label: 'Категории', icon: <IconCategory/>},
     {href: '/admin/users', label: 'Пользователи', icon: <IconUsers/>},
-    {href: '/admin/permissions', label: 'Роли и права', icon: <IconShieldLock/>},
+    {href: '/admin/roles', label: 'Роли и права', icon: <IconShieldLock/>},
 ]
 
 export function AdminLayout({children}: PropsWithChildren) {
@@ -64,7 +64,7 @@ export function AdminLayout({children}: PropsWithChildren) {
                                     href={route.href}
                                     label={route.label}
                                     icon={route.icon}
-                                    active={router.asPath === route.href}
+                                    active={router.pathname === route.href}
                                 />
                             ))}
                             <NavLink

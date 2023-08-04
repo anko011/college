@@ -1,9 +1,9 @@
 import {Button, Group, Input, Pagination, Stack, Table, Text, TextInput} from "@mantine/core";
-import {DeleteUserButton, EditUserButton} from "@/features/user";
 import {UserTableHeader, UserTableRow} from "@/entities/user/client";
 import {getUsersPageFromQuery, UserWithRole} from "@/entities/user";
 import {Role} from "@/entities/role";
 import {useRouter} from "next/router";
+import {DeleteUserButton, EditUserButton} from "@/features/user";
 
 interface UserListWidgetProps {
     users: UserWithRole[]
@@ -28,8 +28,21 @@ export function UserListWidget({users, roles}: UserListWidgetProps) {
         <Stack>
             <Group noWrap>
                 <Input.Wrapper w="100%">
-                    <TextInput placeholder="Введите логин / ФИО"/>
+                    <TextInput placeholder="Логин"/>
                 </Input.Wrapper>
+
+                <Input.Wrapper w="100%">
+                    <TextInput placeholder="Имя"/>
+                </Input.Wrapper>
+
+                <Input.Wrapper w="100%">
+                    <TextInput placeholder="Фамилия"/>
+                </Input.Wrapper>
+
+                <Input.Wrapper w="100%">
+                    <TextInput placeholder="Отчество"/>
+                </Input.Wrapper>
+
                 <Button>Поиск</Button>
             </Group>
 

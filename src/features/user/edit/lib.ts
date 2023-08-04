@@ -5,4 +5,5 @@ export const mapToUpdateUserDto = (userId: number, values: ReturnType<typeof use
     ...values,
     id: userId,
     roleId: parseInt(values.roleId),
+    password: values.password === '' ? null : values.password,
 })

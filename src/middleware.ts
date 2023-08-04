@@ -1,52 +1,47 @@
 import type {NextRequest} from 'next/server'
 import {NextResponse} from 'next/server'
-import {ResponseCookie} from "next/dist/compiled/@edge-runtime/cookies";
-import {EncodedSession, getEncodedSession, updateSessionCookie} from "@/share/lib/sessionService";
 import {getUserWithRoleFromTokenSet} from "@/entities/user";
+import {createAuthenticatedResponse, createUnauthenticatedResponse, getUpdatedTokenSet} from "@/share/lib/authService";
+import {EncodedSession, getEncodedSession} from "@/share/lib/sessionService";
 
 const ADMIN_ROLE = 'ROLE_ADMIN'
 
-const withCookie = (res: NextResponse, cookie: ResponseCookie) => {
-    const response = res
-    res.cookies.set(cookie)
-    return response
-}
-
 const isAdminPath = (req: NextRequest) => req.nextUrl.pathname.startsWith('/admin')
 const isLoginPage = (req: NextRequest) => req.nextUrl.pathname.startsWith(('/admin/login'))
-
-const redirectToHomePage = (req: NextRequest) => NextResponse.redirect(new URL('/', req.url),)
-
+const redirectToHomePage = (req: NextRequest) => (init?: Parameters<typeof NextResponse['redirect']>[1]) => NextResponse.redirect(new URL('/', req.url), init)
 const next = NextResponse.next
 
-const adminPathsGuard = (request: NextRequest, session: EncodedSession | null): NextResponse => {
-    if (session) {
-        if (isAdminPath(request)) {
 
-            if (isLoginPage(request)) return next()
+const adminPathsGuard = (request: NextRequest, session: EncodedSession | null) => {
+    if (isLoginPage(request)) return next
 
+    if (isAdminPath(request)) {
+        if (session) {
             const user = getUserWithRoleFromTokenSet(session.tokenSet)
             if (!user) return redirectToHomePage(request)
 
-            if (user.role.name === ADMIN_ROLE) return next()
+            if (user.role.name === ADMIN_ROLE) return next
         }
+
+        return redirectToHomePage(request)
     }
 
-    if (isLoginPage(request)) return next()
-    if (isAdminPath(request)) return redirectToHomePage(request)
-
-    return next()
+    return next
 }
 
+export type ResponseCreator = ReturnType<typeof adminPathsGuard>
 
 export async function middleware(request: NextRequest) {
     const session = getEncodedSession(request)
-    const response = adminPathsGuard(request, session)
+    const responseCreator = adminPathsGuard(request, session)
 
     if (session) {
-        const sessionCookie = await updateSessionCookie(session)
-        return withCookie(response, sessionCookie)
+        const updatedTokenSet = await getUpdatedTokenSet(session.tokenSet)
+
+        if (updatedTokenSet) {
+            return createAuthenticatedResponse(responseCreator, request, updatedTokenSet)
+        }
     }
 
-    return response
+    return createUnauthenticatedResponse(responseCreator)
 }

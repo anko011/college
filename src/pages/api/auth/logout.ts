@@ -1,10 +1,9 @@
 import {NextApiRequest, NextApiResponse} from "next";
-import {createDeletingSessionCookie} from "@/share/lib/sessionService";
 import {ResponseCookies} from "next/dist/compiled/@edge-runtime/cookies";
+import {createDeletingSessionCookie} from "@/share/lib/sessionService";
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
     const deletingCookie = createDeletingSessionCookie()
-
     const cookies = new ResponseCookies(new Headers())
     cookies.set(deletingCookie)
 

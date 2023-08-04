@@ -1,26 +1,27 @@
 import {GetServerSidePropsContext, InferGetServerSidePropsType} from "next";
+import {Tabs} from "@mantine/core";
 import {withAdminLayout} from "@/widgets/layout";
 import {UserListWidget} from "@/widgets/user";
+import {UserCreateForm} from "@/features/user";
 import {fetchUsers, getUsersPageFromQuery} from "@/entities/user";
 import {fetchRoles} from "@/entities/role";
-import {parseResponseOrError} from "@/share/api";
-import {Tabs} from "@mantine/core";
-import {UserCreateForm} from "@/features/user";
-import {useAppRouter} from "@/share/client/hooks/useAppRouter";
+import {parseResponseOrError} from "@/share/lib/apiService";
+import {useAppRouter} from "@/share/client/hooks";
 
 
 export async function getServerSideProps({req, query}: GetServerSidePropsContext) {
-    const usersPage = getUsersPageFromQuery(query)
+    const usersNumPage = getUsersPageFromQuery(query)
+    const userPage = await parseResponseOrError(fetchUsers(usersNumPage, req))
 
-    const users = await parseResponseOrError(fetchUsers(usersPage, req))
     const roles = await parseResponseOrError(fetchRoles(0, req))
 
     return {
-        props: {users, roles}
+        props: {userPage, roles}
     }
+
 }
 
-function AdminUsersPage({users, roles}: InferGetServerSidePropsType<typeof getServerSideProps>) {
+function AdminUsersPage({userPage, roles}: InferGetServerSidePropsType<typeof getServerSideProps>) {
     const router = useAppRouter()
     const handleTabChange = (value: string) => router.updateQuery('activeTab', value)
 
@@ -35,7 +36,7 @@ function AdminUsersPage({users, roles}: InferGetServerSidePropsType<typeof getSe
                     <UserCreateForm roles={roles}/>
                 </Tabs.Panel>
                 <Tabs.Panel value="userList">
-                    <UserListWidget users={users} roles={roles}/>
+                    <UserListWidget users={userPage.users} roles={roles}/>
                 </Tabs.Panel>
             </Tabs>
 

@@ -1,5 +1,5 @@
 import {notifications} from "@mantine/notifications";
-import {BackendResponse} from "@/share/api";
+import {BackendResponse} from "../../lib/apiService";
 
 export function useNotification(title: string) {
 

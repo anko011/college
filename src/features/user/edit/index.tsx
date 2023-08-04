@@ -19,7 +19,7 @@ interface UserProps {
     roles: Role[]
 }
 
-type EditUserFormProps = UpdateUserDto & {
+type EditUserFormProps = Omit<UpdateUserDto, 'password'> & {
     roles: Role[]
 }
 
@@ -34,7 +34,6 @@ export const EditUserForm = (
         secondName,
         firstName,
         patronymic,
-        password,
         roles
     }: EditUserFormProps) => {
 
@@ -46,14 +45,19 @@ export const EditUserForm = (
             patronymic: patronymic,
             roleId: roleId.toString(),
             login: login,
-            password: password,
+            password: '',
         },
-        validate: baseUserFormFieldsValidate
+        validate: {
+            ...baseUserFormFieldsValidate,
+            password: undefined
+        }
     })
 
     const handleSubmit = async (values: typeof form.values) => {
         const response = await fetchUpdateUser(mapToUpdateUserDto(id, values))
         const data = await response.json()
+
+        console.log(response)
 
         const errorMessage = 'message' in data
             ? data.message
@@ -95,7 +99,6 @@ export function EditUserButton({user, roles}: UserProps) {
                 secondName={user.secondName}
                 patronymic={user.patronymic}
                 login={user.login}
-                password={user.password}
                 roleId={user.role.id}
                 roles={roles}
             />

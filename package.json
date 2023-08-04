@@ -19,6 +19,7 @@
     "@mantine/notifications": "^6.0.16",
     "@tabler/icons-react": "^2.23.0",
     "deepmerge-ts": "^5.1.0",
+    "http-proxy-middleware": "^2.0.6",
     "jose": "^4.14.4",
     "next": "^13.4.12",
     "react": "18.2.0",

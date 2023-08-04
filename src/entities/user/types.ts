@@ -9,6 +9,11 @@ export interface User {
     password: string
 }
 
+export interface UserPage {
+    count: number
+    users: UserWithRole[]
+}
+
 export interface UserWithRole extends User {
     role: Role
 }
@@ -18,7 +23,9 @@ export type BaseUserDto = Omit<User, 'id'> & {
 }
 
 export type CreateUserDto = BaseUserDto
-export type UpdateUserDto = BaseUserDto & {
+
+export type UpdateUserDto = Omit<BaseUserDto, 'password'> & {
     id: number
+    password: string | null
 }
 

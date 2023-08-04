@@ -5,18 +5,15 @@ import {decodeToken, isTokenSet, TokenSet} from "@/share/lib/tokenService";
 import {getRequestCookies} from "@/share/lib/cookieService";
 import {EncodedSession} from "./types";
 import {getSessionConfig} from "./config";
-import {getUpdatedTokenSet} from "@/share/api";
 
 
 const {sessionCookieName} = getSessionConfig()
 
 export const createEncodedSession = (tokenSet: TokenSet): EncodedSession => ({tokenSet: tokenSet})
 
-
 const isEncodedSession = (obj: unknown): obj is EncodedSession => (
     typeof obj === 'object' && !!obj &&
     'tokenSet' in obj && !!obj.tokenSet && typeof obj.tokenSet === 'object' && isTokenSet(obj.tokenSet))
-
 
 export function getEncodedSession(req: GetServerSidePropsContext['req'] | NextRequest): EncodedSession | null {
     const cookies = getRequestCookies(req)
@@ -28,18 +25,6 @@ export function getEncodedSession(req: GetServerSidePropsContext['req'] | NextRe
 
     return null
 }
-
-export const updateSessionCookie = async (session: EncodedSession): Promise<ResponseCookie> => {
-    const tokenSet = await getUpdatedTokenSet(session.tokenSet)
-
-    if (tokenSet) {
-        const newSession = createEncodedSession(tokenSet)
-        return createCreatingSessionCookie(newSession)
-    }
-
-    return createDeletingSessionCookie()
-}
-
 
 export const createCreatingSessionCookie = (encodedSession: EncodedSession): ResponseCookie => {
     const {exp = Date.now()} = decodeToken(encodedSession.tokenSet.refreshToken)

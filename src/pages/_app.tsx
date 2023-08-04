@@ -5,11 +5,9 @@ interface AppPropsWithLayout extends AppProps {
     Component: NextPageWithLayout,
 }
 
-
-export default function App({Component, pageProps}: AppPropsWithLayout) {
+export default function Application({Component, pageProps}: AppPropsWithLayout) {
     const getLayout = Component.getLayout ?? ((page) => page)
     return getLayout(
         <Component {...pageProps} />
     )
 }
-

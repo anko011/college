@@ -13,7 +13,7 @@ export const authenticateByCredentials = async (credentials: string) => {
         headers: {
             'Content-Type': 'application/json'
         },
-        body: credentials
+        body: JSON.stringify(credentials)
     })
 }
 

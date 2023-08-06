@@ -32,14 +32,10 @@ export function UserCreateForm({roles}: UserCreateFormProps) {
     })
 
     const handleSubmit = async (values: typeof form.values) => {
-        const response = await fetchCreateUser(mapToCreateUserDto(values))
-        const data = await response.json()
+        await notification.handlerError(async () => {
+            await fetchCreateUser(mapToCreateUserDto(values))
+        }, dictionary.notification.success, dictionary.notification.error)
 
-        const errorMessage = 'message' in data
-            ? data.message
-            : dictionary.notification.error
-
-        notification.byResponseNotify(response, dictionary.notification.success, errorMessage)
         form.reset()
     }
 

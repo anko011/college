@@ -18,7 +18,6 @@ export async function getStaticProps(ctx: GetServerSidePropsContext) {
     const cookie = new ResponseCookies(headers)
 
     cookie.set({name: 'test', value: 'owowowowow', path: '/', maxAge: 30})
-    console.log('123123', cookie.toString())
 
     ctx.res.writeHead(200, {})
 

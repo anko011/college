@@ -3,8 +3,6 @@ import {withAdminLayout} from "@/widgets/layout/adminLayout";
 import type {GetServerSidePropsContext, InferGetServerSidePropsType} from "next";
 
 export async function getServerSideProps({req, res}: GetServerSidePropsContext) {
-
-
     return {
         props: {
             user: null,
@@ -16,7 +14,6 @@ function AdminHomePage({user}: InferGetServerSidePropsType<typeof getServerSideP
     return (
         <>
             <Text>Admin home page</Text>
-            {JSON.stringify(user)}
         </>
     )
 }

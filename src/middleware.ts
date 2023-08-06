@@ -1,47 +1,30 @@
-import type {NextRequest} from 'next/server'
+import type {NextMiddleware, NextRequest} from 'next/server'
 import {NextResponse} from 'next/server'
 import {getUserWithRoleFromTokenSet} from "@/entities/user";
-import {createAuthenticatedResponse, createUnauthenticatedResponse, getUpdatedTokenSet} from "@/share/lib/authService";
-import {EncodedSession, getEncodedSession} from "@/share/lib/sessionService";
+import {withAuthMiddleware} from "@/share/lib/authService";
+import {getEncodedSession} from "@/share/lib/sessionService";
 
 const ADMIN_ROLE = 'ROLE_ADMIN'
 
 const isAdminPath = (req: NextRequest) => req.nextUrl.pathname.startsWith('/admin')
 const isLoginPage = (req: NextRequest) => req.nextUrl.pathname.startsWith(('/admin/login'))
-const redirectToHomePage = (req: NextRequest) => (init?: Parameters<typeof NextResponse['redirect']>[1]) => NextResponse.redirect(new URL('/', req.url), init)
-const next = NextResponse.next
+const redirectToLoginPage = (req: NextRequest) => NextResponse.redirect(new URL('/admin/login', req.url))
 
 
-const adminPathsGuard = (request: NextRequest, session: EncodedSession | null) => {
-    if (isLoginPage(request)) return next
+const withAdminGuard = (middleware: NextMiddleware): NextMiddleware => async (request, event) => {
+    if (isAdminPath(request) && !isLoginPage(request)) {
+        const session = getEncodedSession(request)
+        if (!session) return redirectToLoginPage(request)
 
-    if (isAdminPath(request)) {
-        if (session) {
-            const user = getUserWithRoleFromTokenSet(session.tokenSet)
-            if (!user) return redirectToHomePage(request)
-
-            if (user.role.name === ADMIN_ROLE) return next
-        }
-
-        return redirectToHomePage(request)
+        const user = getUserWithRoleFromTokenSet(session.tokenSet)
+        if (!user || user.role.name !== ADMIN_ROLE) return redirectToLoginPage(request)
     }
 
-    return next
+    return middleware(request, event);
 }
 
-export type ResponseCreator = ReturnType<typeof adminPathsGuard>
-
-export async function middleware(request: NextRequest) {
-    const session = getEncodedSession(request)
-    const responseCreator = adminPathsGuard(request, session)
-
-    if (session) {
-        const updatedTokenSet = await getUpdatedTokenSet(session.tokenSet)
-
-        if (updatedTokenSet) {
-            return createAuthenticatedResponse(responseCreator, request, updatedTokenSet)
-        }
-    }
-
-    return createUnauthenticatedResponse(responseCreator)
+async function middleware(request: NextRequest) {
+    return NextResponse.next()
 }
+
+export default withAdminGuard(withAuthMiddleware(middleware))

@@ -1,54 +1,63 @@
 import {GetServerSidePropsContext, NextApiRequest} from "next";
-import {BackendResponse, BodyWithMessage, getBackendHTTPConfig, getBaseUrlByFetchSide} from "@/share/lib/apiService";
-import {CreateUserDto, UpdateUserDto, UserPage, UserWithRole} from "./types";
+import {
+    BackendResponse,
+    BodyWithMessage,
+    fetcher,
+    getBackendHTTPConfig,
+    withCheckData,
+    withRisingError
+} from "@/share/lib/apiService";
 import {withAuthHeader} from "@/share/lib/authService";
-
+import {CreateUserDto, UpdateUserDto, UserPage, UserWithRole} from "./types";
+import {isUserPage, isUserWithRole} from "@/entities/user/lib";
 
 const {origin} = getBackendHTTPConfig()
 
-
-export const fetchUsers = async (page: number = 0, req?: GetServerSidePropsContext['req']): Promise<BackendResponse<BodyWithMessage | UserPage>> => {
+const userFetcher = async (page: number = 0, req?: GetServerSidePropsContext['req']): Promise<BackendResponse<UserPage>> => {
     const url = req ? `${origin}/admin/get-users?page=${page}` : '/api/admin/get-users'
-    return await fetch(url, withAuthHeader({
+    return await fetcher(url, withAuthHeader({
         method: 'GET'
-    }, req));
+    }, req))
 }
 
-export const fetchCreateUser = async (dto: CreateUserDto, req?: NextApiRequest): Promise<BackendResponse<BodyWithMessage | UserWithRole>> => {
+export const fetchUsers = withCheckData(withRisingError(userFetcher), isUserPage)
+
+
+const createUserFetcher = async (dto: CreateUserDto, req?: NextApiRequest): Promise<BackendResponse<UserWithRole>> => {
     const url = req ? `${origin}/admin/create-user` : '/api/admin/create-user'
-    return await fetch(url, withAuthHeader(withAuthHeader({
+    return await fetcher(url, withAuthHeader({
         method: 'POST',
         body: JSON.stringify(dto),
         headers: {
             accept: 'application/json',
             'Content-Type': 'application/json'
         }
-    }, req)))
+    }, req))
 }
+export const fetchCreateUser = withCheckData(withRisingError(createUserFetcher), isUserWithRole)
 
-export const fetchUpdateUser = async (dto: UpdateUserDto, req?: NextApiRequest): Promise<BackendResponse<BodyWithMessage | UserWithRole>> => {
-    const url = `${getBaseUrlByFetchSide(req)}/admin/update-user`
-    const requestCreator = createRequestCreatorByFetchSide(url, {
+const updateUserFetcher = async (dto: UpdateUserDto, req?: NextApiRequest): Promise<BackendResponse<UserWithRole>> => {
+    const url = req ? `${origin}/admin/update-user` : '/api/admin/update-user'
+    return await fetcher(url, withAuthHeader({
         method: 'PUT',
         body: JSON.stringify(dto),
         headers: {
-            Accept: 'application/json',
+            Accept: '*/*',
             'Content-Type': 'application/json'
         }
-    })
-
-    return await fetch(requestCreator(req))
+    }, req))
 }
+export const fetchUpdateUser = withCheckData(withRisingError(updateUserFetcher), isUserWithRole)
 
-export const fetchDeleteUser = async (userId: number, req?: NextApiRequest): Promise<BackendResponse<BodyWithMessage>> => {
-    const url = `${getBaseUrlByFetchSide(req)}/admin/delete-user/${userId}`
-    const requestCreator = createRequestCreatorByFetchSide(url, {
+const deleteUserFetcher = async (userId: number, req?: NextApiRequest): Promise<BackendResponse<BodyWithMessage>> => {
+    const url = req ? `${origin}/admin/delete-user/${userId}` : `/api/admin/delete-user/${userId}`
+    return await fetcher(url, withAuthHeader({
         method: 'DELETE',
         headers: {
             Accept: 'application/json',
             'Content-Type': 'application/json'
         }
-    })
-
-    return await fetch(requestCreator(req))
+    }, req))
 }
+
+export const fetchDeleteUser = withRisingError(deleteUserFetcher)

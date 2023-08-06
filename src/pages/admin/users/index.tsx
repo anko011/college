@@ -5,21 +5,20 @@ import {UserListWidget} from "@/widgets/user";
 import {UserCreateForm} from "@/features/user";
 import {fetchUsers, getUsersPageFromQuery} from "@/entities/user";
 import {fetchRoles} from "@/entities/role";
-import {parseResponseOrError} from "@/share/lib/apiService";
 import {useAppRouter} from "@/share/client/hooks";
+import {withHandleError} from "@/share/lib/apiService";
 
 
-export async function getServerSideProps({req, query}: GetServerSidePropsContext) {
+export const getServerSideProps = withHandleError(async ({req, query}: GetServerSidePropsContext) => {
     const usersNumPage = getUsersPageFromQuery(query)
-    const userPage = await parseResponseOrError(fetchUsers(usersNumPage, req))
-
-    const roles = await parseResponseOrError(fetchRoles(0, req))
+    const userPage = await fetchUsers(usersNumPage, req)
+    const roles = await fetchRoles(0, req)
 
     return {
         props: {userPage, roles}
     }
 
-}
+})
 
 function AdminUsersPage({userPage, roles}: InferGetServerSidePropsType<typeof getServerSideProps>) {
     const router = useAppRouter()
@@ -39,7 +38,6 @@ function AdminUsersPage({userPage, roles}: InferGetServerSidePropsType<typeof ge
                     <UserListWidget users={userPage.users} roles={roles}/>
                 </Tabs.Panel>
             </Tabs>
-
         </>
     )
 

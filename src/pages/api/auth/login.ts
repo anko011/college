@@ -6,11 +6,12 @@ import {authenticateByCredentials} from "@/share/lib/authService";
 
 const isIncorrectCredentials = (response: Response) => response.status === 403
 
+
+//TODO: AUTH
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     if (req.method === 'POST') {
         const response = await authenticateByCredentials(req.body)
         if (isIncorrectCredentials(response)) return res.status(response.status).json(await response.json())
-
         const tokenSet = await response.json()
         if (!isTokenSet(tokenSet)) throw new Error('Получен некорректный формат токенов')
 
@@ -27,4 +28,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 message: 'Авторизация прошла успешно'
             })
     }
+
+    return res.status(400).json({message: `Метод ${req.method} не поддерживается`})
 }

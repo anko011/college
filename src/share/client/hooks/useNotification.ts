@@ -16,6 +16,16 @@ export function useNotification(title: string) {
             } else {
                 this.errorNotify(messageError)
             }
+        },
+        async handlerError(executor: () => void, messageSuccess: string, errorMessage: string) {
+            try {
+                await executor()
+                this.successNotify(messageSuccess)
+            } catch (error) {
+                if (error instanceof Error) this.errorNotify(error.message ?? errorMessage)
+                throw error
+            }
+
         }
     })
 }

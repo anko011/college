@@ -1,7 +1,27 @@
+type HTTPResponseStatus = 200 | 201 | 400 | 403
+
 export interface BodyWithMessage {
     message: string
 }
 
-export interface BackendResponse<T> extends Response {
+
+export interface SuccessBackendResponse<T extends object> extends Response {
+    status: 200 | 201
+    ok: true
+
     json(): Promise<T>
 }
+
+
+export interface BackendErrorMessage {
+    message: string
+}
+
+export interface ErrorBackendResponse extends Response {
+    status: Exclude<HTTPResponseStatus, 200 | 201>
+    ok: false
+
+    json(): Promise<BackendErrorMessage>
+}
+
+export type BackendResponse<T extends object> = ErrorBackendResponse | SuccessBackendResponse<T>

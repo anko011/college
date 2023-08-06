@@ -23,7 +23,6 @@ type EditUserFormProps = Omit<UpdateUserDto, 'password'> & {
     roles: Role[]
 }
 
-
 const dictionary = getUserEditFeatureDictionary('ru')
 
 export const EditUserForm = (
@@ -53,18 +52,11 @@ export const EditUserForm = (
         }
     })
 
-    const handleSubmit = async (values: typeof form.values) => {
-        const response = await fetchUpdateUser(mapToUpdateUserDto(id, values))
-        const data = await response.json()
+    const handleSubmit = (values: typeof form.values) => {
+        notification.handlerError(async () => {
+            await fetchUpdateUser(mapToUpdateUserDto(id, values))
+        }, dictionary.notification.success, dictionary.notification.error)
 
-        console.log(response)
-
-        const errorMessage = 'message' in data
-            ? data.message
-            : dictionary.notification.error
-
-
-        notification.byResponseNotify(response, dictionary.notification.success, errorMessage)
         form.reset()
     }
 

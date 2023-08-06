@@ -1,5 +1,5 @@
 import {isRole} from '@/entities/role/@x'
-import {User, UserWithRole} from "./types";
+import {User, UserPage, UserWithRole} from "./types";
 
 
 export function isUser(obj: unknown): obj is User {
@@ -12,10 +12,16 @@ export function isUser(obj: unknown): obj is User {
         'login' in obj && typeof obj.login === 'string')
 }
 
-
 export function isUserWithRole(obj: unknown): obj is UserWithRole {
     return (
         isUser(obj) && 'role' in obj && isRole(obj.role)
     )
 }
 
+export const isUserPage = (obj: unknown): obj is UserPage => {
+    return (
+        typeof obj === 'object' && !!obj &&
+        'count' in obj && typeof obj.count === 'number' &&
+        'users' in obj && Array.isArray(obj.users) && obj.users.every(isUserWithRole)
+    )
+}

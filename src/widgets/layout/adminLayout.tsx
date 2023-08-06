@@ -4,6 +4,8 @@ import {IconBrandPagekit, IconCategory, IconLogout, IconShieldLock, IconUsers} f
 import NextLink from 'next/link'
 import {useRouter} from "next/router";
 import {MantineProvider} from "@/share/providers";
+import {signOut} from "@/features/auth";
+import ErrorBoundary from "@/share/client/components/error-boundary";
 
 type Route = {
     href: string
@@ -23,13 +25,9 @@ export function AdminLayout({children}: PropsWithChildren) {
     const [isLoadingPage, setIsLoadingPage] = useState(false)
 
     const handleLogout = async () => {
-        await fetch('/api/auth/logout/', {
-            method: 'POST'
-        })
-
+        const response = await signOut()
         await router.push('/')
     }
-
 
     useEffect(() => {
         const handleStart = () => {
@@ -52,41 +50,43 @@ export function AdminLayout({children}: PropsWithChildren) {
     }, [router])
 
     return (
-        <MantineProvider>
-            <AppShell
-                navbar={
-                    <Navbar p="md" width={{sm: 200, lg: 300}}>
-                        <Navbar.Section>
-                            {navbarRoutes.map(route => (
+        <ErrorBoundary>
+            <MantineProvider>
+                <AppShell
+                    navbar={
+                        <Navbar p="md" width={{sm: 200, lg: 300}}>
+                            <Navbar.Section>
+                                {navbarRoutes.map(route => (
+                                    <NavLink
+                                        key={route.href}
+                                        component={NextLink}
+                                        href={route.href}
+                                        label={route.label}
+                                        icon={route.icon}
+                                        active={router.pathname === route.href}
+                                    />
+                                ))}
                                 <NavLink
-                                    key={route.href}
-                                    component={NextLink}
-                                    href={route.href}
-                                    label={route.label}
-                                    icon={route.icon}
-                                    active={router.pathname === route.href}
+                                    label='Выйти'
+                                    icon={<IconLogout/>}
+                                    onClick={handleLogout}
                                 />
-                            ))}
-                            <NavLink
-                                label='Выйти'
-                                icon={<IconLogout/>}
-                                onClick={handleLogout}
-                            />
-                            <NavLink component={NextLink} href='/admin/login' label='Логин'/>
+                                <NavLink component={NextLink} href='/admin/login' label='Логин'/>
 
-                        </Navbar.Section>
-                    </Navbar>
-                }
-            >
-                <Transition transition="fade" mounted={!isLoadingPage}>
-                    {(styles) => (
-                        <Container style={styles} mih="100%">
-                            {children}
-                        </Container>
-                    )}
-                </Transition>
-            </AppShell>
-        </MantineProvider>
+                            </Navbar.Section>
+                        </Navbar>
+                    }
+                >
+                    <Transition transition="fade" mounted={!isLoadingPage}>
+                        {(styles) => (
+                            <Container style={styles} mih="100%">
+                                {children}
+                            </Container>
+                        )}
+                    </Transition>
+                </AppShell>
+            </MantineProvider>
+        </ErrorBoundary>
     )
 }
 

@@ -8,13 +8,15 @@ import {
     withRisingError
 } from "@/share/lib/apiService";
 import {withAuthHeader} from "@/share/lib/authService";
-import {CreateUserDto, UpdateUserDto, UserPage, UserWithRole} from "./types";
+import {CreateUserDto, SearchUserDto, UpdateUserDto, UserPage, UserWithRole} from "./types";
 import {isUserPage, isUserWithRole} from "@/entities/user/lib";
+import {createSearchUserQueryString} from "@/entities/user/model";
 
 const {origin} = getBackendHTTPConfig()
 
-const userFetcher = async (page: number = 0, req?: GetServerSidePropsContext['req']): Promise<BackendResponse<UserPage>> => {
-    const url = req ? `${origin}/admin/get-users?page=${page}` : '/api/admin/get-users'
+const userFetcher = async (page: number = 0, limitUsers: number = 10, searchDto?: SearchUserDto, req?: GetServerSidePropsContext['req']): Promise<BackendResponse<UserPage>> => {
+    const searchQuery = createSearchUserQueryString(searchDto)
+    const url = req ? `${origin}/admin/get-users?page=${page}&${searchQuery}&limit=${limitUsers}` : `/api/admin/get-users?page=${page}&${searchQuery}&limit=${limitUsers}`
     return await fetcher(url, withAuthHeader({
         method: 'GET'
     }, req))

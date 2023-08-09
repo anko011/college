@@ -1,4 +1,4 @@
-import {ActionIcon, Box, Button, Group} from "@mantine/core";
+import {ActionIcon, Box, Button, Group, LoadingOverlay, Stack} from "@mantine/core";
 import {modals} from "@mantine/modals";
 import {IconPencil} from "@tabler/icons-react";
 import {fetchUpdateUser, UpdateUserDto, UserWithRole} from "@/entities/user";
@@ -9,10 +9,10 @@ import {
     BaseUserFormProvider,
     useBaseUserForm
 } from "@/entities/user/client";
-import {useNotification} from "@/share/client/hooks";
-
+import {useAppRouter, useNotification} from "@/share/client/hooks";
 import {getUserEditFeatureDictionary} from "./i18n";
 import {mapToUpdateUserDto} from "./lib";
+import {useState} from "react";
 
 interface UserProps {
     user: UserWithRole
@@ -36,7 +36,9 @@ export const EditUserForm = (
         roles
     }: EditUserFormProps) => {
 
+    const router = useAppRouter()
     const notification = useNotification(dictionary.notification.title)
+    const [isShowLoader, setIsShowLoader] = useState(false)
     const form = useBaseUserForm({
         initialValues: {
             firstName: firstName,
@@ -52,35 +54,46 @@ export const EditUserForm = (
         }
     })
 
-    const handleSubmit = (values: typeof form.values) => {
-        notification.handlerError(async () => {
-            await fetchUpdateUser(mapToUpdateUserDto(id, values))
+    const handleSubmit = async (values: typeof form.values) => {
+        setIsShowLoader(true)
+        await notification.handlerError(async () => {
+            const user = await fetchUpdateUser(mapToUpdateUserDto(id, values))
+            form.setValues({
+                firstName: user.firstName,
+                secondName: user.secondName,
+                patronymic: user.patronymic,
+                roleId: user.role.id.toString(),
+                login: user.login,
+                password: ''
+            })
         }, dictionary.notification.success, dictionary.notification.error)
-
-        form.reset()
+        setIsShowLoader(false)
+        await router.safeReload()
     }
 
     return (
         <Box component="form" onSubmit={form.onSubmit(handleSubmit)}>
-            <BaseUserFormProvider form={form}>
-                <BaseUserFormFields roles={roles}/>
-
-                <Group position="right" mt="md">
-                    <Button
-                        variant="default"
-                        onClick={() => modals.closeAll()}
-                    >
-                        {dictionary.form.buttons.cancel}
-                    </Button>
-                    <Button type="submit">{dictionary.form.buttons.confirm}</Button>
-                </Group>
-            </BaseUserFormProvider>
+            <LoadingOverlay visible={isShowLoader}/>
+            <Stack>
+                <BaseUserFormProvider form={form}>
+                    <BaseUserFormFields roles={roles}/>
+                    <Group position="right" mt="md">
+                        <Button
+                            variant="default"
+                            onClick={() => modals.closeAll()}
+                        >
+                            {dictionary.form.buttons.cancel}
+                        </Button>
+                        <Button type="submit">{dictionary.form.buttons.confirm}</Button>
+                    </Group>
+                </BaseUserFormProvider>
+            </Stack>
         </Box>
     )
 }
 
-export function EditUserButton({user, roles}: UserProps) {
 
+export function EditUserButton({user, roles}: UserProps) {
     const handleClick = () => {
         modals.open({
             title: dictionary.modal.title,

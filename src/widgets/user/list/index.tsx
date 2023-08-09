@@ -1,51 +1,29 @@
-import {Button, Group, Input, Pagination, Stack, Table, Text, TextInput} from "@mantine/core";
+import {Group, Pagination, Stack, Table, Text} from "@mantine/core";
 import {UserTableHeader, UserTableRow} from "@/entities/user/client";
-import {getUsersPageFromQuery, UserWithRole} from "@/entities/user";
+import {getUserConfig, getUsersPageFromQuery, UserWithRole} from "@/entities/user";
 import {Role} from "@/entities/role";
-import {useRouter} from "next/router";
-import {DeleteUserButton, EditUserButton} from "@/features/user";
+import {DeleteUserButton, EditUserButton, UserSearchForm} from "@/features/user";
+import {useAppRouter} from "@/share/client/hooks";
 
 interface UserListWidgetProps {
     users: UserWithRole[]
     roles: Role[]
+    totalCountPages: number
 }
 
-export function UserListWidget({users, roles}: UserListWidgetProps) {
-    const router = useRouter()
+const {queryPageKey} = getUserConfig()
+
+export function UserListWidget({users, roles, totalCountPages}: UserListWidgetProps) {
+    const router = useAppRouter()
     const page = getUsersPageFromQuery(router.query)
 
     const handleChangePage = (newPage: number) => {
-        router.push({
-            pathname: '/admin/users',
-            query: {
-                ...router.query,
-                usersPage: newPage - 1
-            }
-        })
+        router.updateQuery(queryPageKey, (newPage - 1).toString())
     }
 
     return (
         <Stack>
-            <Group noWrap>
-                <Input.Wrapper w="100%">
-                    <TextInput placeholder="Логин"/>
-                </Input.Wrapper>
-
-                <Input.Wrapper w="100%">
-                    <TextInput placeholder="Имя"/>
-                </Input.Wrapper>
-
-                <Input.Wrapper w="100%">
-                    <TextInput placeholder="Фамилия"/>
-                </Input.Wrapper>
-
-                <Input.Wrapper w="100%">
-                    <TextInput placeholder="Отчество"/>
-                </Input.Wrapper>
-
-                <Button>Поиск</Button>
-            </Group>
-
+            <UserSearchForm/>
             <Table>
                 <UserTableHeader actionTitles={[
                     <Group key={1} position="right">
@@ -70,7 +48,15 @@ export function UserListWidget({users, roles}: UserListWidgetProps) {
                 ))}
                 </tbody>
             </Table>
-            <Pagination total={2} position="center" value={(page ?? 0) + 1} onChange={handleChangePage}/>
+            {totalCountPages > 0 && (
+                <Pagination
+                    total={totalCountPages}
+                    value={(page ?? 0) + 1}
+                    onChange={handleChangePage}
+                    position="center"
+                />
+            )}
+
         </Stack>
     )
 }

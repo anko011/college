@@ -1,9 +1,8 @@
-type HTTPResponseStatus = 200 | 201 | 400 | 403
+type HTTPResponseStatus = 200 | 201 | 400 | 401 | 403
 
 export interface BodyWithMessage {
     message: string
 }
-
 
 export interface SuccessBackendResponse<T extends object> extends Response {
     status: 200 | 201
@@ -11,7 +10,6 @@ export interface SuccessBackendResponse<T extends object> extends Response {
 
     json(): Promise<T>
 }
-
 
 export interface BackendErrorMessage {
     message: string

@@ -3,6 +3,7 @@ import {NextResponse} from 'next/server'
 import {getUserWithRoleFromTokenSet} from "@/entities/user";
 import {withAuthMiddleware} from "@/share/lib/authService";
 import {getEncodedSession} from "@/share/lib/sessionService";
+import {isExpiredToken} from "@/share/lib/tokenService";
 
 const ADMIN_ROLE = 'ROLE_ADMIN'
 
@@ -15,6 +16,7 @@ const withAdminGuard = (middleware: NextMiddleware): NextMiddleware => async (re
     if (isAdminPath(request) && !isLoginPage(request)) {
         const session = getEncodedSession(request)
         if (!session) return redirectToLoginPage(request)
+        if (isExpiredToken(session.tokenSet.accessToken)) return redirectToLoginPage(request)
 
         const user = getUserWithRoleFromTokenSet(session.tokenSet)
         if (!user || user.role.name !== ADMIN_ROLE) return redirectToLoginPage(request)

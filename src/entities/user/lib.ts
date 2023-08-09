@@ -25,3 +25,4 @@ export const isUserPage = (obj: unknown): obj is UserPage => {
         'users' in obj && Array.isArray(obj.users) && obj.users.every(isUserWithRole)
     )
 }
+

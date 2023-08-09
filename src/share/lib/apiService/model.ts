@@ -12,7 +12,7 @@ export class AppError extends Error {
 
 export class NotAuthorizeError extends AppError {
     constructor() {
-        super('Пользователь не авторизован', 403);
+        super('Пользователь не авторизован', 401);
     }
 }
 
@@ -23,7 +23,7 @@ export const withRisingError = <T extends object, A extends any[]>(fetcher: (...
     async (...args: A): Promise<SuccessBackendResponse<T>> => {
         const response = await fetcher(...args)
         if (!response.ok) {
-            if (response.status === 403) throw new NotAuthorizeError()
+            if (response.status === 401) throw new NotAuthorizeError()
 
             const error = await response.json()
             throw new AppError(error.message, response.status)
@@ -42,9 +42,9 @@ export const withCheckData = <T extends object, A extends any[]>(successFetcher:
         throw new AppError(`${response.url}: Получен неверный формат сущности`, response.status)
     }
 
-export const withHandleError = <T extends object>(getServerSideProps: GetServerSideProps) => (ctx: GetServerSidePropsContext) => {
+export const withHandleError = <T extends object>(getServerSideProps: GetServerSideProps) => async (ctx: GetServerSidePropsContext) => {
     try {
-        return getServerSideProps(ctx)
+        return await getServerSideProps(ctx)
     } catch (error) {
         if (error instanceof NotAuthorizeError) return {
             redirect: {

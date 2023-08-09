@@ -11,9 +11,8 @@ export function isTokenSet(obj: unknown): obj is TokenSet {
 export function isExpiredToken(accessToken: string): boolean {
     const payload = decodeToken(accessToken)
     if (!payload.exp) return false
-
-    const timestamp = Date.now()
-    return timestamp - payload.exp < 0
+    const timestamp = Date.now() / 1000
+    return payload.exp - timestamp <= 0
 }
 
 

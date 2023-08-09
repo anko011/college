@@ -1,4 +1,4 @@
-import {Box, Button, Group} from "@mantine/core";
+import {Box, Button, Group, LoadingOverlay, Stack} from "@mantine/core";
 import {Role} from "@/entities/role";
 import {fetchCreateUser} from "@/entities/user";
 import {
@@ -10,6 +10,7 @@ import {
 import {useNotification} from "@/share/client/hooks";
 import {getUserCreateFeatureDictionary} from "./i18n";
 import {mapToCreateUserDto} from "./lib";
+import {useState} from "react";
 
 interface UserCreateFormProps {
     roles: Role[]
@@ -19,6 +20,7 @@ const dictionary = getUserCreateFeatureDictionary('ru')
 
 export function UserCreateForm({roles}: UserCreateFormProps) {
     const notification = useNotification(dictionary.notification.title)
+    const [isShowLoader, setIsShowLoader] = useState(false)
     const form = useBaseUserForm({
         initialValues: {
             firstName: '',
@@ -32,23 +34,27 @@ export function UserCreateForm({roles}: UserCreateFormProps) {
     })
 
     const handleSubmit = async (values: typeof form.values) => {
+        setIsShowLoader(true)
         await notification.handlerError(async () => {
             await fetchCreateUser(mapToCreateUserDto(values))
         }, dictionary.notification.success, dictionary.notification.error)
-
         form.reset()
+        setIsShowLoader(false)
     }
 
 
     return (
         <Box component="form" onSubmit={form.onSubmit(handleSubmit)}>
-            <BaseUserFormProvider form={form}>
-                <BaseUserFormFields roles={roles}/>
+            <LoadingOverlay visible={isShowLoader}/>
+            <Stack>
+                <BaseUserFormProvider form={form}>
+                    <BaseUserFormFields roles={roles}/>
 
-                <Group position="right" mt="md">
-                    <Button type="submit">{dictionary.form.buttons.confirm}</Button>
-                </Group>
-            </BaseUserFormProvider>
+                    <Group position="right" mt="md">
+                        <Button type="submit">{dictionary.form.buttons.confirm}</Button>
+                    </Group>
+                </BaseUserFormProvider>
+            </Stack>
         </Box>
     )
 }

@@ -1,5 +1,5 @@
 export const getUserConfig = () => {
     return {
-        queryPageKey: 'usersPage'
+        queryPageKey: 'usersPage',
     }
 }

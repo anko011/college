@@ -15,8 +15,8 @@ export const SearchRoleForm = () => {
         },
     })
 
-    const handleSubmit = (values: typeof form.values) => {
-        router.updateQueries({...values})
+    const handleSubmit = async (values: typeof form.values) => {
+        await router.updateQueries({...values})
     }
 
     return (

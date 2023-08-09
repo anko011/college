@@ -3,14 +3,14 @@ import {IconTrash} from "@tabler/icons-react";
 import {useNotification} from "@/share/client/hooks";
 import {modals} from "@mantine/modals";
 import {useAppRouter} from "@/share/client/hooks/useAppRouter";
-import {getDeleteRoleFeautureDictionary} from "@/features/role/delete/i18n";
+import {getDeleteRoleDictionary} from "@/features/role/delete/i18n";
 import {fetchDeleteRole} from "@/entities/role";
 
 interface DeleteRoleButtonProps {
     roleId: number
 }
 
-const dictionary = getDeleteRoleFeautureDictionary('ru')
+const dictionary = getDeleteRoleDictionary('ru')
 
 
 export const DeleteRoleButton = ({roleId}: DeleteRoleButtonProps) => {

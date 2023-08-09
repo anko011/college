@@ -3,7 +3,3 @@ export interface AuthBackendConfig {
     authTokenName: string
 }
 
-export interface Credentials {
-    login: string
-    password: string
-}

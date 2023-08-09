@@ -15,10 +15,10 @@ export const UserSearchForm = () => {
         },
     })
 
-    const handleSubmit = (values: typeof form.values) => {
-        router.updateQueries({...values})
+    const handleSubmit = async (values: typeof form.values) => {
+        await router.updateQueries({...values})
     }
-
+    //TODO: add locale directions
     return (
         <Box component="form" onSubmit={form.onSubmit(handleSubmit)}>
             <Flex gap="md">

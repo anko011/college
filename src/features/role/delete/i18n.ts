@@ -21,7 +21,7 @@ const matcher = {
     'ru': LOCALE_RU
 }
 
-export const getDeleteRoleFeautureDictionary = (locale: Locale) => {
+export const getDeleteRoleDictionary = (locale: Locale) => {
     const baseDictionary = getBaseDictionary(locale)
     return deepmerge(baseDictionary, matcher[locale])
 }

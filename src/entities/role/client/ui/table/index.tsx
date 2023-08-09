@@ -1,10 +1,8 @@
 import {ReactElement} from "react";
-import {Permission} from "@/entities/permission/@x";
 import {getRoleTableDictionary} from "./i18n";
 
 interface RoleRowProps {
     name: string
-    permissions: Permission[]
     actions?: ReactElement[]
 }
 
@@ -30,7 +28,7 @@ export function RoleTableHeader({actionTitles}: RoleTableHeaderProps) {
     )
 }
 
-export function RoleTableRow({name, permissions, actions}: RoleRowProps) {
+export function RoleTableRow({name, actions}: RoleRowProps) {
     return (
         <tr>
             <td>{name}</td>

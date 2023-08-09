@@ -18,8 +18,8 @@ export const RoleListWidget = ({roles, totalCountPages, permissions}: RoleListWi
     const router = useAppRouter()
     const page = getRolesPageFromQuery(router.query)
 
-    const handleChangePage = (newPage: number) => {
-        router.updateQuery(queryPageKey, (newPage - 1).toString())
+    const handleChangePage = async (newPage: number) => {
+        await router.updateQuery(queryPageKey, (newPage - 1).toString())
     }
 
     return (
@@ -37,7 +37,6 @@ export const RoleListWidget = ({roles, totalCountPages, permissions}: RoleListWi
                     <RoleTableRow
                         key={role.id}
                         name={role.name}
-                        permissions={role.permissions}
                         actions={[
                             <Group key={1}>
                                 <PermissionRowIcons permissionsIds={role.permissions.map(permission => permission.id)}/>

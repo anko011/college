@@ -3,12 +3,14 @@ import {Tabs} from "@mantine/core";
 import {withAdminLayout} from "@/widgets/layout";
 import {UserListWidget} from "@/widgets/user";
 import {UserCreateForm} from "@/features/user";
-import {fetchUsers, createSearchUserDto, getUsersPageFromQuery} from "@/entities/user";
+import {createSearchUserDto, fetchUsers, getUserConfig, getUsersPageFromQuery} from "@/entities/user";
 import {fetchRoles} from "@/entities/role";
 import {useAppRouter} from "@/share/client/hooks";
 import {withHandleError} from "@/share/lib/apiService";
 
 const LIMIT_USERS = 10
+
+const userConfig = getUserConfig()
 
 export const getServerSideProps = withHandleError(async ({req, query}: GetServerSidePropsContext) => {
     const usersNumPage = getUsersPageFromQuery(query)

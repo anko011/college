@@ -25,7 +25,7 @@ const withAdminGuard = (middleware: NextMiddleware): NextMiddleware => async (re
     return middleware(request, event);
 }
 
-async function middleware(request: NextRequest) {
+async function middleware(_: NextRequest) {
     return NextResponse.next()
 }
 

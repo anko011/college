@@ -17,8 +17,8 @@ export function UserListWidget({users, roles, totalCountPages}: UserListWidgetPr
     const router = useAppRouter()
     const page = getUsersPageFromQuery(router.query)
 
-    const handleChangePage = (newPage: number) => {
-        router.updateQuery(queryPageKey, (newPage - 1).toString())
+    const handleChangePage = async (newPage: number) => {
+        await router.updateQuery(queryPageKey, (newPage - 1).toString())
     }
 
     return (

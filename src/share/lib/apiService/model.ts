@@ -6,7 +6,7 @@ export class AppError extends Error {
         public message: string,
         public statusCode: number
     ) {
-        super();
+        super(message);
     }
 }
 

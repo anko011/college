@@ -25,7 +25,7 @@ export function AdminLayout({children}: PropsWithChildren) {
     const [isLoadingPage, setIsLoadingPage] = useState(false)
 
     const handleLogout = async () => {
-        const response = await signOut()
+        await signOut()
         await router.push('/')
     }
 

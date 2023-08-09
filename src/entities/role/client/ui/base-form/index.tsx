@@ -1,6 +1,6 @@
 import {useState} from "react";
 import {Input, TextInput, TransferList, TransferListData, TransferListItem} from "@mantine/core";
-import {createFormContext, isNotEmpty} from "@mantine/form";
+import {createFormContext} from "@mantine/form";
 import {BaseRoleDto} from "@/entities/role";
 import {Permission} from "@/entities/permission";
 import {getBaseRoleFormDictionary} from "./i18n";
@@ -11,9 +11,6 @@ export const [BaseRoleFormProvider, useBaseRoleFormContext, useBaseRoleForm] = c
     permissionIds: string[]
 }>()
 
-export const baseRoleFormFieldsValidate = {
-    name: isNotEmpty(dictionary.form.errors.required)
-}
 
 interface BaseRoleFormFieldsProps {
     permissions: Permission[]

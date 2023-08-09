@@ -1,13 +1,12 @@
 import {withAdminLayout} from "@/widgets/layout/adminLayout";
-import type {GetStaticPathsResult, GetStaticPropsContext, InferGetStaticPropsType} from "next";
-import {getAllPages, getPageById} from "@/entities/page/api";
-import {withFallback} from "../../../../share/client/hoc";
+import type {GetStaticPropsContext, InferGetStaticPropsType} from "next";
+import {withFallback} from "@/share/client/hoc";
 
-export async function getStaticPaths(): Promise<GetStaticPathsResult> {
-    const pages = await getAllPages()
-    const paths = pages.map(page => ({params: {id: page.id.toString()}}))
-    return {paths, fallback: true}
-}
+// export async function getStaticPaths(): Promise<GetStaticPathsResult> {
+//     const pages = await getAllPages()
+//     const paths = pages.map(page => ({params: {id: page.id.toString()}}))
+//     return {paths, fallback: true}
+// }
 
 export async function getStaticProps({params}: GetStaticPropsContext) {
 
@@ -15,14 +14,13 @@ export async function getStaticProps({params}: GetStaticPropsContext) {
         throw new Error('Не указан или некорректно указан ID для получения страницы в params')
     }
 
-    const page = await getPageById(params.id)
-    return {props: {page}}
+    return {props: {}}
 }
 
-function AdminPageEditorPage({page}: InferGetStaticPropsType<typeof getStaticProps>) {
+function AdminPageEditorPage({}: InferGetStaticPropsType<typeof getStaticProps>) {
     return (
         <div>
-            {JSON.stringify(page)}
+            Page editor
         </div>
     )
 }

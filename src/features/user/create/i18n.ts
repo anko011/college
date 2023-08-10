@@ -1,33 +1,18 @@
-import {getCommonDictionary, Locale} from "@/share/lib/i18nService";
-import {deepmerge} from "deepmerge-ts";
+import {Locale} from "@/share/lib/i18nService";
 
 
-const LOCALE_RU = {
+const RU_DICTIONARY = {
     notification: {
         title: 'Создание пользователя',
         success: 'Пользователь успешно создан',
         error: 'Не удалось создать пользователя'
     },
-    form: {
-        fields: {
-            firstName: 'Имя',
-            secondName: 'Фамилия',
-            patronymic: 'Отчество',
-            role: 'Роль',
-            login: 'Логин',
-            password: 'Пароль'
-        },
-        buttons: {
-            confirm: 'Создать'
-        }
-    }
 }
 
-const localeMapping = {
-    ru: LOCALE_RU
+const mapper = {
+    ru: RU_DICTIONARY
 }
 
-export function getUserCreateFeatureDictionary(locale: Locale) {
-    const baseDictionary = getCommonDictionary(locale)
-    return deepmerge(baseDictionary, localeMapping[locale])
+export function getUserCreateDictionary(locale: Locale) {
+    return mapper[locale]
 }

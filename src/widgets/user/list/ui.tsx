@@ -1,21 +1,22 @@
 import {Group, Pagination, Stack, Table, Text} from "@mantine/core";
 import {UserTableHeader, UserTableRow} from "@/entities/user/client";
-import {getUserConfig, getUsersPageFromQuery, UserWithRole} from "@/entities/user";
-import {Role} from "@/entities/role";
 import {DeleteUserButton, EditUserButton, UserSearchForm} from "@/features/user";
 import {useAppRouter} from "@/share/client/hooks";
+import {useUsers} from "@/entities/user/client/hooks";
 
-interface UserListWidgetProps {
-    users: UserWithRole[]
-    roles: Role[]
+import {getUsersListConfig} from "./config";
+import {getUsersPageFromQuery} from "./model";
+
+interface UsersListWidgetProps {
     totalCountPages: number
 }
 
-const {queryPageKey} = getUserConfig()
+const {queryPageKey} = getUsersListConfig()
 
-export function UserListWidget({users, roles, totalCountPages}: UserListWidgetProps) {
+export function UsersListWidget({totalCountPages}: UsersListWidgetProps) {
     const router = useAppRouter()
     const page = getUsersPageFromQuery(router.query)
+    const users = useUsers()
 
     const handleChangePage = async (newPage: number) => {
         await router.updateQuery(queryPageKey, (newPage - 1).toString())
@@ -40,7 +41,7 @@ export function UserListWidget({users, roles, totalCountPages}: UserListWidgetPr
                         patronymic={user.patronymic}
                         actions={[
                             <Group key={1} position="right">
-                                <EditUserButton user={user} roles={roles}/>
+                                <EditUserButton user={user}/>
                                 <DeleteUserButton userId={user.id}/>
                             </Group>
                         ]}

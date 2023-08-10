@@ -60,14 +60,11 @@ const AdminRolesPage = ({rolesPage, permissions}: InferGetServerSidePropsType<ty
                     onTabChange={handleTabChange}
                 >
                     <Tabs.List grow mb="md">
-                        <Tabs.Tab
-                            value={rolesPageConfig.createRoleQueryKey}
-                        >
+                        <Tabs.Tab value={rolesPageConfig.createRoleQueryKey}>
                             {rolesPageDictionary.tabs.createRole}
                         </Tabs.Tab>
-                        <Tabs.Tab
-                            value={rolesPageConfig.listRolesQueryKey}
-                        >
+
+                        <Tabs.Tab value={rolesPageConfig.listRolesQueryKey}>
                             {rolesPageDictionary.tabs.listRoles}
                         </Tabs.Tab>
                     </Tabs.List>

@@ -1,5 +1,3 @@
-export const getRolesListConfig = () => {
-    return {
-        queryPageKey: 'roleListPage'
-    }
-}
+export const getRolesListConfig = () => ({
+    queryPageKey: 'roleListPage'
+})

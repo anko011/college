@@ -1,2 +1,2 @@
-export * from './row-icons'
-export * from './form-fileds'
+export * from './rowIcons'
+export * from './formFileds'

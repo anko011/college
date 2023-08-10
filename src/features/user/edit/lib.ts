@@ -1,7 +1,7 @@
-import {useBaseUserForm} from "@/entities/user/client";
 import {UpdateUserDto} from "@/entities/user";
+import {EditUserForm} from "./index";
 
-export const mapToUpdateUserDto = (userId: number, values: ReturnType<typeof useBaseUserForm>['values']): UpdateUserDto => ({
+export const mapToUpdateUserDto = (userId: number, values: EditUserForm): UpdateUserDto => ({
     ...values,
     id: userId,
     roleId: parseInt(values.roleId),

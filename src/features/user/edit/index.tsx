@@ -1,71 +1,63 @@
-import {ActionIcon, Box, Button, Group, LoadingOverlay, Stack} from "@mantine/core";
+import {ActionIcon, Box, Button, Group, Input, LoadingOverlay, Stack, TextInput} from "@mantine/core";
+import {useState} from "react";
+import {isNotEmpty, useForm} from "@mantine/form";
 import {modals} from "@mantine/modals";
 import {IconPencil} from "@tabler/icons-react";
-import {fetchUpdateUser, UpdateUserDto, UserWithRole} from "@/entities/user";
-import {Role} from "@/entities/role";
-import {
-    BaseUserFormFields,
-    baseUserFormFieldsValidate,
-    BaseUserFormProvider,
-    useBaseUserForm
-} from "@/entities/user/client";
+import {fetchUpdateUser, getUserDictionary, UserWithRole} from "@/entities/user";
+import {RolesContext, RoleSelect, useRoles} from "@/entities/role/client";
+import {getCommonDictionary} from "@/share/lib/i18nService";
 import {useAppRouter, useNotification} from "@/share/client/hooks";
-import {getUserEditFeatureDictionary} from "./i18n";
+import {getUserEditDictionary} from "./i18n";
 import {mapToUpdateUserDto} from "./lib";
-import {useState} from "react";
 
 interface UserProps {
     user: UserWithRole
-    roles: Role[]
 }
 
-type EditUserFormProps = Omit<UpdateUserDto, 'password'> & {
-    roles: Role[]
+interface EditUserFormProps {
+    user: UserWithRole
 }
 
-const dictionary = getUserEditFeatureDictionary('ru')
+export interface EditUserForm {
+    firstName: string
+    secondName: string
+    patronymic: string
+    login: string
+    password: string
+    roleId: string
+}
 
-export const EditUserForm = (
-    {
-        id,
-        login,
-        roleId,
-        secondName,
-        firstName,
-        patronymic,
-        roles
-    }: EditUserFormProps) => {
+const commonDictionary = getCommonDictionary('ru')
+const userDictionary = getUserDictionary('ru')
+const dictionary = getUserEditDictionary('ru')
 
+export const EditUserForm = ({user}: EditUserFormProps) => {
     const router = useAppRouter()
     const notification = useNotification(dictionary.notification.title)
     const [isShowLoader, setIsShowLoader] = useState(false)
-    const form = useBaseUserForm({
+    const form = useForm<EditUserForm>({
         initialValues: {
-            firstName: firstName,
-            secondName: secondName,
-            patronymic: patronymic,
-            roleId: roleId.toString(),
-            login: login,
+            firstName: user.firstName,
+            secondName: user.secondName,
+            patronymic: user.patronymic,
+            roleId: user.role.id.toString(),
+            login: user.login,
             password: '',
         },
         validate: {
-            ...baseUserFormFieldsValidate,
-            password: undefined
+            firstName: isNotEmpty(commonDictionary.errors.required),
+            secondName: isNotEmpty(commonDictionary.errors.required),
+            patronymic: isNotEmpty(commonDictionary.errors.required),
+            login: isNotEmpty(commonDictionary.errors.required),
+            roleId: isNotEmpty(commonDictionary.errors.required)
         }
     })
 
     const handleSubmit = async (values: typeof form.values) => {
         setIsShowLoader(true)
         await notification.handlerError(async () => {
-            const user = await fetchUpdateUser(mapToUpdateUserDto(id, values))
-            form.setValues({
-                firstName: user.firstName,
-                secondName: user.secondName,
-                patronymic: user.patronymic,
-                roleId: user.role.id.toString(),
-                login: user.login,
-                password: ''
-            })
+            const updatedUser = await fetchUpdateUser(mapToUpdateUserDto(user.id, values))
+            form.setValues({...updatedUser, password: undefined})
         }, dictionary.notification.success, dictionary.notification.error)
         setIsShowLoader(false)
         await router.safeReload()
@@ -75,38 +67,50 @@ export const EditUserForm = (
         <Box component="form" onSubmit={form.onSubmit(handleSubmit)}>
             <LoadingOverlay visible={isShowLoader}/>
             <Stack>
-                <BaseUserFormProvider form={form}>
-                    <BaseUserFormFields roles={roles}/>
-                    <Group position="right" mt="md">
-                        <Button
-                            variant="default"
-                            onClick={() => modals.closeAll()}
-                        >
-                            {dictionary.form.buttons.cancel}
-                        </Button>
-                        <Button type="submit">{dictionary.form.buttons.confirm}</Button>
-                    </Group>
-                </BaseUserFormProvider>
+                <Input.Wrapper label={userDictionary.user.firstName}>
+                    <TextInput {...form.getInputProps('firstName')}/>
+                </Input.Wrapper>
+
+                <Input.Wrapper label={userDictionary.user.secondName}>
+                    <TextInput {...form.getInputProps('secondName')}/>
+                </Input.Wrapper>
+
+                <Input.Wrapper label={userDictionary.user.patronymic}>
+                    <TextInput {...form.getInputProps('patronymic')}/>
+                </Input.Wrapper>
+
+                <RoleSelect {...form.getInputProps('roleId')}/>
+
+                <Input.Wrapper label={userDictionary.user.login}>
+                    <TextInput {...form.getInputProps('login')}/>
+                </Input.Wrapper>
+
+                <Input.Wrapper label={userDictionary.user.password}>
+                    <TextInput {...form.getInputProps('password')}/>
+                </Input.Wrapper>
+
+
+                <Group position="right" mt="md">
+                    <Button type="submit">{commonDictionary.buttons.edit}</Button>
+                </Group>
             </Stack>
         </Box>
     )
 }
 
 
-export function EditUserButton({user, roles}: UserProps) {
+export function EditUserButton({user}: UserProps) {
+    const roles = useRoles()
+
     const handleClick = () => {
         modals.open({
             title: dictionary.modal.title,
             centered: true,
-            children: <EditUserForm
-                id={user.id}
-                firstName={user.firstName}
-                secondName={user.secondName}
-                patronymic={user.patronymic}
-                login={user.login}
-                roleId={user.role.id}
-                roles={roles}
-            />
+            children: (
+                <RolesContext.Provider value={roles}>
+                    <EditUserForm user={user}/>
+                </RolesContext.Provider>
+            )
         })
     }
 

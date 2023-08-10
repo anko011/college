@@ -2,6 +2,7 @@ import {Locale} from "@/share/lib/i18nService";
 
 
 const RU_USER_DICTIONARY = {
+    title: 'Пользователь',
     user: {
         firstName: 'Имя',
         secondName: 'Фамилия',

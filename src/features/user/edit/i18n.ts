@@ -1,8 +1,7 @@
-import {getCommonDictionary, Locale} from "@/share/lib/i18nService";
-import {deepmerge} from "deepmerge-ts";
+import {Locale} from "@/share/lib/i18nService";
 
 
-const LOCALE_RU = {
+const RU_DICTIONARY = {
     modal: {
         title: 'Редактирование пользователя'
     },
@@ -11,27 +10,12 @@ const LOCALE_RU = {
         success: 'Пользователь успешно обновлен',
         error: 'Не удалось обновить пользователя'
     },
-    form: {
-        fields: {
-            firstName: 'Имя',
-            secondName: 'Фамилия',
-            patronymic: 'Отчество',
-            role: 'Роль',
-            login: 'Логин',
-            password: 'Пароль'
-        },
-        buttons: {
-            confirm: 'Редактировать',
-            cancel: 'Отменить'
-        }
-    }
 }
 
-const localeMapping = {
-    ru: LOCALE_RU
+const mapper = {
+    ru: RU_DICTIONARY
 }
 
-export function getUserEditFeatureDictionary(locale: Locale) {
-    const baseDictionary = getCommonDictionary(locale)
-    return deepmerge(baseDictionary, localeMapping[locale])
+export function getUserEditDictionary(locale: Locale) {
+    return mapper[locale]
 }

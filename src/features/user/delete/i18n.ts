@@ -1,7 +1,6 @@
-import {getCommonDictionary, Locale} from "@/share/lib/i18nService";
-import {deepmerge} from "deepmerge-ts";
+import {Locale} from "@/share/lib/i18nService";
 
-const LOCALE_RU = {
+const RU_DICTIONARY = {
     notification: {
         title: 'Удаление пользователя',
         success: 'Пользователь успешно удален',
@@ -9,18 +8,13 @@ const LOCALE_RU = {
     },
     modal: {
         title: 'Удаление пользователя',
-        buttons: {
-            cancel: 'Отмена',
-            confirm: 'Удалить'
-        }
     }
 }
 
-const matcher = {
-    'ru': LOCALE_RU
+const mapper = {
+    'ru': RU_DICTIONARY
 }
 
-export const getDeleteUserFeautureDictionary = (locale: Locale) => {
-    const baseDictionary = getCommonDictionary(locale)
-    return deepmerge(baseDictionary, matcher[locale])
+export const getDeleteUserDictionary = (locale: Locale) => {
+    return mapper[locale]
 }

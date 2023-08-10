@@ -1,6 +1,6 @@
 import {ReactElement} from "react";
 import {Box} from "@mantine/core";
-import {getUserTableDictionary} from "./i18n";
+import {getUserDictionary} from "../../../i18n";
 
 interface UserRowProps {
     login: string
@@ -15,16 +15,16 @@ interface UserTableHeaderProps {
     actionTitles: ReactElement[]
 }
 
-const userDictionary = getUserTableDictionary('ru')
+const userDictionary = getUserDictionary('ru')
 
 export function UserTableHeader({actionTitles}: UserTableHeaderProps) {
     return (
         <thead>
         <tr>
-            <th>{userDictionary.userTable.header.login}</th>
-            <th>{userDictionary.userTable.header.firstName}</th>
-            <th>{userDictionary.userTable.header.secondName}</th>
-            <th>{userDictionary.userTable.header.patronymic}</th>
+            <th>{userDictionary.user.login}</th>
+            <th>{userDictionary.user.firstName}</th>
+            <th>{userDictionary.user.secondName}</th>
+            <th>{userDictionary.user.patronymic}</th>
             {actionTitles?.length && actionTitles.map((title, index) => (
                 <th
                     key={index}

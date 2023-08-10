@@ -6,12 +6,14 @@ import {useRoles} from "@/entities/role/client/hooks";
 import {useAppRouter} from "@/share/client/hooks";
 import {getRolesPageFromQuery} from "./model";
 import {getRolesListConfig} from "./config";
+import {getRolesListDictionary} from "@/widgets/role/list/i18n";
 
 interface RolesListProps {
     totalCountRolePages: number
 }
 
 const {queryPageKey} = getRolesListConfig()
+const rolesListDictionary = getRolesListDictionary('ru')
 
 export const RolesList = ({totalCountRolePages}: RolesListProps) => {
     const roles = useRoles()
@@ -27,9 +29,10 @@ export const RolesList = ({totalCountRolePages}: RolesListProps) => {
 
             <Table>
                 <RoleTableHeader actionTitles={[
-                    <Text key={1}>Права</Text>,
+                    <Text key={1}>{rolesListDictionary.table.permissions}</Text>,
+
                     <Group key={2} position="right">
-                        <Text>Управление</Text>
+                        <Text>{rolesListDictionary.table.control}</Text>
                     </Group>
                 ]}/>
 

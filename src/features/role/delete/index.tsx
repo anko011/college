@@ -1,35 +1,36 @@
 import {ActionIcon, Text} from "@mantine/core";
-import {IconTrash} from "@tabler/icons-react";
-import {useNotification} from "@/share/client/hooks";
 import {modals} from "@mantine/modals";
-import {useAppRouter} from "@/share/client/hooks/useAppRouter";
-import {getDeleteRoleDictionary} from "@/features/role/delete/i18n";
+import {IconTrash} from "@tabler/icons-react";
 import {fetchDeleteRole} from "@/entities/role";
+import {useAppRouter, useNotification} from "@/share/client/hooks";
+import {getCommonDictionary} from "@/share/lib/i18nService";
+import {getDeleteRoleDictionary} from "./i18n";
 
 interface DeleteRoleButtonProps {
     roleId: number
 }
 
-const dictionary = getDeleteRoleDictionary('ru')
+const deleteRoleDictionary = getDeleteRoleDictionary('ru')
+const commonDictionary = getCommonDictionary('ru')
 
 
 export const DeleteRoleButton = ({roleId}: DeleteRoleButtonProps) => {
-    const notification = useNotification(dictionary.notification.title)
+    const notification = useNotification(deleteRoleDictionary.notification.title)
     const router = useAppRouter()
     const handleClick = async () => {
         modals.openConfirmModal({
-            title: dictionary.modal.title,
+            title: deleteRoleDictionary.modal.title,
             centered: true,
-            children: <Text>{dictionary.modal.text}</Text>,
+            children: <Text>{deleteRoleDictionary.modal.text}</Text>,
             labels: {
-                cancel: dictionary.modal.buttons.cancel,
-                confirm: dictionary.modal.buttons.confirm
+                cancel: commonDictionary.buttons.cancel,
+                confirm: commonDictionary.buttons.confirm
             },
             confirmProps: {color: 'red'},
             onConfirm: async () => {
                 await notification.handlerError(async () => {
                     await fetchDeleteRole(roleId)
-                }, dictionary.notification.success, dictionary.notification.error)
+                }, deleteRoleDictionary.notification.success, deleteRoleDictionary.notification.error)
 
                 await router.safeReload()
             }

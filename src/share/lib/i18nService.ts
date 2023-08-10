@@ -1,23 +1,29 @@
 export type Locale = 'ru'
 
-const locale_ru = {
-    form: {
-        errors: {
-            required: 'Обязательное поле'
-        },
+const RU_COMMON_DICTIONARY = {
+    buttons: {
+        create: 'Создать',
+        edit: 'Редактировать',
+        cancel: 'Отменить',
+        confirm: 'Подтвердить',
+        search: 'Найти'
     },
-    modal: {
-        buttons: {
-            confirm: 'Подтвердить',
-            cancel: 'Отменить'
-        }
-    }
+
+    fields: {
+        search: 'Поиск..',
+        notFound: 'Ничего не найдено'
+    },
+
+    errors: {
+        required: 'Обязательное поле'
+    },
+
 }
 
-export function getBaseDictionary(locale: Locale) {
-    if (locale === 'ru') {
-        return locale_ru
-    }
+const mapper = {
+    'ru': RU_COMMON_DICTIONARY
+}
 
-    return locale_ru
+export function getCommonDictionary(locale: Locale) {
+    return mapper[locale]
 }

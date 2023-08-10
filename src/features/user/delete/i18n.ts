@@ -1,4 +1,4 @@
-import {getBaseDictionary, Locale} from "@/share/lib/i18nService";
+import {getCommonDictionary, Locale} from "@/share/lib/i18nService";
 import {deepmerge} from "deepmerge-ts";
 
 const LOCALE_RU = {
@@ -21,6 +21,6 @@ const matcher = {
 }
 
 export const getDeleteUserFeautureDictionary = (locale: Locale) => {
-    const baseDictionary = getBaseDictionary(locale)
+    const baseDictionary = getCommonDictionary(locale)
     return deepmerge(baseDictionary, matcher[locale])
 }

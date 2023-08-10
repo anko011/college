@@ -1,38 +1,48 @@
-import {Box, Button, Group, LoadingOverlay, Stack} from "@mantine/core";
-import {Permission} from "@/entities/permission";
-import {BaseRoleFormFields, BaseRoleFormProvider, useBaseRoleForm} from "@/entities/role/client";
-import {useNotification} from "@/share/client/hooks";
-import {getRoleCreateFeatureDictionary} from "./i18n";
 import {useState} from "react";
-import {isNotEmpty} from "@mantine/form";
-import {mapToCreateRoleDto} from "@/features/role/create/lib";
+import {Box, Button, Group, Input, LoadingOverlay, Stack, TextInput} from "@mantine/core";
+import {isNotEmpty, useForm} from "@mantine/form";
 import {fetchCreateRole} from "@/entities/role";
+import {PermissionsTransferList} from "@/entities/permission/client";
+import {getCommonDictionary} from "@/share/lib/i18nService";
+import {useNotification} from "@/share/client/hooks";
+import {getCreateRoleDictionary} from "./i18n";
+import {mapToCreateRoleDto} from "./lib";
+import {getRoleDictionary} from "@/entities/role/i18n";
 
-interface RoleCreateFormProps {
-    permissions: Permission[]
+export type CreateRoleForm = {
+    name: string,
+    permissionIds: string[]
 }
 
-const dictionary = getRoleCreateFeatureDictionary('ru')
+const commonDictionary = getCommonDictionary('ru')
+const roleDictionary = getRoleDictionary('ru')
+const createRoleDictionary = getCreateRoleDictionary('ru')
 
-export function RoleCreateForm({permissions}: RoleCreateFormProps) {
-    const notification = useNotification(dictionary.notification.title)
+export function RoleCreateForm() {
     const [isShowLoader, setIsShowLoader] = useState(false)
-    const form = useBaseRoleForm({
+    const notification = useNotification(createRoleDictionary.notification.title)
+
+    const form = useForm<CreateRoleForm>({
         initialValues: {
             name: '',
-            permissionIds: []
+            permissionIds: [],
         },
         validate: {
-            name: isNotEmpty(dictionary.form.errors.required)
+            name: isNotEmpty(commonDictionary.errors.required)
         }
     })
 
-    const handleSubmit = async (values: typeof form.values) => {
+    const handleChangePermissions = (permissionIds: string[]) => {
+        form.setFieldValue('permissionIds', permissionIds)
+    }
 
+    const handleSubmit = async (values: typeof form.values) => {
         setIsShowLoader(true)
+
         await notification.handlerError(async () => {
             await fetchCreateRole(mapToCreateRoleDto(values))
-        }, dictionary.notification.success, dictionary.notification.error)
+        }, createRoleDictionary.notification.success, createRoleDictionary.notification.error)
+
         setIsShowLoader(false)
 
         form.reset()
@@ -41,14 +51,20 @@ export function RoleCreateForm({permissions}: RoleCreateFormProps) {
     return (
         <Box component="form" onSubmit={form.onSubmit(handleSubmit)}>
             <LoadingOverlay visible={isShowLoader}/>
-            <Stack>
-                <BaseRoleFormProvider form={form}>
-                    <BaseRoleFormFields permissions={permissions}/>
 
-                    <Group position="right" mt="md">
-                        <Button type="submit">{dictionary.form.buttons.confirm}</Button>
-                    </Group>
-                </BaseRoleFormProvider>
+            <Stack>
+                <Input.Wrapper label={roleDictionary.role.name}>
+                    <TextInput {...form.getInputProps('name')}/>
+                </Input.Wrapper>
+
+                <PermissionsTransferList
+                    selectedPermissionIds={form.values.permissionIds}
+                    onChangePermissions={handleChangePermissions}
+                />
+
+                <Group position="right" mt="md">
+                    <Button type="submit">{commonDictionary.buttons.create}</Button>
+                </Group>
             </Stack>
         </Box>
     )

@@ -23,6 +23,7 @@ export const getUsersPageFromQuery = (query: ParsedUrlQuery) => {
     if (page && page < 0) page = 0
     return page ?? 0
 }
+
 export const createSearchUserDto = (query: ParsedUrlQuery): SearchUserDto | undefined => {
     const dtoKeys: Array<keyof SearchUserDto> = ['login', 'firstName', 'secondName', 'patronymic']
 

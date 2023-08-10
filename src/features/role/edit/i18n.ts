@@ -1,5 +1,4 @@
-import {getBaseDictionary, Locale} from "@/share/lib/i18nService";
-import {deepmerge} from "deepmerge-ts";
+import {Locale} from "@/share/lib/i18nService";
 
 
 const LOCALE_RU = {
@@ -11,19 +10,12 @@ const LOCALE_RU = {
         success: 'Роль успешно обновлена',
         error: 'Не удалось обновить роль'
     },
-    form: {
-        buttons: {
-            confirm: 'Редактировать',
-            cancel: 'Отменить'
-        }
-    }
 }
 
-const localeMapping = {
+const mapper = {
     ru: LOCALE_RU
 }
 
-export function getRoleEditFeatureDictionary(locale: Locale) {
-    const baseDictionary = getBaseDictionary(locale)
-    return deepmerge(baseDictionary, localeMapping[locale])
+export function getRoleEditDictionary(locale: Locale) {
+    return mapper[locale]
 }

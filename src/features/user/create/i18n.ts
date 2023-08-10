@@ -1,4 +1,4 @@
-import {getBaseDictionary, Locale} from "@/share/lib/i18nService";
+import {getCommonDictionary, Locale} from "@/share/lib/i18nService";
 import {deepmerge} from "deepmerge-ts";
 
 
@@ -28,6 +28,6 @@ const localeMapping = {
 }
 
 export function getUserCreateFeatureDictionary(locale: Locale) {
-    const baseDictionary = getBaseDictionary(locale)
+    const baseDictionary = getCommonDictionary(locale)
     return deepmerge(baseDictionary, localeMapping[locale])
 }

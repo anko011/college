@@ -1,8 +1,10 @@
 import {UpdateRoleDto} from "@/entities/role";
-import {useBaseRoleForm} from "@/entities/role/client";
+import {EditRoleForm} from "@/features/role";
+import {createSystemName} from "@/features/role/common";
 
-export const mapToUpdateRoleDto = (roleId: number, values: ReturnType<typeof useBaseRoleForm>['values']): UpdateRoleDto => ({
+export const mapToUpdateRoleDto = (roleId: number, values: EditRoleForm): UpdateRoleDto => ({
     id: roleId,
     name: values.name,
-    permissionIds: values.permissionIds.map(permission => parseInt(permission))
+    permissionIds: values.permissionIds.map(value => parseInt(value)),
+    systemName: createSystemName(values.name)
 })

@@ -1,11 +1,13 @@
 import {ParsedUrlQuery} from "querystring";
-import {getRoleConfig} from "@/entities/role/config";
-import {getNumberFromQuery} from "@/share/lib/queryService";
+import {SearchRoleDto} from "@/entities/role/types";
+import {createObjectFromQuery} from "@/share/lib/queryService";
 
-const {queryPageKey} = getRoleConfig()
+export const createSearchRoleDto = (query: ParsedUrlQuery): SearchRoleDto | undefined => {
+    return createObjectFromQuery(query, ['name'])
+}
 
-export const getRolesPageFromQuery = (query: ParsedUrlQuery) => {
-    let page = getNumberFromQuery(query, queryPageKey)
-    if (page && page < 0) page = 0
-    return page ?? 0
+export const createSearchRoleQueryString = (dto?: SearchRoleDto) => {
+    if (!dto) return ''
+    const params = new URLSearchParams(dto as Record<string, string>)
+    return params.toString()
 }

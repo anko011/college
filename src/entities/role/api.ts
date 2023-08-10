@@ -1,19 +1,21 @@
 import {GetServerSidePropsContext} from "next";
 import {BackendResponse, fetcher, getBackendHTTPConfig, withCheckData, withRisingError} from "@/share/lib/apiService";
 import {withAuthHeader} from "@/share/lib/authService";
-import {CreateRoleDto, Role, RoleWithPermissions, UpdateRoleDto} from "./types";
-import {isRole, isRoleWithPermissions} from "./lib";
+import {CreateRoleDto, RolesPage, RoleWithPermissions, SearchRoleDto, UpdateRoleDto} from "./types";
+import {isRolePage, isRoleWithPermissions} from "./lib";
+import {createSearchRoleQueryString} from "@/entities/role/model";
 
 const {origin} = getBackendHTTPConfig()
 
-const rolesFetcher = async (page: number = 1, req?: GetServerSidePropsContext['req']): Promise<BackendResponse<Role[]>> => {
-    const url = req ? `${origin}/admin/get-roles?page=${page}` : `/api/admin/get-roles?page=${page}`
+const rolesFetcher = async (page: number = 1, searchDto?: SearchRoleDto, req?: GetServerSidePropsContext['req']): Promise<BackendResponse<RolesPage>> => {
+    const searchQuery = createSearchRoleQueryString(searchDto)
+    const url = req ? `${origin}/admin/get-roles?page=${page}&${searchQuery}` : `/api/admin/get-roles?page=${page}&${searchQuery}`
     return await fetcher(url, withAuthHeader({
         method: 'GET'
     }, req));
 }
 
-export const fetchRoles = withCheckData(withRisingError(rolesFetcher), isRole)
+export const fetchRoles = withCheckData(withRisingError(rolesFetcher), isRolePage)
 
 const createRoleFetcher = async (createRoleDto: CreateRoleDto, req?: GetServerSidePropsContext['req']): Promise<BackendResponse<RoleWithPermissions>> => {
     const url = req ? `${origin}/admin/create-role` : `/api/admin/create-role`
@@ -38,7 +40,7 @@ const deleteRoleFetcher = async (roleId: number, req?: GetServerSidePropsContext
 
 export const fetchDeleteRole = withRisingError(deleteRoleFetcher)
 
-const updateRoleFetcher = async (updateRoleDto: UpdateRoleDto, req?: GetServerSidePropsContext['req']): Promise<BackendResponse<{}>> => {
+const updateRoleFetcher = async (updateRoleDto: UpdateRoleDto, req?: GetServerSidePropsContext['req']): Promise<BackendResponse<RoleWithPermissions>> => {
     const url = req ? `${origin}/admin/update-role` : `/api/admin/update-role`
     return await fetcher(url, withAuthHeader({
         method: 'PUT',

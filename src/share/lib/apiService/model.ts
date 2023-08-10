@@ -36,7 +36,6 @@ export const withCheckData = <T extends object, A extends any[]>(successFetcher:
     async (...args: A): Promise<T> => {
         const response = await successFetcher(...args)
         const data = await response.json()
-
         if (Array.isArray(data) && data.every(predicate)) return data
         if (typeof data === 'object' && predicate(data)) return data
         throw new AppError(`${response.url}: Получен неверный формат сущности`, response.status)

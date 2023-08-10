@@ -1,2 +1,2 @@
 export type {Role} from './types'
-export {isRole} from './lib'
+export {isRole, isRoleWithPermissions} from './lib'

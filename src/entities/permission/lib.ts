@@ -4,5 +4,7 @@ export function isPermission(obj: unknown): obj is Permission {
     return (
         typeof obj === 'object' && !!obj &&
         'id' in obj && typeof obj.id === 'number' &&
-        'name' in obj && typeof obj.name === 'string')
+        'name' in obj && typeof obj.name === 'string' &&
+        'russianName' in obj && typeof obj.russianName === 'string'
+    )
 }

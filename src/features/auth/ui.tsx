@@ -4,9 +4,9 @@ import {useState} from "react";
 import {useRouter} from "next/router";
 import {isNotEmpty, useForm} from "@mantine/form";
 import {signIn} from "@/features/auth/api";
-import {getBaseDictionary} from "@/share/lib/i18nService";
+import {getCommonDictionary} from "@/share/lib/i18nService";
 
-const dictionary = getBaseDictionary('ru')
+const commonDictionary = getCommonDictionary('ru')
 
 const REDIRECT_TIME = 1000
 
@@ -23,8 +23,8 @@ export const AuthByCredentialForm = () => {
             password: ''
         },
         validate: {
-            username: isNotEmpty(dictionary.form.errors.required),
-            password: isNotEmpty(dictionary.form.errors.required),
+            username: isNotEmpty(commonDictionary.errors.required),
+            password: isNotEmpty(commonDictionary.errors.required),
         }
     })
 

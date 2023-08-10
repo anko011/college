@@ -1,22 +1,24 @@
 import {createFormContext, isNotEmpty} from "@mantine/form";
 import {BaseUserDto} from "@/entities/user";
-import {Input, Select, SelectItem, TextInput} from "@mantine/core";
-import {getBaseUserFormDictionary} from "@/entities/user/client/ui/base-form/i18n";
+import {Input, TextInput} from "@mantine/core";
 import {Role} from "@/entities/role";
+import {getUserDictionary} from "@/entities/user/i18n";
+import {getCommonDictionary} from "@/share/lib/i18nService";
 
-const dictionary = getBaseUserFormDictionary('ru')
+const userDictionary = getUserDictionary('ru')
+const commonDictionary = getCommonDictionary('ru')
 
 export const [BaseUserFormProvider, useBaseUserFormContext, useBaseUserForm] = createFormContext<Omit<BaseUserDto, 'roleId'> & {
     roleId: string
 }>()
 
 export const baseUserFormFieldsValidate = {
-    firstName: isNotEmpty(dictionary.form.errors.required),
-    secondName: isNotEmpty(dictionary.form.errors.required),
-    patronymic: isNotEmpty(dictionary.form.errors.required),
-    login: isNotEmpty(dictionary.form.errors.required),
-    password: isNotEmpty(dictionary.form.errors.required),
-    roleId: isNotEmpty(dictionary.form.errors.required)
+    firstName: isNotEmpty(commonDictionary.errors.required),
+    secondName: isNotEmpty(commonDictionary.errors.required),
+    patronymic: isNotEmpty(commonDictionary.errors.required),
+    login: isNotEmpty(commonDictionary.errors.required),
+    password: isNotEmpty(commonDictionary.errors.required),
+    roleId: isNotEmpty(commonDictionary.errors.required)
 }
 
 interface BaseUserFormFields {
@@ -25,35 +27,27 @@ interface BaseUserFormFields {
 
 export const BaseUserFormFields = ({roles}: BaseUserFormFields) => {
     const form = useBaseUserFormContext()
-    const selectValues: SelectItem[] = roles.map(role => ({label: role.name, value: role.id.toString()}))
 
     return (
         <>
-            <Input.Wrapper label={dictionary.form.fields.firstName}>
+            <Input.Wrapper label={userDictionary.user.firstName}>
                 <TextInput {...form.getInputProps('firstName')}/>
             </Input.Wrapper>
 
-            <Input.Wrapper label={dictionary.form.fields.secondName}>
+            <Input.Wrapper label={userDictionary.user.secondName}>
                 <TextInput {...form.getInputProps('secondName')}/>
             </Input.Wrapper>
 
-            <Input.Wrapper label={dictionary.form.fields.patronymic}>
+            <Input.Wrapper label={userDictionary.user.patronymic}>
                 <TextInput {...form.getInputProps('patronymic')}/>
             </Input.Wrapper>
 
-            <Input.Wrapper label={dictionary.form.fields.role}>
-                <Select
-                    {...form.getInputProps('roleId')}
-                    data={selectValues}
-                    onChange={(value) => form.setFieldValue('roleId', value ?? '')}
-                />
-            </Input.Wrapper>
 
-            <Input.Wrapper label={dictionary.form.fields.login}>
+            <Input.Wrapper label={userDictionary.user.login}>
                 <TextInput {...form.getInputProps('login')}/>
             </Input.Wrapper>
 
-            <Input.Wrapper label={dictionary.form.fields.password}>
+            <Input.Wrapper label={userDictionary.user.password}>
                 <TextInput {...form.getInputProps('password')}/>
             </Input.Wrapper>
         </>

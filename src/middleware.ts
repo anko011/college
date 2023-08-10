@@ -9,8 +9,9 @@ const ADMIN_ROLE = 'ROLE_ADMIN'
 
 const isAdminPath = (req: NextRequest) => req.nextUrl.pathname.startsWith('/admin')
 const isLoginPage = (req: NextRequest) => req.nextUrl.pathname.startsWith(('/admin/login'))
-const redirectToLoginPage = (req: NextRequest) => NextResponse.redirect(new URL('/admin/login', req.url))
 
+const redirectToLoginPage = (req: NextRequest) => NextResponse.redirect(new URL('/admin/login', req.url))
+const redirectToHomePage = (req: NextRequest) => NextResponse.redirect(new URL('/', req.url))
 
 const withAdminGuard = (middleware: NextMiddleware): NextMiddleware => async (request, event) => {
     if (isAdminPath(request) && !isLoginPage(request)) {
@@ -19,7 +20,7 @@ const withAdminGuard = (middleware: NextMiddleware): NextMiddleware => async (re
         if (isExpiredToken(session.tokenSet.accessToken)) return redirectToLoginPage(request)
 
         const user = getUserWithRoleFromTokenSet(session.tokenSet)
-        if (!user || user.role.name !== ADMIN_ROLE) return redirectToLoginPage(request)
+        if (!user || user.role.name !== ADMIN_ROLE) return redirectToHomePage(request)
     }
 
     return middleware(request, event);

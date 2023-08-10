@@ -18,7 +18,7 @@ export const getServerSideProps = withHandleError(async ({req, query}: GetServer
     const roles = await fetchRoles(0, req)
 
     return {
-        props: {userPage, roles}
+        props: {userPage, roles: []}
     }
 
 })

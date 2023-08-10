@@ -2,10 +2,12 @@ import {Box, Button, Flex, Input, TextInput} from "@mantine/core";
 import {useForm} from "@mantine/form";
 import {useAppRouter} from "@/share/client/hooks";
 import {SearchRoleDto} from "@/entities/role";
-import {getRoleSearchFeatureDictionary} from "./i18n";
+import {getCommonDictionary} from "@/share/lib/i18nService";
+import {getRoleDictionary} from "@/entities/role/i18n";
 
 
-const dictionary = getRoleSearchFeatureDictionary('ru')
+const commonDictionary = getCommonDictionary('ru')
+const roleDictionary = getRoleDictionary('ru')
 
 export const SearchRoleForm = () => {
     const router = useAppRouter()
@@ -24,10 +26,10 @@ export const SearchRoleForm = () => {
             <Flex gap="md">
 
                 <Input.Wrapper w="100%">
-                    <TextInput placeholder={dictionary.form.fields.search.name} {...form.getInputProps('name')}/>
+                    <TextInput placeholder={roleDictionary.role.name} {...form.getInputProps('name')}/>
                 </Input.Wrapper>
 
-                <Button type="submit">{dictionary.form.buttons.search}</Button>
+                <Button type="submit">{commonDictionary.buttons.search}</Button>
             </Flex>
         </Box>
     )

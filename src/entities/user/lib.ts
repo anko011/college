@@ -1,4 +1,4 @@
-import {isRole} from '@/entities/role/@x'
+import {isRoleWithPermissions} from '@/entities/role/@x'
 import {User, UserPage, UserWithRole} from "./types";
 
 
@@ -14,7 +14,7 @@ export function isUser(obj: unknown): obj is User {
 
 export function isUserWithRole(obj: unknown): obj is UserWithRole {
     return (
-        isUser(obj) && 'role' in obj && isRole(obj.role)
+        isUser(obj) && 'role' in obj && isRoleWithPermissions(obj.role)
     )
 }
 

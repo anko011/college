@@ -1,93 +1,107 @@
-import {ActionIcon, Box, Button, Group, LoadingOverlay} from "@mantine/core";
+import {ActionIcon, Box, Button, Group, Input, LoadingOverlay, TextInput} from "@mantine/core";
 import {modals} from "@mantine/modals";
 import {IconPencil} from "@tabler/icons-react";
 import {fetchUpdateRole, RoleWithPermissions} from "@/entities/role";
 import {useAppRouter, useNotification} from "@/share/client/hooks";
-
-import {getRoleEditFeatureDictionary} from "./i18n";
+import {getRoleEditDictionary} from "./i18n";
 import {mapToUpdateRoleDto} from "./lib";
-import {BaseRoleFormFields, BaseRoleFormProvider, useBaseRoleForm} from "@/entities/role/client";
-import {Permission} from "@/entities/permission";
-import {isNotEmpty} from "@mantine/form";
+import {isNotEmpty, useForm} from "@mantine/form";
 import React, {useState} from "react";
+import {getCommonDictionary} from "@/share/lib/i18nService";
+import {PermissionContext, PermissionsTransferList, usePermissions} from "@/entities/permission/client";
+import {getRoleDictionary} from "@/entities/role/i18n";
 
-
-type EditUserFormProps = {
+export interface EditRoleForm {
     name: string
-    roleId: number
-    selectedPermissionIds: Permission[]
-    permissions: Permission[]
+    permissionIds: string[]
 }
 
-interface EditRoleButtonProps {
-    permissions: Permission[]
+type EditUserFormProps = {
     role: RoleWithPermissions
 }
 
-const dictionary = getRoleEditFeatureDictionary('ru')
+interface EditRoleButtonProps {
+    role: RoleWithPermissions
+}
 
-export const EditRoleForm = (
-    {
-        roleId,
-        name,
-        selectedPermissionIds,
-        permissions,
-    }: EditUserFormProps) => {
+const commonDictionary = getCommonDictionary('ru')
+const roleDictionary = getRoleDictionary('ru')
+const roleEditDictionary = getRoleEditDictionary('ru')
 
+
+export const EditRoleForm = ({role}: EditUserFormProps) => {
     const [isShowLoader, setIsShowLoader] = useState(false)
-    const notification = useNotification(dictionary.notification.title)
+    const notification = useNotification(roleEditDictionary.notification.title)
     const router = useAppRouter()
-    const form = useBaseRoleForm({
+    const form = useForm<EditRoleForm>({
         initialValues: {
-            name: name,
-            permissionIds: selectedPermissionIds.map(permission => permission.id.toString())
+            name: role.name,
+            permissionIds: role.permissions.map(permission => permission.id.toString())
         },
         validate: {
-            name: isNotEmpty(dictionary.form.errors.required)
+            name: isNotEmpty(commonDictionary.errors.required)
         }
     })
 
+    const handleChangePermissions = (selectedPermissionIds: string[]) => {
+        console.log(selectedPermissionIds)
+        form.setFieldValue('permissionIds', selectedPermissionIds)
+    }
+
     const handleSubmit = async (values: typeof form.values) => {
         setIsShowLoader(true)
+
         await notification.handlerError(async () => {
-            await fetchUpdateRole(mapToUpdateRoleDto(roleId, values))
-        }, dictionary.notification.success, dictionary.notification.error)
-        await router.safeReload()
+            const updatedRole = await fetchUpdateRole(mapToUpdateRoleDto(role.id, values))
+            form.setValues({
+                name: updatedRole.name,
+                permissionIds: updatedRole.permissions.map((permission) => permission.id.toString())
+            })
+        }, roleEditDictionary.notification.success, roleEditDictionary.notification.error)
+
         setIsShowLoader(false)
-        form.reset()
+
+        await router.safeReload()
     }
+
 
     return (
         <Box component="form" onSubmit={form.onSubmit(handleSubmit)}>
             <LoadingOverlay visible={isShowLoader}/>
-            <BaseRoleFormProvider form={form}>
-                <BaseRoleFormFields permissions={permissions}/>
-                <Group position="right" mt="md">
-                    <Button
-                        variant="default"
-                        onClick={() => modals.closeAll()}
-                    >
-                        {dictionary.form.buttons.cancel}
-                    </Button>
-                    <Button type="submit">{dictionary.form.buttons.confirm}</Button>
-                </Group>
-            </BaseRoleFormProvider>
+
+            <Input.Wrapper label={roleDictionary.role.name}>
+                <TextInput {...form.getInputProps('name')}/>
+            </Input.Wrapper>
+
+            <PermissionsTransferList
+                selectedPermissionIds={form.values.permissionIds}
+                onChangePermissions={handleChangePermissions}
+            />
+
+            <Group position="right" mt="md">
+                <Button
+                    variant="default"
+                    onClick={() => modals.closeAll()}
+                >
+                    {commonDictionary.buttons.cancel}
+                </Button>
+                <Button type="submit">{commonDictionary.buttons.edit}</Button>
+            </Group>
         </Box>
     )
 }
 
-export function EditRoleButton({permissions, role}: EditRoleButtonProps) {
+export function EditRoleButton({role}: EditRoleButtonProps) {
+    const permissions = usePermissions()
 
     const handleClick = () => {
         modals.open({
-            title: dictionary.modal.title,
+            title: roleEditDictionary.modal.title,
             centered: true,
-            children: <EditRoleForm
-                permissions={permissions}
-                name={role.name}
-                roleId={role.id}
-                selectedPermissionIds={role.permissions}
-            />
+            children:
+                <PermissionContext.Provider value={permissions}>
+                    <EditRoleForm role={role}/>
+                </PermissionContext.Provider>
         })
     }
 

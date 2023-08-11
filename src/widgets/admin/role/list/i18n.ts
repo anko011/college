@@ -1,6 +1,7 @@
 import {Locale} from "@/share/lib/i18nService";
 
 const RU_DICTIONARY = {
+    title: 'Список ролей',
     table: {
         permissions: 'Права',
         control: 'Управление'

@@ -4,7 +4,7 @@ import {fetchCreateUser, getUserDictionary} from "@/entities/user";
 import {RoleSelect} from "@/entities/role/client";
 import {useNotification} from "@/share/client/hooks";
 import {getCommonDictionary} from "@/share/lib/i18nService";
-import {getUserCreateDictionary} from "./i18n";
+import {getCreateUserDictionary} from "./i18n";
 import {mapToCreateUserDto} from "./lib";
 import {isNotEmpty, useForm} from "@mantine/form";
 
@@ -19,7 +19,7 @@ export interface CreateUserForm {
 
 const commonDictionary = getCommonDictionary('ru')
 const userDictionary = getUserDictionary('ru')
-const userCreateDictionary = getUserCreateDictionary('ru')
+const userCreateDictionary = getCreateUserDictionary('ru')
 
 export function UserCreateForm() {
     const notification = useNotification(userCreateDictionary.notification.title)

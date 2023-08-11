@@ -31,9 +31,8 @@ export const DeleteUserButton = ({userId}: DeleteUserButtonProps) => {
             onConfirm: async () => {
                 await notification.handlerError(async () => {
                     await fetchDeleteUser(userId)
+                    await router.safeReload()
                 }, deleteUserDictionary.notification.success, deleteUserDictionary.notification.error)
-
-                await router.safeReload()
             }
         })
     }

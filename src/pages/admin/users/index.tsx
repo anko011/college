@@ -1,30 +1,14 @@
-import {GetServerSidePropsContext, InferGetServerSidePropsType} from "next";
+import {InferGetServerSidePropsType} from "next";
 import {Tabs} from "@mantine/core";
-import {withAdminLayout} from "@/widgets/layout";
-import {getUsersPageFromQuery, UsersListWidget} from "@/widgets/user";
+import {getUsersListDictionary, getUsersPageFromQuery, UsersListWidget, withAdminLayout} from "@/widgets/admin";
 import {UserCreateForm} from "@/features/user";
 import {createSearchUserDto, fetchUsers} from "@/entities/user";
 import {fetchRoles} from "@/entities/role";
 import {RolesContext} from "@/entities/role/client";
-import {UsersContext} from "@/entities/user/client";
-import {Locale} from "@/share/lib/i18nService";
-import {withHandleError} from "@/share/lib/apiService";
+import {UsersContext, useUser} from "@/entities/user/client";
 import {useAppRouter} from "@/share/client/hooks";
-
-const RU_DICTIONARY = {
-    tabs: {
-        createUser: 'Создание пользователя',
-        listUsers: 'Список пользователей'
-    }
-}
-
-const mapper = {
-    'ru': RU_DICTIONARY
-}
-
-export const getUsersPageDictionary = (locale: Locale) => {
-    return mapper[locale]
-}
+import {getCreateUserDictionary} from "@/features/user/create";
+import {appGetServerSideProps} from "@/widgets/appGetServerSideProps";
 
 export const getUsersPageConfig = () => ({
     limitUsers: 10,
@@ -34,9 +18,10 @@ export const getUsersPageConfig = () => ({
 })
 
 const usersPageConfig = getUsersPageConfig()
-const usersPageDictionary = getUsersPageDictionary('ru')
+const usersListDictionary = getUsersListDictionary('ru')
+const createUserDictionary = getCreateUserDictionary('ru')
 
-export const getServerSideProps = withHandleError(async ({req, query}: GetServerSidePropsContext) => {
+export const getServerSideProps = appGetServerSideProps(async ({req, query, user}) => {
     const usersNumPage = getUsersPageFromQuery(query)
     const searchQuery = createSearchUserDto(query)
     const userPage = await fetchUsers(usersNumPage, usersPageConfig.limitUsers, searchQuery, req)
@@ -44,7 +29,7 @@ export const getServerSideProps = withHandleError(async ({req, query}: GetServer
     const rolesPage = await fetchRoles(0, undefined, req)
 
     return {
-        props: {userPage, rolesPage}
+        props: {userPage, rolesPage, user}
     }
 
 })
@@ -55,20 +40,21 @@ function AdminUsersPage({userPage, rolesPage}: InferGetServerSidePropsType<typeo
 
     const totalCountPages = Math.ceil(userPage.count / usersPageConfig.limitUsers)
 
+
     return (
         <UsersContext.Provider value={userPage.users}>
             <RolesContext.Provider value={rolesPage.roles}>
-
-                <Tabs value={router.query.activeTab as string ?? usersPageConfig.createUserQueryKey}
-                      onTabChange={handleTabChange}
+                <Tabs
+                    value={router.query.activeTab as string ?? usersPageConfig.createUserQueryKey}
+                    onTabChange={handleTabChange}
                 >
                     <Tabs.List grow mb="md">
                         <Tabs.Tab value={usersPageConfig.createUserQueryKey}>
-                            {usersPageDictionary.tabs.createUser}
+                            {createUserDictionary.title}
                         </Tabs.Tab>
 
                         <Tabs.Tab value={usersPageConfig.listUsersQueryKey}>
-                            {usersPageDictionary.tabs.listUsers}
+                            {usersListDictionary.title}
                         </Tabs.Tab>
                     </Tabs.List>
 

@@ -2,6 +2,7 @@ import {Locale} from "@/share/lib/i18nService";
 
 
 const LOCALE_RU = {
+    title: 'Создание роли',
     notification: {
         title: 'Создание роли',
         success: 'Роль успешно создана',

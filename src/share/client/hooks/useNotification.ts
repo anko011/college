@@ -14,8 +14,11 @@ export function useNotification(title: string) {
                 await executor()
                 this.successNotify(messageSuccess)
             } catch (error) {
-                if (error instanceof Error) this.errorNotify(error.message ?? errorMessage)
-                throw error
+                if (error instanceof Error) {
+                    this.errorNotify(error.message ?? errorMessage)
+                } else {
+                    throw error
+                }
             }
 
         }

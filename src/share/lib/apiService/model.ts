@@ -41,7 +41,7 @@ export const withCheckData = <T extends object, A extends any[]>(successFetcher:
         throw new AppError(`${response.url}: Получен неверный формат сущности`, response.status)
     }
 
-export const withHandleError = <T extends object>(getServerSideProps: GetServerSideProps) => async (ctx: GetServerSidePropsContext) => {
+export const withHandleError = (getServerSideProps: GetServerSideProps) => async (ctx: GetServerSidePropsContext) => {
     try {
         return await getServerSideProps(ctx)
     } catch (error) {

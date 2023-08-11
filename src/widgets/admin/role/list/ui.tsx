@@ -6,7 +6,7 @@ import {useRoles} from "@/entities/role/client/hooks";
 import {useAppRouter} from "@/share/client/hooks";
 import {getRolesPageFromQuery} from "./model";
 import {getRolesListConfig} from "./config";
-import {getRolesListDictionary} from "@/widgets/role/list/i18n";
+import {getRolesListDictionary} from "@/widgets/admin/role/list/i18n";
 
 interface RolesListProps {
     totalCountRolePages: number

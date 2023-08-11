@@ -1,43 +1,70 @@
-import {withAdminLayout} from "@/widgets/layout/adminLayout";
-import {LinkCard} from "@/share/client/components/admin";
-import {Divider, Grid, Stack, Title} from "@mantine/core";
+//@X
+import {getUsersPageConfig} from "@/pages/admin/users";
+import {getRolesPageConfig} from "@/pages/admin/roles";
 
+import {
+    getRolesListDictionary,
+    getUsersListDictionary,
+    GridNavigation,
+    Section,
+    withAdminLayout
+} from "@/widgets/admin";
+
+import {getCreateUserDictionary} from "@/features/user/create";
+import {getCreateRoleDictionary} from "@/features/role/create";
+
+import {getUserDictionary} from "@/entities/user";
+import {getRoleDictionary} from "@/entities/role";
+import {Divider, Title} from "@mantine/core";
+import {getGridNavigationDictionary} from "@/widgets/admin/gridNavigation/i18n";
+
+//@X
+const usersPageConfig = getUsersPageConfig()
+const rolesPageConfig = getRolesPageConfig()
+
+const userDictionary = getUserDictionary('ru')
+const usersListDictionary = getUsersListDictionary('ru')
+const createUserDictionary = getCreateUserDictionary('ru')
+
+const roleDictionary = getRoleDictionary('ru')
+const rolesListDictionary = getRolesListDictionary('ru')
+const createRoleDictionary = getCreateRoleDictionary('ru')
+
+const gridNavigationDictionary = getGridNavigationDictionary('ru')
+
+const sections: Section[] = [
+    {
+        title: userDictionary.title, links: [
+            {
+                title: createUserDictionary.title,
+                url: `/admin/users?${usersPageConfig.tabsQueryKey}=${usersPageConfig.createUserQueryKey}`
+            },
+            {
+                title: usersListDictionary.title,
+                url: `/admin/users?${usersPageConfig.tabsQueryKey}=${usersPageConfig.listUsersQueryKey}`
+            }
+        ]
+    },
+    {
+        title: roleDictionary.title, links: [
+            {
+                title: createRoleDictionary.title,
+                url: `/admin/roles?${rolesPageConfig.tabsQueryKey}=${rolesPageConfig.createRoleQueryKey}`
+            },
+            {
+                title: rolesListDictionary.title,
+                url: `/admin/roles?${rolesPageConfig.tabsQueryKey}=${rolesPageConfig.listRolesQueryKey}`
+            }
+        ]
+    }
+]
 
 function AdminHomePage() {
     return (
         <>
-            <Title order={4}>Быстрые ссылки</Title>
+            <Title order={4}>{gridNavigationDictionary.title}</Title>
             <Divider my="md"/>
-            <Grid bg="gray.0">
-                <Grid.Col span={3}>
-                    <Stack p="md">
-                        <Title order={5} align="center">Пользователи</Title>
-                        <LinkCard href={`/admin/users?activeTab=}`} title="Список пользователей"/>
-                        <LinkCard href="/admin" title="Создать пользователя"/>
-                    </Stack>
-                </Grid.Col>
-                <Grid.Col span={3}>
-                    <Stack p="md">
-                        <Title order={5} align="center">Роли</Title>
-                        <LinkCard href="/admin" title="Список ролей"/>
-                        <LinkCard href="/admin" title="Создать роль"/>
-                    </Stack>
-                </Grid.Col>
-                <Grid.Col span={3}>
-                    <Stack p="md">
-                        <Title order={5} align="center">Страницы</Title>
-                        <LinkCard href="/admin" title="Список страниц"/>
-                        <LinkCard href="/admin" title="Создать страницу"/>
-                    </Stack>
-                </Grid.Col>
-                <Grid.Col span={3}>
-                    <Stack p="md">
-                        <Title order={5} align="center">Медиа</Title>
-                        <LinkCard href="/admin" title="Ссылка"/>
-                        <LinkCard href="/admin" title="Ссылка"/>
-                    </Stack>
-                </Grid.Col>
-            </Grid>
+            <GridNavigation sections={sections}/>
         </>
     )
 }

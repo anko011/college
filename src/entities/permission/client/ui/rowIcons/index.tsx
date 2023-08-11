@@ -17,25 +17,25 @@ export const PermissionRowIcons = ({permissions}: PermissionRowIconsProps) => {
                 switch (permission.id) {
                     case 302:
                         return (
-                            <Tooltip label={permission.russianName}>
+                            <Tooltip key={permission.id} label={permission.russianName}>
                                 <IconFileUpload/>
                             </Tooltip>
                         )
                     case 303:
                         return (
-                            <Tooltip label={permission.russianName}>
+                            <Tooltip key={permission.id} label={permission.russianName}>
                                 <IconFileDownload/>
                             </Tooltip>
                         )
                     case 304:
                         return (
-                            <Tooltip label={permission.russianName}>
+                            <Tooltip key={permission.id} label={permission.russianName}>
                                 <IconFileReport/>
                             </Tooltip>
                         )
                     case 305:
                         return (
-                            <Tooltip label={permission.russianName}>
+                            <Tooltip key={permission.id} label={permission.russianName}>
                                 <IconAddressBookOff/>
                             </Tooltip>
                         )

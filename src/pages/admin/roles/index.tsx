@@ -1,7 +1,6 @@
 import {GetServerSidePropsContext, InferGetServerSidePropsType} from "next";
 import {Tabs} from "@mantine/core";
-import {withAdminLayout} from "@/widgets/layout";
-import {getRolesPageFromQuery, RolesList} from "@/widgets/role";
+import {getRolesPageFromQuery, RolesList, withAdminLayout} from "@/widgets/admin";
 import {RoleCreateForm} from "@/features/role";
 import {fetchPermissions} from "@/entities/permission";
 import {createSearchRoleDto, fetchRoles} from "@/entities/role";

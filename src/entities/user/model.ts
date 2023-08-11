@@ -2,7 +2,9 @@ import {ParsedUrlQuery} from "querystring";
 import {decodeToken, TokenSet} from "@/share/lib/tokenService";
 import {createObjectFromQuery} from "@/share/lib/queryService";
 import {isUserWithRole} from "./lib";
-import {SearchUserDto} from "./types";
+import {SearchUserDto, User} from "./types";
+import {GetServerSideProps, GetServerSidePropsContext} from "next";
+import {getEncodedSession} from "@/share/lib/sessionService";
 
 
 export const getUserWithRoleFromTokenSet = (tokenSet: TokenSet) => {
@@ -16,6 +18,19 @@ export const getUserWithRoleFromTokenSet = (tokenSet: TokenSet) => {
     return null
 }
 
+export interface GetServerSidePropsContextWithUser extends GetServerSidePropsContext {
+    user: User | null
+}
+
+export const withUser = (getServerSideProps: GetServerSideProps) => async (ctx: GetServerSidePropsContext) => {
+    const ctxWithUser: GetServerSidePropsContextWithUser = {...ctx, user: null}
+    const encodedSession = getEncodedSession(ctx.req)
+    if (encodedSession) {
+        ctxWithUser.user = getUserWithRoleFromTokenSet(encodedSession.tokenSet)
+
+    }
+    return await getServerSideProps(ctxWithUser)
+}
 
 export const createSearchUserDto = (query: ParsedUrlQuery): SearchUserDto | undefined => {
     return createObjectFromQuery(query, ['login', 'firstName', 'secondName', 'patronymic'])

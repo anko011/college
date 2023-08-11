@@ -30,9 +30,9 @@ export const DeleteRoleButton = ({roleId}: DeleteRoleButtonProps) => {
             onConfirm: async () => {
                 await notification.handlerError(async () => {
                     await fetchDeleteRole(roleId)
+                    await router.safeReload()
                 }, deleteRoleDictionary.notification.success, deleteRoleDictionary.notification.error)
 
-                await router.safeReload()
             }
         })
     }

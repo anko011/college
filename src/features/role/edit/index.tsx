@@ -57,11 +57,11 @@ export const EditRoleForm = ({role}: EditUserFormProps) => {
                 name: updatedRole.name,
                 permissionIds: updatedRole.permissions.map((permission) => permission.id.toString())
             })
+            await router.safeReload()
         }, roleEditDictionary.notification.success, roleEditDictionary.notification.error)
 
         setIsShowLoader(false)
 
-        await router.safeReload()
     }
 
 

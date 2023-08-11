@@ -58,9 +58,9 @@ export const EditUserForm = ({user}: EditUserFormProps) => {
         await notification.handlerError(async () => {
             const updatedUser = await fetchUpdateUser(mapToUpdateUserDto(user.id, values))
             form.setValues({...updatedUser, password: undefined})
+            await router.safeReload()
         }, dictionary.notification.success, dictionary.notification.error)
         setIsShowLoader(false)
-        await router.safeReload()
     }
 
     return (

@@ -1,10 +1,10 @@
 import {ParsedUrlQuery} from "querystring";
-import {getUsersListConfig} from "@/widgets/user/list/config";
 import {getNumberFromQuery} from "@/share/lib/queryService";
+import {getRolesListConfig} from "@/widgets/admin/role/list/config";
 
-const {queryPageKey} = getUsersListConfig()
+const {queryPageKey} = getRolesListConfig()
 
-export const getUsersPageFromQuery = (query: ParsedUrlQuery) => {
+export const getRolesPageFromQuery = (query: ParsedUrlQuery) => {
     let page = getNumberFromQuery(query, queryPageKey)
     if (page && page < 0) page = 0
     return page ?? 0

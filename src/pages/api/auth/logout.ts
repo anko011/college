@@ -1,13 +1,16 @@
 import {NextApiRequest, NextApiResponse} from "next";
 import {ResponseCookies} from "next/dist/compiled/@edge-runtime/cookies";
 import {createDeletingSessionCookie} from "@/share/lib/sessionService";
+import {logout} from "@/share/lib/authService/api";
 
-export default function handler(req: NextApiRequest, res: NextApiResponse) {
-    const deletingCookie = createDeletingSessionCookie()
-    const cookies = new ResponseCookies(new Headers())
-    cookies.set(deletingCookie)
-
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     if (req.method === 'POST') {
+        const deletingCookie = createDeletingSessionCookie()
+        const cookies = new ResponseCookies(new Headers())
+        cookies.set(deletingCookie)
+
+        await logout()
+
         return res
             .status(200)
             .setHeader('Set-Cookie', cookies.toString())

@@ -1,26 +1,18 @@
 import {Group, Pagination, Stack, Table, Text} from "@mantine/core";
-import {UserTableHeader, UserTableRow} from "@/entities/user/client";
 import {DeleteUserButton, EditUserButton, UserSearchForm} from "@/features/user";
-import {useAppRouter} from "@/share/client/hooks";
-import {useUsers} from "@/entities/user/client/hooks";
-
-import {getUsersListConfig} from "./config";
-import {getUsersPageFromQuery} from "./model";
+import {UserTableHeader, UserTableRow, useUsers} from "@/entities/user/client";
+import {useUsersListPagination} from "./model";
 
 interface UsersListWidgetProps {
     totalCountPages: number
 }
 
-const {queryPageKey} = getUsersListConfig()
 
 export function UsersListWidget({totalCountPages}: UsersListWidgetProps) {
-    const router = useAppRouter()
-    const page = getUsersPageFromQuery(router.query)
     const users = useUsers()
+    const pagination = useUsersListPagination()
 
-    const handleChangePage = async (newPage: number) => {
-        await router.updateQuery(queryPageKey, (newPage - 1).toString())
-    }
+    const handleChangePage = (newPage: number) => pagination.setPage(newPage - 1)
 
     return (
         <Stack>
@@ -52,7 +44,7 @@ export function UsersListWidget({totalCountPages}: UsersListWidgetProps) {
             {totalCountPages > 0 && (
                 <Pagination
                     total={totalCountPages}
-                    value={(page ?? 0) + 1}
+                    value={pagination.getCurrentPage() + 1}
                     onChange={handleChangePage}
                     position="center"
                 />

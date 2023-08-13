@@ -28,7 +28,3 @@ export interface UpdateRoleDto {
     systemName: string
     permissionIds: number[]
 }
-
-export interface SearchRoleDto {
-    name?: string
-}

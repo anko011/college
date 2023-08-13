@@ -1,25 +1,17 @@
 import {Box, Button, Flex, Input, TextInput} from "@mantine/core";
-import {useForm} from "@mantine/form";
-import {useAppRouter} from "@/share/client/hooks";
-import {getUserDictionary, SearchUserDto} from "@/entities/user";
+import {getUserDictionary} from "@/entities/user";
 import {getCommonDictionary} from "@/share/lib/i18nService";
+import {useQuerySearchUsers, useSearchUsersForm} from "@/features/user/search/model";
 
 const commonDictionary = getCommonDictionary('ru')
 const userDictionary = getUserDictionary('ru')
 
 export const UserSearchForm = () => {
-    const router = useAppRouter()
-    const form = useForm<SearchUserDto>({
-        initialValues: {
-            login: '',
-            firstName: '',
-            secondName: '',
-            patronymic: ''
-        },
-    })
+    const searcher = useQuerySearchUsers()
+    const form = useSearchUsersForm()
 
     const handleSubmit = async (values: typeof form.values) => {
-        await router.updateQueries({...values})
+        searcher.search(values)
     }
 
     return (

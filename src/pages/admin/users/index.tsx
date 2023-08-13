@@ -1,14 +1,17 @@
 import {InferGetServerSidePropsType} from "next";
 import {Tabs} from "@mantine/core";
-import {getUsersListDictionary, getUsersPageFromQuery, UsersListWidget, withAdminLayout} from "@/widgets/admin";
+import {getPaginationUsersListQuery, getUsersListDictionary, UsersListWidget, withAdminLayout} from "@/widgets/admin";
 import {UserCreateForm} from "@/features/user";
-import {createSearchUserDto, fetchUsers} from "@/entities/user";
-import {fetchRoles} from "@/entities/role";
+import {fetchUsers} from "@/entities/user";
+import {fetchAllRoles} from "@/entities/role";
 import {RolesContext} from "@/entities/role/client";
-import {UsersContext, useUser} from "@/entities/user/client";
+import {UsersContext} from "@/entities/user/client";
 import {useAppRouter} from "@/share/client/hooks";
 import {getCreateUserDictionary} from "@/features/user/create";
 import {appGetServerSideProps} from "@/widgets/appGetServerSideProps";
+import {getSearchUsersQuery} from "@/features/user/search/model";
+import {ParsedUrlQuery} from "querystring";
+import {splitQuery} from "@/share/lib/queryService";
 
 export const getUsersPageConfig = () => ({
     limitUsers: 10,
@@ -21,12 +24,17 @@ const usersPageConfig = getUsersPageConfig()
 const usersListDictionary = getUsersListDictionary('ru')
 const createUserDictionary = getCreateUserDictionary('ru')
 
-export const getServerSideProps = appGetServerSideProps(async ({req, query, user}) => {
-    const usersNumPage = getUsersPageFromQuery(query)
-    const searchQuery = createSearchUserDto(query)
-    const userPage = await fetchUsers(usersNumPage, usersPageConfig.limitUsers, searchQuery, req)
+const getFetchUsersQuery = (query: ParsedUrlQuery) => {
+    const searchQueries = getSearchUsersQuery(query)
+    const paginationUsersListQuery = getPaginationUsersListQuery(query)
+    return splitQuery(searchQueries, paginationUsersListQuery)
+}
 
-    const rolesPage = await fetchRoles(0, undefined, req)
+export const getServerSideProps = appGetServerSideProps(async ({req, query, user}) => {
+    const usersQuery = getFetchUsersQuery(query)
+
+    const userPage = await fetchUsers(usersQuery, req)
+    const rolesPage = await fetchAllRoles(req)
 
     return {
         props: {userPage, rolesPage, user}

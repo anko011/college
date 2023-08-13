@@ -7,7 +7,6 @@ const isSystemName = (obj: unknown): obj is PermissionSystemName => {
 }
 
 export function isPermission(obj: unknown): obj is Permission {
-    console.log(isSystemName({}))
     return (
         typeof obj === 'object' && !!obj &&
         'id' in obj && typeof obj.id === 'number' &&

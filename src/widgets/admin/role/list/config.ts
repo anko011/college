@@ -1,3 +1,4 @@
 export const getRolesListConfig = () => ({
-    queryPageKey: 'roleListPage'
+    queryPageKey: 'rolesListPage',
+    queryLimitKey: 'rolesListLimit'
 })

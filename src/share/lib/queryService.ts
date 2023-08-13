@@ -13,18 +13,18 @@ export const getNumberFromQuery = (query: ParsedUrlQuery, key: string) => {
 }
 
 
-export const createObjectFromQuery = <T extends object, K extends keyof T>(query: ParsedUrlQuery, keys: K[]): Partial<T> | undefined => {
+export const getBackendMappedQuery = (mapper: { key: string, backendKey: string }[], query: ParsedUrlQuery) => {
+    const queries = Object.fromEntries(mapper
+        .map(({key, backendKey}) => [backendKey, query[key]])
+        .filter(([_, value]) => typeof value === 'string')
+    )
 
-    let object: Partial<T> = {}
-    keys.forEach(key => {
-        if (key in query) {
-            const value = query[key as keyof typeof query]
-            if (typeof value !== 'string') return
+    const params = new URLSearchParams(queries)
+    return params.toString()
+}
 
-            object[key] = value as T[K]
-        }
-    })
-
-    if (Object.keys(object).length === 0) return
-    return object
+export const splitQuery = (...args: string[]) => {
+    return args
+        .filter(query => query !== '')
+        .join('&')
 }

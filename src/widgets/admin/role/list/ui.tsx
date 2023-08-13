@@ -3,26 +3,21 @@ import {DeleteRoleButton, EditRoleButton, SearchRoleForm} from "@/features/role"
 import {RoleTableHeader, RoleTableRow} from "@/entities/role/client";
 import {PermissionRowIcons} from "@/entities/permission/client";
 import {useRoles} from "@/entities/role/client/hooks";
-import {useAppRouter} from "@/share/client/hooks";
-import {getRolesPageFromQuery} from "./model";
-import {getRolesListConfig} from "./config";
-import {getRolesListDictionary} from "@/widgets/admin/role/list/i18n";
+import {getRolesListDictionary} from "./i18n";
+import {useRolesListPagination} from "./model";
 
 interface RolesListProps {
     totalCountRolePages: number
 }
 
-const {queryPageKey} = getRolesListConfig()
 const rolesListDictionary = getRolesListDictionary('ru')
 
 export const RolesList = ({totalCountRolePages}: RolesListProps) => {
     const roles = useRoles()
-    const router = useAppRouter()
-    const page = getRolesPageFromQuery(router.query)
+    const pagination = useRolesListPagination()
 
-    const handleChangePage = async (newPage: number) => {
-        await router.updateQuery(queryPageKey, (newPage - 1).toString())
-    }
+    const handleChangePage = (newPage: number) => pagination.setPage(newPage - 1)
+
     return (
         <Stack>
             <SearchRoleForm/>
@@ -59,7 +54,7 @@ export const RolesList = ({totalCountRolePages}: RolesListProps) => {
             {totalCountRolePages > 0 && (
                 <Pagination
                     total={totalCountRolePages}
-                    value={(page ?? 0) + 1}
+                    value={pagination.getCurrentPage() + 1}
                     onChange={handleChangePage}
                     position="center"
                 />

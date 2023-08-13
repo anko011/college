@@ -29,10 +29,4 @@ export type UpdateUserDto = Omit<BaseUserDto, 'password'> & {
     password: string | null
 }
 
-export interface SearchUserDto {
-    login?: string
-    firstName?: string
-    secondName?: string
-    patronymic?: string
-}
 

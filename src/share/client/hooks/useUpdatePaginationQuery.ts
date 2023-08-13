@@ -1,0 +1,15 @@
+import {useAppRouter} from "./useAppRouter";
+import {getNumberFromQuery} from "@/share/lib/queryService";
+
+export const useUpdatePaginationQuery = (pageQueryKey: string, limitQueryKey: string) => {
+    const router = useAppRouter()
+
+    return {
+        getCurrentPage() {
+            return getNumberFromQuery(router.query, pageQueryKey) ?? 0
+        },
+        setPage(value: string | number) {
+            router.updateQuery(pageQueryKey, value.toString())
+        }
+    }
+}

@@ -1,3 +1,4 @@
 export const getUsersListConfig = () => ({
-    queryPageKey: 'userListPage'
+    queryPageKey: 'userListPage',
+    queryLimitKey: 'usersListLimit',
 })

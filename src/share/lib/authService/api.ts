@@ -17,6 +17,12 @@ export const authenticateByCredentials = async (credentials: string) => {
     })
 }
 
+export const logout = async () => {
+    return await fetch(`${origin}/logout`, {
+        method: 'POST',
+    })
+}
+
 export const refreshToken = async (tokenSet: TokenSet) =>
     await fetch(`${origin}/auth/refresh-token`, {
         method: 'POST',

@@ -44,7 +44,6 @@ export const EditRoleForm = ({role}: EditUserFormProps) => {
     })
 
     const handleChangePermissions = (selectedPermissionIds: string[]) => {
-        console.log(selectedPermissionIds)
         form.setFieldValue('permissionIds', selectedPermissionIds)
     }
 

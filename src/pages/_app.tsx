@@ -8,9 +8,11 @@ interface AppPropsWithLayout extends AppProps {
 
 export default function Application({Component, pageProps: {user, ...pageProps}}: AppPropsWithLayout) {
     const getLayout = Component.getLayout ?? ((page) => page)
-    return getLayout(
+    const page = getLayout(<Component {...pageProps} />)
+
+    return (
         <UserContext.Provider value={user}>
-            <Component {...pageProps} />
+            {page}
         </UserContext.Provider>
     )
 }

@@ -17,6 +17,7 @@ import {getUserDictionary} from "@/entities/user";
 import {getRoleDictionary} from "@/entities/role";
 import {Divider, Title} from "@mantine/core";
 import {getGridNavigationDictionary} from "@/widgets/admin/gridNavigation/i18n";
+import {appGetServerSideProps} from "@/widgets/appGetServerSideProps";
 
 //@X
 const usersPageConfig = getUsersPageConfig()
@@ -58,6 +59,12 @@ const sections: Section[] = [
         ]
     }
 ]
+
+export const getServerSideProps = appGetServerSideProps(async ({user}) => {
+    return {
+        props: {user}
+    }
+})
 
 function AdminHomePage() {
     return (

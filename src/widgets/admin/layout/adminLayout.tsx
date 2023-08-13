@@ -1,11 +1,12 @@
 import {ComponentType, PropsWithChildren, ReactElement, ReactNode, useEffect, useState} from "react";
-import {AppShell, Container, Navbar, NavLink, Transition} from "@mantine/core";
-import {IconBrandPagekit, IconCategory, IconLogout, IconShieldLock, IconUsers} from "@tabler/icons-react";
+import {AppShell, Container, Divider, Navbar, NavLink, Transition} from "@mantine/core";
+import {IconFiles, IconLogout, IconShieldLock, IconUsers} from "@tabler/icons-react";
 import NextLink from 'next/link'
 import {useRouter} from "next/router";
 import {MantineProvider} from "@/share/providers";
 import {signOut} from "@/features/auth";
 import ErrorBoundary from "@/share/client/components/error-boundary";
+import {UserInfoCard} from "@/entities/user/client";
 
 type Route = {
     href: string
@@ -14,10 +15,9 @@ type Route = {
 
 
 const navbarRoutes: Array<Route & { icon: ReactNode }> = [
-    {href: '/admin/page', label: 'Страницы', icon: <IconBrandPagekit/>},
-    {href: '/admin/category', label: 'Категории', icon: <IconCategory/>},
     {href: '/admin/users', label: 'Пользователи', icon: <IconUsers/>},
     {href: '/admin/roles', label: 'Роли и права', icon: <IconShieldLock/>},
+    {href: '/admin/files', label: 'Файлы', icon: <IconFiles/>},
 ]
 
 export function AdminLayout({children}: PropsWithChildren) {
@@ -56,6 +56,8 @@ export function AdminLayout({children}: PropsWithChildren) {
                     navbar={
                         <Navbar p="md" width={{sm: 200, lg: 300}}>
                             <Navbar.Section>
+                                <UserInfoCard/>
+                                <Divider my="md"/>
                                 {navbarRoutes.map(route => (
                                     <NavLink
                                         key={route.href}
@@ -66,13 +68,12 @@ export function AdminLayout({children}: PropsWithChildren) {
                                         active={router.pathname === route.href}
                                     />
                                 ))}
+                                <Divider my="md"/>
                                 <NavLink
                                     label='Выйти'
                                     icon={<IconLogout/>}
                                     onClick={handleLogout}
                                 />
-                                <NavLink component={NextLink} href='/admin/login' label='Логин'/>
-
                             </Navbar.Section>
                         </Navbar>
                     }

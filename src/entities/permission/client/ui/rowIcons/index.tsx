@@ -1,10 +1,13 @@
 import {Tooltip} from "@mantine/core";
 import {IconAddressBookOff, IconFileDownload, IconFileReport, IconFileUpload} from "@tabler/icons-react";
-import {Permission} from "../../../types";
+import {Permission, PermissionSystemName} from "../../../types";
 
 interface PermissionRowIconsProps {
     permissions: Permission[]
 }
+
+
+//TODO: logout
 
 
 export const PermissionRowIcons = ({permissions}: PermissionRowIconsProps) => {
@@ -14,28 +17,28 @@ export const PermissionRowIcons = ({permissions}: PermissionRowIconsProps) => {
     return (
         <>
             {permissions.sort((a, b) => a.id - b.id).map(permission => {
-                switch (permission.id) {
-                    case 302:
+                switch (permission.systemName) {
+                    case PermissionSystemName.UPLOAD_FILE_PERMISSION:
                         return (
-                            <Tooltip key={permission.id} label={permission.russianName}>
+                            <Tooltip key={permission.id} label={permission.name}>
                                 <IconFileUpload/>
                             </Tooltip>
                         )
-                    case 303:
+                    case PermissionSystemName.DOWNLOAD_FILE_PERMISSION:
                         return (
-                            <Tooltip key={permission.id} label={permission.russianName}>
+                            <Tooltip key={permission.id} label={permission.name}>
                                 <IconFileDownload/>
                             </Tooltip>
                         )
-                    case 304:
+                    case PermissionSystemName.WATCH_FILE_PERMISSION:
                         return (
-                            <Tooltip key={permission.id} label={permission.russianName}>
+                            <Tooltip key={permission.id} label={permission.name}>
                                 <IconFileReport/>
                             </Tooltip>
                         )
-                    case 305:
+                    case PermissionSystemName.DELETE_FILE_PERMISSION:
                         return (
-                            <Tooltip key={permission.id} label={permission.russianName}>
+                            <Tooltip key={permission.id} label={permission.name}>
                                 <IconAddressBookOff/>
                             </Tooltip>
                         )

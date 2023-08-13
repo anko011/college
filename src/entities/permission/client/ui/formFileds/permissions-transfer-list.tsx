@@ -21,7 +21,7 @@ const createTransferListInitialValue = (permissions: Permission[], selectedIds: 
         const formPermission = selectedIds.find((id) => id === permission.id.toString())
         const transferListValue = {
             value: permission.id.toString(),
-            label: permission.russianName
+            label: permission.name
         }
         if (formPermission) {
             selectedValues.push(transferListValue)

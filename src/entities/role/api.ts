@@ -7,9 +7,12 @@ import {createSearchRoleQueryString} from "@/entities/role/model";
 
 const {origin} = getBackendHTTPConfig()
 
+//TODO: сдлать fetchall для roles
+
 const rolesFetcher = async (page: number = 1, searchDto?: SearchRoleDto, req?: GetServerSidePropsContext['req']): Promise<BackendResponse<RolesPage>> => {
     const searchQuery = createSearchRoleQueryString(searchDto)
-    const url = req ? `${origin}/admin/get-roles?page=${page}&${searchQuery}` : `/api/admin/get-roles?page=${page}&${searchQuery}`
+    const url = req ? `${origin}/admin/get-roles?page=${page}&size=10&${searchQuery}` : `/api/admin/get-roles?page=${page}&size=10&${searchQuery}`
+    console.log(url)
     return await fetcher(url, withAuthHeader({
         method: 'GET'
     }, req));

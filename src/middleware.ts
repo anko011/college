@@ -20,7 +20,7 @@ const withAdminGuard = (middleware: NextMiddleware): NextMiddleware => async (re
         if (isExpiredToken(session.tokenSet.accessToken)) return redirectToLoginPage(request)
 
         const user = getUserWithRoleFromTokenSet(session.tokenSet)
-        if (!user || user.role.name !== ADMIN_ROLE) return redirectToHomePage(request)
+        if (!user || user.role.systemName !== ADMIN_ROLE) return redirectToHomePage(request)
     }
 
     return middleware(request, event);

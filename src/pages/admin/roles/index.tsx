@@ -1,4 +1,4 @@
-import {GetServerSidePropsContext, InferGetServerSidePropsType} from "next";
+import {InferGetServerSidePropsType} from "next";
 import {Tabs} from "@mantine/core";
 import {getRolesPageFromQuery, RolesList, withAdminLayout} from "@/widgets/admin";
 import {RoleCreateForm} from "@/features/role";
@@ -7,8 +7,8 @@ import {createSearchRoleDto, fetchRoles} from "@/entities/role";
 import {RolesContext} from "@/entities/role/client";
 import {PermissionContext} from "@/entities/permission/client";
 import {Locale} from "@/share/lib/i18nService";
-import {withHandleError} from "@/share/lib/apiService";
 import {useAppRouter} from "@/share/client/hooks";
+import {appGetServerSideProps} from "@/widgets/appGetServerSideProps";
 
 const RU_DICTIONARY = {
     tabs: {
@@ -32,13 +32,13 @@ export const getRolesPageConfig = () => ({
     listRolesQueryKey: 'listRoles'
 })
 
-export const getServerSideProps = withHandleError(async ({req, query}: GetServerSidePropsContext) => {
+export const getServerSideProps = appGetServerSideProps(async ({req, query, user}) => {
     const rolePageNumber = getRolesPageFromQuery(query)
     const searchRoleDto = createSearchRoleDto(query)
     const rolesPage = await fetchRoles(rolePageNumber, searchRoleDto, req)
 
     const permissions = await fetchPermissions(req)
-    return {props: {rolesPage, permissions}}
+    return {props: {rolesPage, permissions, user}}
 })
 
 const rolesPageConfig = getRolesPageConfig()

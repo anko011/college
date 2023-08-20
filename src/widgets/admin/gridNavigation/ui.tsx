@@ -1,4 +1,4 @@
-import {Grid, Stack, Title} from "@mantine/core";
+import {Divider, Flex, Grid, Stack, Title} from "@mantine/core";
 import {LinkCard} from "@/share/client/components/admin";
 
 type Link = {
@@ -24,12 +24,13 @@ export const GridNavigation = ({sections}: GridNavigationsProps) => {
         <Grid>
             {sections.map((section) => (
                 <Grid.Col key={section.title} span={span}>
-                    <Stack p="md">
-                        <Title order={5} align="center">{section.title}</Title>
+                    <Flex direction="column">
+                        <Title order={5}>{section.title}</Title>
+                        <Divider my="xs"/>
                         {section.links.map(link => (
                             <LinkCard key={link.url} href={link.url} title={link.title}/>
                         ))}
-                    </Stack>
+                    </Flex>
                 </Grid.Col>
             ))}
         </Grid>

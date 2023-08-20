@@ -15,7 +15,6 @@ import {getCreateRoleDictionary} from "@/features/role/create";
 
 import {getUserDictionary} from "@/entities/user";
 import {getRoleDictionary} from "@/entities/role";
-import {Divider, Title} from "@mantine/core";
 import {getGridNavigationDictionary} from "@/widgets/admin/gridNavigation/i18n";
 import {appGetServerSideProps} from "@/widgets/appGetServerSideProps";
 
@@ -69,8 +68,6 @@ export const getServerSideProps = appGetServerSideProps(async ({user}) => {
 function AdminHomePage() {
     return (
         <>
-            <Title order={4}>{gridNavigationDictionary.title}</Title>
-            <Divider my="md"/>
             <GridNavigation sections={sections}/>
         </>
     )

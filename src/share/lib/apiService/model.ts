@@ -1,5 +1,6 @@
-import {BackendResponse, SuccessBackendResponse} from "@/share/lib/apiService/types";
+import {BackendResponse, PaginatedData, SuccessBackendResponse} from "@/share/lib/apiService/types";
 import {GetServerSideProps, GetServerSidePropsContext} from "next";
+import {isPaginatedData} from "@/share/lib/apiService/lib";
 
 export class AppError extends Error {
     constructor(
@@ -24,7 +25,6 @@ export const withRisingError = <T extends object, A extends any[]>(fetcher: (...
         const response = await fetcher(...args)
         if (!response.ok) {
             if (response.status === 401) throw new NotAuthorizeError()
-
             const error = await response.json()
             throw new AppError(error.message, response.status)
         }
@@ -32,10 +32,12 @@ export const withRisingError = <T extends object, A extends any[]>(fetcher: (...
         return response
     }
 
-export const withCheckData = <T extends object, A extends any[]>(successFetcher: (...args: A) => Promise<SuccessBackendResponse<T>>, predicate: (obj: unknown) => obj is T extends (infer I)[] ? I : T) =>
+export const withCheckData = <T extends object, A extends any[]>(successFetcher: (...args: A) => Promise<SuccessBackendResponse<T>>, predicate: (obj: unknown) => obj is T extends PaginatedData<infer I> ? I : T extends (infer I)[] ? I : T) =>
     async (...args: A): Promise<T> => {
         const response = await successFetcher(...args)
         const data = await response.json()
+
+        if (isPaginatedData(data) && data.data.every(predicate)) return data
         if (Array.isArray(data) && data.every(predicate)) return data
         if (typeof data === 'object' && predicate(data)) return data
         throw new AppError(`${response.url}: Получен неверный формат сущности`, response.status)
@@ -55,5 +57,7 @@ export const withHandleError = (getServerSideProps: GetServerSideProps) => async
         throw error
     }
 }
+
+
 
 

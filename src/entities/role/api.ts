@@ -1,22 +1,29 @@
 import {GetServerSidePropsContext} from "next";
-import {BackendResponse, fetcher, getBackendHTTPConfig, withCheckData, withRisingError} from "@/share/lib/apiService";
+import {
+    BackendResponse,
+    fetcher,
+    getBackendHTTPConfig,
+    PaginatedData,
+    withCheckData,
+    withRisingError
+} from "@/share/lib/apiService";
 import {withAuthHeader} from "@/share/lib/authService";
-import {CreateRoleDto, RolesPage, RoleWithPermissions, UpdateRoleDto} from "./types";
-import {isRolePage, isRoleWithPermissions} from "./lib";
+import {CreateRoleDto, Role, RoleWithPermissions, UpdateRoleDto} from "./types";
+import {isRole, isRoleWithPermissions} from "./lib";
 
 const {origin} = getBackendHTTPConfig()
 
-const allRolesFetcher = async (req?: GetServerSidePropsContext['req']): Promise<BackendResponse<RolesPage>> => {
+const allRolesFetcher = async (req?: GetServerSidePropsContext['req']): Promise<BackendResponse<RoleWithPermissions[]>> => {
     const prefix = req ? origin : '/api'
-    const url = `${prefix}/admin/get-roles`
+    const url = `${prefix}/admin/get-all-roles`
     return await fetcher(url, withAuthHeader({
         method: 'GET'
     }, req));
 }
 
-export const fetchAllRoles = withCheckData(withRisingError(allRolesFetcher), isRolePage)
+export const fetchAllRoles = withCheckData(withRisingError(allRolesFetcher), isRoleWithPermissions)
 
-const rolesFetcher = async (queries?: string, req?: GetServerSidePropsContext['req']): Promise<BackendResponse<RolesPage>> => {
+const rolesFetcher = async (queries?: string, req?: GetServerSidePropsContext['req']): Promise<BackendResponse<PaginatedData<Role>>> => {
     const prefix = req ? origin : '/api'
     const url = `${prefix}/admin/get-roles?${queries}`
     return await fetcher(url, withAuthHeader({
@@ -24,7 +31,7 @@ const rolesFetcher = async (queries?: string, req?: GetServerSidePropsContext['r
     }, req));
 }
 
-export const fetchRoles = withCheckData(withRisingError(rolesFetcher), isRolePage)
+export const fetchRoles = withCheckData(withRisingError(rolesFetcher), isRole)
 
 const createRoleFetcher = async (createRoleDto: CreateRoleDto, req?: GetServerSidePropsContext['req']): Promise<BackendResponse<RoleWithPermissions>> => {
     const prefix = req ? origin : '/api'

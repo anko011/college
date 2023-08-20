@@ -5,6 +5,10 @@ interface AppRouter extends NextRouter {
 
     updateQueries(object: { [key: string]: string }): Promise<boolean>
 
+    setQuery(name: string, value: string): Promise<boolean>
+
+    setQueries(object: { [key: string]: string }): Promise<boolean>
+
     safeReload(): Promise<boolean>
 }
 
@@ -31,6 +35,25 @@ export const useAppRouter = (): AppRouter => {
         },
         updateQueries(queries) {
             const params = new URLSearchParams(this.query as Record<string, string>)
+
+            Object.entries(queries).forEach(([name, value]) => {
+                removeEmptyQuery(params, name, value)
+            })
+
+            return this.replace({
+                pathname: this.pathname,
+                query: params.toString()
+            })
+        },
+        setQuery(name: string, value: string): Promise<boolean> {
+            const params = new URLSearchParams({[name]: value})
+            return this.replace({
+                pathname: this.pathname,
+                query: params.toString()
+            })
+        },
+        setQueries(queries) {
+            const params = new URLSearchParams()
 
             Object.entries(queries).forEach(([name, value]) => {
                 removeEmptyQuery(params, name, value)

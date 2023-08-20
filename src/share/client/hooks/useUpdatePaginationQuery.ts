@@ -6,7 +6,7 @@ export const useUpdatePaginationQuery = (pageQueryKey: string, limitQueryKey: st
 
     return {
         getCurrentPage() {
-            return getNumberFromQuery(router.query, pageQueryKey) ?? 0
+            return getNumberFromQuery(router.query, pageQueryKey) ?? 1
         },
         setPage(value: string | number) {
             router.updateQuery(pageQueryKey, value.toString())

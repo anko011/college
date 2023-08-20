@@ -1,8 +1,34 @@
 import Head from 'next/head'
-import NextLink from 'next/link'
+import {LastAnnouncement, LastNews, withSiteLayout} from "@/widgets/site";
+import {Stack} from "@mantine/core";
+import {News} from "@/entities/news";
 
+const news: News[] = [
+    {
+        id: 1,
+        label: '',
+        href: '/',
+        date: new Date(),
+        imageSrc: '/news1.jpg'
+    },
+    {
+        id: 2,
+        label: '',
+        href: '/',
+        date: new Date(),
+        imageSrc: '/news1.jpg'
+    },
+    {
+        id: 3,
+        label: '',
+        href: '/',
+        date: new Date(),
+        imageSrc: '/news1.jpg'
+    },
+]
 
-export default function Home() {
+const SiteHomePage = () => {
+
     return (
         <>
             <Head>
@@ -12,9 +38,18 @@ export default function Home() {
                 <link rel="icon" href="/favicon.ico"/>
             </Head>
             <main>
-                <h1>Сайт колледжа - Главная страница</h1>
-                <NextLink href='/admin'>Перейти к главной странице админ панели</NextLink>
+                <Stack>
+                    <LastAnnouncement
+                        href="/"
+                        label="Код будущего"
+                        date={new Date()}
+                        imageSrc="/news1.jpg"
+                    />
+                    <LastNews news={news}/>
+                </Stack>
             </main>
         </>
     )
 }
+
+export default withSiteLayout(SiteHomePage)

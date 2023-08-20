@@ -4,25 +4,25 @@ import {
     BodyWithMessage,
     fetcher,
     getBackendHTTPConfig,
+    PaginatedData,
     withCheckData,
     withRisingError
 } from "@/share/lib/apiService";
 import {withAuthHeader} from "@/share/lib/authService";
-import {CreateUserDto, UpdateUserDto, UserPage, UserWithRole} from "./types";
-import {isUserPage, isUserWithRole} from "./lib";
+import {CreateUserDto, UpdateUserDto, UserWithRole} from "./types";
+import {isUserWithRole} from "./lib";
 
 const {origin} = getBackendHTTPConfig()
 
-const userFetcher = async (query?: string, req?: GetServerSidePropsContext['req']): Promise<BackendResponse<UserPage>> => {
+const userFetcher = async (query?: string, req?: GetServerSidePropsContext['req']): Promise<BackendResponse<PaginatedData<UserWithRole>>> => {
     const prefix = req ? origin : '/api'
     const url = `${prefix}/admin/get-users?${query}`
-    console.log(url)
     return await fetcher(url, withAuthHeader({
         method: 'GET'
     }, req))
 }
 
-export const fetchUsers = withCheckData(withRisingError(userFetcher), isUserPage)
+export const fetchUsers = withCheckData(withRisingError(userFetcher), isUserWithRole)
 
 
 const createUserFetcher = async (dto: CreateUserDto, req?: NextApiRequest): Promise<BackendResponse<UserWithRole>> => {

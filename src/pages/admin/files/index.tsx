@@ -1,68 +1,51 @@
-import {Anchor, Button, Chip, Divider, FileButton, Group, Text, TextInput} from '@mantine/core'
 import {appGetServerSideProps} from "@/widgets/appGetServerSideProps";
-import {IconFile, IconFolder} from "@tabler/icons-react";
 import {withAdminLayout} from "@/widgets/admin";
-import NextLink from "next/link";
+import {Directory, DirectoryItem, fetchDirectory, File, FileItem} from "@/entities/files";
+import {isDirectoryItem, isFileItem} from "@/entities/files/lib";
+import {useAppRouter} from "@/share/client/hooks";
+import {fetcher} from "@/share/lib/apiService";
+import {useState} from "react";
 
-export const getServerSideProps = appGetServerSideProps(async ({user}) => {
+export const getServerSideProps = appGetServerSideProps(async ({user, req}) => {
+    const directoryData = await fetchDirectory(req)
+    const directories = directoryData.filter(isDirectoryItem)
+    const files = directoryData.filter(isFileItem)
+
     return {
-        props: {user}
+        props: {user, directories, files}
     }
 })
 
 
-const DirectoryItem = ({name}: { name: string }) => {
-    return (
-        <Group p="xs">
-            <IconFolder/>
-            <Anchor component={NextLink} href="/admin/files">
-                <Text>{name}</Text>
-            </Anchor>
-        </Group>
-    )
-}
+export const AdminFilesPage = (
+    {
+        files, directories
+    }: {
+        directories: DirectoryItem[],
+        files: FileItem[]
+    }) => {
+    const router = useAppRouter()
+    const [state, setState] = useState('')
+    const handleOpenFile = async (file: FileItem) => {
+        const response = await fetcher(`/api/files/download?filename=${file.name}`)
+        const data = await response.blob()
+        const reader = new FileReader()
+        reader.readAsDataURL(data)
+        const url = URL.createObjectURL(data)
+        setState(url)
+    }
 
-const FileItem = ({name}: { name: string }) => {
-    return (
-        <Group p="xs">
-            <IconFile/>
-            <Anchor component={NextLink} href="/admin/files">
-                <Text>{name}</Text>
-            </Anchor>
-            <Group ml="auto">
-                <Chip>Яндекст диск</Chip>
-            </Group>
-        </Group>
-    )
-}
-
-
-export const AdminFilesPage = () => {
     return (
         <>
-            <Group>
-                <FileButton onChange={() => {
-                }}>
-                    {props => (
-                        <Button {...props}>Добавить файл</Button>
-                    )}
-                </FileButton>
-                <Button>Добавить директорию</Button>
-                <Group ml="auto">
-                    <TextInput my="md" placeholder="Поиск по файла или директории"/>
-                    <Button>Найти</Button>
-                </Group>
-            </Group>
-            <DirectoryItem name="Учебные листы"/>
-            <DirectoryItem name="Учебные листы"/>
-            <DirectoryItem name="Учебные листы"/>
-            <DirectoryItem name="Учебные листы"/>
-            <Divider/>
-            <FileItem name="main.js"/>
-            <FileItem name="main.js"/>
-            <FileItem name="main.js"/>
-            <FileItem name="main.js"/>
-            <FileItem name="main.js"/>
+            <a href={state} download>111111</a>
+            {directories.map(directory => <Directory key={directory.path} directory={directory}/>)}
+            {files.map(file => (
+                <File
+                    key={file.path}
+                    file={file}
+                    onClickTitle={handleOpenFile}
+                />
+            ))}
         </>
     )
 }

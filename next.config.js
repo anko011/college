@@ -6,6 +6,10 @@ const nextConfig = {
             {
                 source: '/api/admin/:path*',
                 destination: 'http://188.120.239.41:9991/admin/:path*',
+            },
+            {
+                source: '/api/files/:path*',
+                destination: 'http://188.120.239.41:9991/files/:path*',
             }
         ]
     }

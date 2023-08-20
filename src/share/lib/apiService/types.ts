@@ -23,3 +23,13 @@ export interface ErrorBackendResponse extends Response {
 }
 
 export type BackendResponse<T extends object> = ErrorBackendResponse | SuccessBackendResponse<T>
+
+export interface PaginatedData<T extends object> {
+    data: T[]
+    pagination: {
+        countPages: number
+        currentPage: number
+        hasNextPage: boolean
+        hasPrevPage: boolean
+    },
+}

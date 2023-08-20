@@ -1,23 +1,21 @@
-import {ReactElement} from "react";
-import {Box} from "@mantine/core";
+import {ReactNode} from "react";
 import {getUserDictionary} from "../../../i18n";
+import {User} from "@/entities/user";
 
 interface UserRowProps {
-    login: string
-    firstName: string
-    secondName: string
-    patronymic: string
-    actions?: ReactElement[]
+    user: User
+    before?: (render: (node: ReactNode) => ReactNode) => ReactNode
 }
 
 
 interface UserTableHeaderProps {
-    actionTitles: ReactElement[]
+    before?: (render: (node: ReactNode) => ReactNode) => ReactNode
 }
 
 const userDictionary = getUserDictionary('ru')
 
-export function UserTableHeader({actionTitles}: UserTableHeaderProps) {
+export function UserTableHeader({before}: UserTableHeaderProps) {
+    const render = (node: ReactNode) => <th>{node}</th>
     return (
         <thead>
         <tr>
@@ -25,33 +23,21 @@ export function UserTableHeader({actionTitles}: UserTableHeaderProps) {
             <th>{userDictionary.user.firstName}</th>
             <th>{userDictionary.user.secondName}</th>
             <th>{userDictionary.user.patronymic}</th>
-            {actionTitles?.length && actionTitles.map((title, index) => (
-                <th
-                    key={index}
-                >
-                    {title}
-                </th>
-            ))}
+            {before?.(render)}
         </tr>
         </thead>
     )
 }
 
-export function UserTableRow({login, firstName, secondName, patronymic, actions}: UserRowProps) {
+export function UserTableRow({user, before}: UserRowProps) {
+    const render = (node: ReactNode) => <td>{node}</td>
     return (
         <tr>
-            <td>{login}</td>
-            <td>{firstName}</td>
-            <td>{secondName}</td>
-            <td>{patronymic}</td>
-            {actions?.length && actions.map(action => action && (
-                <Box
-                    component='td'
-                    key={action.toString()}
-                >
-                    {action}
-                </Box>
-            ))}
+            <td>{user.login}</td>
+            <td>{user.firstName}</td>
+            <td>{user.secondName}</td>
+            <td>{user.patronymic}</td>
+            {before?.(render)}
         </tr>
     )
 }

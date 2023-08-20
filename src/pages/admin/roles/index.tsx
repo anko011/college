@@ -29,7 +29,6 @@ export const getRolesPageDictionary = (locale: Locale) => {
 }
 
 export const getRolesPageConfig = () => ({
-    limitRoles: 10,
     tabsQueryKey: 'activeTab',
     createRoleQueryKey: 'createRole',
     listRolesQueryKey: 'listRoles'
@@ -46,21 +45,20 @@ const getFetchRolesQueries = (query: ParsedUrlQuery) => {
 
 export const getServerSideProps = appGetServerSideProps(async ({req, query, user}) => {
     const rolesQueries = getFetchRolesQueries(query)
-    const rolesPage = await fetchRoles(rolesQueries, req)
+    const rolesPaginationData = await fetchRoles(rolesQueries, req)
 
     const permissions = await fetchPermissions(req)
-    return {props: {rolesPage, permissions, user}}
+    return {props: {rolesPaginationData, permissions, user}}
 })
 
 
-const AdminRolesPage = ({rolesPage, permissions}: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+const AdminRolesPage = ({rolesPaginationData, permissions}: InferGetServerSidePropsType<typeof getServerSideProps>) => {
     const router = useAppRouter()
 
-    const handleTabChange = (value: string) => router.updateQuery(rolesPageConfig.tabsQueryKey, value)
-    const totalCountRolePages = Math.ceil(rolesPage.count / rolesPageConfig.limitRoles)
+    const handleTabChange = (value: string) => router.setQuery(rolesPageConfig.tabsQueryKey, value)
 
     return (
-        <RolesContext.Provider value={rolesPage.roles}>
+        <RolesContext.Provider value={rolesPaginationData.data}>
             <PermissionContext.Provider value={permissions}>
 
                 <Tabs
@@ -82,7 +80,7 @@ const AdminRolesPage = ({rolesPage, permissions}: InferGetServerSidePropsType<ty
                     </Tabs.Panel>
 
                     <Tabs.Panel value={rolesPageConfig.listRolesQueryKey}>
-                        <RolesList totalCountRolePages={totalCountRolePages}/>
+                        <RolesList totalCountRolePages={rolesPaginationData.pagination.countPages}/>
                     </Tabs.Panel>
                 </Tabs>
 

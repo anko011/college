@@ -1,6 +1,5 @@
 import NextLink from 'next/link'
-import {Anchor, AspectRatio} from "@mantine/core";
-import {useHover} from "@mantine/hooks";
+import {Anchor} from "@mantine/core";
 
 interface LinkCardProps {
     href: string
@@ -8,23 +7,13 @@ interface LinkCardProps {
 }
 
 export const LinkCard = ({href, title}: LinkCardProps) => {
-    const {ref, hovered} = useHover<HTMLAnchorElement>()
     return (
-        <AspectRatio ratio={1}>
-            <Anchor
-                sx={{
-                    transition: 'background 200ms'
-                }}
-                ref={ref}
-                bg={hovered ? 'cyan.4' : 'cyan'}
-                variant="ligthen"
-                color="white"
-                href={href}
-                underline={false}
-                component={NextLink}
-            >
-                {title}
-            </Anchor>
-        </AspectRatio>
+        <Anchor
+            variant="ligthen"
+            href={href}
+            component={NextLink}
+        >
+            {title}
+        </Anchor>
     )
 }

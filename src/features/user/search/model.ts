@@ -11,7 +11,7 @@ export const useQuerySearchUsers = () => {
 
     return {
         search(values: ReturnType<typeof useSearchUsersForm>['values']) {
-            router.updateQueries({
+            router.setQueries({
                 [searchUserFirstNameQueryKey]: values.firstName,
                 [searchUserSecondNameQueryKey]: values.secondName,
                 [searchUserPatronymicNameQueryKey]: values.patronymic,

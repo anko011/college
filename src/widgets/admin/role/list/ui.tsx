@@ -15,9 +15,6 @@ const rolesListDictionary = getRolesListDictionary('ru')
 export const RolesList = ({totalCountRolePages}: RolesListProps) => {
     const roles = useRoles()
     const pagination = useRolesListPagination()
-
-    const handleChangePage = (newPage: number) => pagination.setPage(newPage - 1)
-
     return (
         <Stack>
             <SearchRoleForm/>
@@ -50,12 +47,11 @@ export const RolesList = ({totalCountRolePages}: RolesListProps) => {
                 ))}
                 </tbody>
             </Table>
-
             {totalCountRolePages > 0 && (
                 <Pagination
                     total={totalCountRolePages}
-                    value={pagination.getCurrentPage() + 1}
-                    onChange={handleChangePage}
+                    value={pagination.getCurrentPage()}
+                    onChange={pagination.setPage}
                     position="center"
                 />
             )}

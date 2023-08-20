@@ -12,31 +12,46 @@ export function UsersListWidget({totalCountPages}: UsersListWidgetProps) {
     const users = useUsers()
     const pagination = useUsersListPagination()
 
-    const handleChangePage = (newPage: number) => pagination.setPage(newPage - 1)
-
     return (
         <Stack>
             <UserSearchForm/>
             <Table>
-                <UserTableHeader actionTitles={[
-                    <Group key={1} position="right">
-                        <Text>Управление</Text>
-                    </Group>
-                ]}/>
+                <UserTableHeader
+                    before={(render) => (
+                        <>
+                            {render(
+                                <Group position="center">
+                                    <Text>Роль</Text>
+                                </Group>
+                            )}
+                            {render(
+                                <Group position="right">
+                                    <Text>Управление</Text>
+                                </Group>
+                            )}
+                        </>
+                    )}
+                />
                 <tbody>
                 {users.map((user) => (
                     <UserTableRow
                         key={user.id}
-                        login={user.login}
-                        firstName={user.firstName}
-                        secondName={user.secondName}
-                        patronymic={user.patronymic}
-                        actions={[
-                            <Group key={1} position="right">
-                                <EditUserButton user={user}/>
-                                <DeleteUserButton userId={user.id}/>
-                            </Group>
-                        ]}
+                        user={user}
+                        before={(render) => (
+                            <>
+                                {render(
+                                    <Group position="center">
+                                        <Text>{user.role.name}</Text>
+                                    </Group>
+                                )}
+                                {render(
+                                    <Group position="right">
+                                        <EditUserButton user={user}/>
+                                        <DeleteUserButton userId={user.id}/>
+                                    </Group>
+                                )}
+                            </>
+                        )}
                     />
                 ))}
                 </tbody>
@@ -44,8 +59,8 @@ export function UsersListWidget({totalCountPages}: UsersListWidgetProps) {
             {totalCountPages > 0 && (
                 <Pagination
                     total={totalCountPages}
-                    value={pagination.getCurrentPage() + 1}
-                    onChange={handleChangePage}
+                    value={pagination.getCurrentPage()}
+                    onChange={pagination.setPage}
                     position="center"
                 />
             )}

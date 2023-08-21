@@ -11,14 +11,6 @@ export function isRole(obj: unknown): obj is Role {
     )
 }
 
-export function isRolePage(obj: unknown): obj is RolesPage {
-    return (
-        typeof obj === 'object' && !!obj &&
-        'count' in obj && typeof obj.count === 'number' &&
-        'roles' in obj && Array.isArray(obj.roles) && obj.roles.every(isRoleWithPermissions)
-    )
-}
-
 
 export function isRoleWithPermissions(obj: unknown): obj is RoleWithPermissions {
     return (isRole(obj) && 'permissions' in obj && Array.isArray(obj.permissions)) && obj.permissions.every(isPermission)

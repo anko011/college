@@ -1,0 +1,23 @@
+.root {
+  padding: 24px;
+  padding-left: 0;
+  overflow: hidden;
+
+  & * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+}
+
+.list {
+  list-style: none;
+}
+
+.item {
+  background: red;
+  padding: 40px 0;
+  border-top-right-radius: 20px;
+  border-bottom-right-radius: 20px;
+  padding-left: 8px;
+}

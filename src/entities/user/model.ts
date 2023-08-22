@@ -10,7 +10,6 @@ export const getUserWithRoleFromTokenSet = (tokenSet: TokenSet) => {
 
     if (payload.sub) {
         const user = JSON.parse(payload.sub)
-        console.log(payload.sub)
         if (isUserWithRole(user)) return user
     }
 

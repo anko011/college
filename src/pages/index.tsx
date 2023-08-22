@@ -1,26 +1,26 @@
 import Head from 'next/head'
-import {LastAnnouncement, LastNews, withSiteLayout} from "@/widgets/site";
-import {Stack} from "@mantine/core";
 import {News} from "@/entities/news";
+import {withNewSiteLayout} from "@/widgets/site/layout/newLayout";
+import {LastNews} from "@/widgets/site";
 
 const news: News[] = [
     {
         id: 1,
-        label: '',
+        label: 'Label',
         href: '/',
         date: new Date(),
         imageSrc: '/news1.jpg'
     },
     {
         id: 2,
-        label: '',
+        label: 'Label',
         href: '/',
         date: new Date(),
         imageSrc: '/news1.jpg'
     },
     {
         id: 3,
-        label: '',
+        label: 'Label',
         href: '/',
         date: new Date(),
         imageSrc: '/news1.jpg'
@@ -38,18 +38,10 @@ const SiteHomePage = () => {
                 <link rel="icon" href="/favicon.ico"/>
             </Head>
             <main>
-                <Stack>
-                    <LastAnnouncement
-                        href="/"
-                        label="Код будущего"
-                        date={new Date()}
-                        imageSrc="/news1.jpg"
-                    />
-                    <LastNews news={news}/>
-                </Stack>
+                <LastNews news={news}/>
             </main>
         </>
     )
 }
 
-export default withSiteLayout(SiteHomePage)
+export default withNewSiteLayout(SiteHomePage)

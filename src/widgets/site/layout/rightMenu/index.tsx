@@ -1,4 +1,5 @@
 import NextLink from "next/link";
+import NextImage from "next/image"
 import {NavigationLinkItem} from "@/widgets/site/layout/types";
 import classes from './styles.module.scss'
 import {Box} from "@/share/client/components/site";
@@ -23,13 +24,13 @@ export const RightMenu = ({menuData}: RightMenuProps) => {
                         href={link.href}
                     >
                         <li className={classes.item}>
-                            {/*<Image*/}
-                            {/*    className={classes.image}*/}
-                            {/*    src={link.image.src}*/}
-                            {/*    alt={link.image.alt}*/}
-                            {/*    width="1920"*/}
-                            {/*    height="1080"*/}
-                            {/*/>*/}
+                            <NextImage
+                                className={classes.image}
+                                src={link.image.src}
+                                alt={link.image.alt}
+                                width="512"
+                                height="512"
+                            />
                             <span>{link.label}</span>
                         </li>
                     </NextLink>

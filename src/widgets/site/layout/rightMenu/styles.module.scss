@@ -1,7 +1,7 @@
 .root {
-  padding: 24px;
-  padding-left: 0;
-  overflow: hidden;
+  padding: 24px !important;
+  padding-left: 0 !important;
+  overflow: hidden !important;
 
   & * {
     margin: 0;
@@ -14,10 +14,38 @@
   list-style: none;
 }
 
-.item {
-  background: red;
-  padding: 40px 0;
+.link {
+  display: block;
+  position: relative;
   border-top-right-radius: 20px;
   border-bottom-right-radius: 20px;
-  padding-left: 8px;
+  padding: 40px 0 40px 8px;
+  overflow: hidden;
+
+
+  @media (max-width: 1024px) {
+    padding: 20px 0 20px 8px;
+  }
+
+  span {
+    position: relative;
+    z-index: 1;
+  }
+
+  &:hover {
+    .image {
+      opacity: 1;
+    }
+  }
+}
+
+.image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 110%;
+  height: 110%;
+  object-fit: cover;
+  transition: opacity 300ms ease;
+  opacity: 0;
 }

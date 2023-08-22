@@ -1,0 +1,26 @@
+.root {
+  display: grid;
+  grid-template:
+          "in in"
+          "bl be";
+  padding: 20px;
+}
+
+.searchInput {
+  grid-area: in;
+  width: 100%;
+}
+
+.loginButton {
+  grid-area: bl;
+  justify-self: center;
+  width: 32px;
+  height: 32px;
+}
+
+.eyeButton {
+  grid-area: be;
+  justify-self: center;
+  width: 32px;
+  height: 32px;
+}

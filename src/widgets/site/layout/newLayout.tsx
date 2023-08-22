@@ -10,6 +10,7 @@ import {IconMenu2} from "@tabler/icons-react";
 import Image from "next/image";
 import {HeaderMenu} from "@/widgets/site/layout/headerMenu";
 import {RightMenu} from "@/widgets/site/layout/rightMenu";
+import {InteractSection} from "@/widgets/site/layout/interactSection";
 
 
 const inter = Inter({subsets: ['cyrillic']})
@@ -313,6 +314,10 @@ export function NewSiteLayout({children}: PropsWithChildren) {
                 <div className={cs(classes.content, classes.contentSection)}>
                     <div className={classes.pageContent}>
                         {children}
+                    </div>
+
+                    <div className={classes.internactiveSection}>
+                        <InteractSection/>
                     </div>
 
                     <div className={classes.rightNavigation}>

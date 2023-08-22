@@ -178,11 +178,39 @@
   box-shadow: inset 0 0 10px rgba(0 0 0 /70%);
 
   display: grid;
-  grid-template-columns: auto 250px;
+  grid-gap: 20px;
+  grid-template:
+    "pg in"
+    "pg rn" / auto 250px;
+
+  @media (max-width: 1024px) {
+    grid-template:
+    "pg in"
+    "pg rn" / auto 150px;
+  }
+
+  @media (max-width: 578px) {
+    grid-template:
+    "in"
+    "rn"
+    "pg" / auto;
+  }
 
   @media (max-width: 768px) {
     margin-left: 20px;
   }
+}
+
+.pageContent {
+  grid-area: pg;
+}
+
+.rightNavigation {
+  grid-area: rn;
+}
+
+.internactiveSection {
+  grid-area: in;
 }
 
 

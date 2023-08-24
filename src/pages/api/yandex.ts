@@ -8,10 +8,10 @@ const {origin} = getBackendHTTPConfig()
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     if (req.method === 'GET') {
         const code = req.query.code
-        const user = req.query.user
+        const userId = req.query.state
         if (!code || typeof code !== 'string') throw new Error()
 
-        const response = await fetcher(`${origin}/yandex-disk/generate-token?code=${code}`, {
+        const response = await fetcher(`${origin}/yandex-disk/generate-token?code=${code}&userId=${userId}`, {
             method: 'GET',
         })
 

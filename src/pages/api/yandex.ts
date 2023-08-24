@@ -1,6 +1,5 @@
 import {NextApiRequest, NextApiResponse} from "next";
 import {fetcher, getBackendHTTPConfig} from "@/share/lib/apiService";
-import {NextResponse} from "next/server";
 
 const {origin} = getBackendHTTPConfig()
 
@@ -14,10 +13,10 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         })
 
         if (response.ok) {
-            return NextResponse.redirect('/admin/files')
+            return res.redirect('/admin/files')
         }
 
-        return NextResponse.redirect('/admin')
+        return res.redirect('/admin')
     }
 }
 

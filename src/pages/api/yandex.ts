@@ -3,9 +3,12 @@ import {fetcher, getBackendHTTPConfig} from "@/share/lib/apiService";
 
 const {origin} = getBackendHTTPConfig()
 
+//req - YANDEX
+
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     if (req.method === 'GET') {
         const code = req.query.code
+        const user = req.query.user
         if (!code || typeof code !== 'string') throw new Error()
 
         const response = await fetcher(`${origin}/yandex-disk/generate-token?code=${code}`, {

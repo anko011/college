@@ -11,8 +11,19 @@
   display: block;
   min-width: 228px;
   aspect-ratio: 3.5625;
+  overflow: hidden;
+  position: relative;
+
 
   &:hover {
-    background-position-y: 100% !important;
+    .image {
+      top: -100%
+    }
   }
+}
+
+.image {
+  position: absolute;
+  top: 0;
+  left: 0;
 }

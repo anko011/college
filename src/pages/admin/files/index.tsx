@@ -16,7 +16,7 @@ export const AdminFilesPage = (
 
     return (
         <>
-
+            <a href="https://oauth.yandex.ru/authorize?response_type=code&client_id=b2b0764ee7784ac995a008244dacd2f2">авторизоваться</a>
         </>
     )
 }

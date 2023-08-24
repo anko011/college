@@ -72,7 +72,7 @@
 
     .content {
       position: relative;
-      transform: translateX(0);
+      transform: translateX(10%);
 
       &[data-state="open"] {
         animation-name: collapseIn !important;
@@ -93,9 +93,6 @@
       }
 
       &:hover, &[data-state="open"] {
-        color: red;
-        background: transparent;
-
         svg {
           transform: rotate(180deg);
         }
@@ -176,6 +173,7 @@
   font-size: 14px;
   transition: color 300ms ease, background-color 300ms ease;
   cursor: pointer;
+  min-height: 32px;
 
   &:hover, &[data-state="open"] {
     background: var(--color-peach-2);

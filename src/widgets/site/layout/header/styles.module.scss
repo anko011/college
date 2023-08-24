@@ -1,0 +1,31 @@
+.root {
+  display: grid;
+  padding: 20px;
+  grid-template:
+    "tt im"
+    "mn im" / 1fr auto;
+  justify-items: center;
+  align-items: center;
+  gap: 8px;
+}
+
+.title {
+  grid-area: tt;
+  font-size: 32px !important;
+  font-weight: bold;
+  text-align: center;
+}
+
+.image {
+  grid-area: im;
+
+  @media (max-width: 425px) {
+    & {
+      display: none;
+    }
+  }
+}
+
+.menu {
+  grid-area: mn;
+}

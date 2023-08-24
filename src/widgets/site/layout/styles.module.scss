@@ -19,6 +19,7 @@
 //LAYOUT
 
 .root {
+  background: var(--color-gradient-1);
   display: grid;
   margin: -8px;
   column-gap: 20px;
@@ -28,10 +29,18 @@
     "ft ft ft ft" auto
     "ad ad ad ad" auto / auto 1fr 1fr 1fr;
 
+
+  @media (max-width: 1024px) {
+    grid-template-columns: 200px 1fr 1fr 1fr;
+  }
+
   @media (max-width: 768px) {
-    & {
-      grid-gap: 0;
-    }
+    grid-gap: 0;
+    grid-template:
+    "hd" auto
+    "ct" 1fr
+    "ft" auto
+    "ad" auto;
   }
 }
 
@@ -55,145 +64,28 @@
   grid-area: ad;
 }
 
-//LEFT MENU SECTION
-.leftMenuSection {
-  margin-top: 20px;
-  max-width: 250px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 12px;
-  gap: 8px;
-  background: darkorange;
-  border-top-right-radius: 20px;
-  border-bottom-right-radius: 20px;
-  box-shadow: 0 0 4px 0 rgba(0 0 0 / 70%);
-
-  .burger {
-    display: none;
-  }
-
-  @media (max-width: 768px) {
-    & {
-      display: none;
-    }
-  }
-}
-
-.leftMenuSectionCompact {
-  background: white;
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 2;
-  width: 100vw;
-  height: 100vh;
-
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  align-items: center;
-
-  animation-duration: 300ms;
-  animation-timing-function: ease;
-  animation-name: shiftLeftIn;
-  animation-fill-mode: forwards;
-}
-
-.exitMenuSection {
-  animation-name: shiftLeftOut;
-}
-
-.closeDrawer {
-  background: white;
-  width: 32px;
-  height: 32px;
-  border: 1px solid gray;
-  align-self: end;
-  margin: 8px;
-}
-
-.burger {
-  display: none;
-
-  background: white;
-  width: 32px;
-  height: 32px;
-  border: 1px solid gray;
-  box-shadow: 0 0 4px 0 black;
-
-
-  @media (max-width: 768px) {
-    & {
-      position: fixed;
-      top: 12px;
-      left: 12px;
-
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-  }
-}
-
-//HeaderSection
-.headerSection {
-  display: grid;
-  padding: 20px;
-  grid-template:
-    "tt im"
-    "mn im" / 1fr auto;
-  justify-items: center;
-  align-items: center;
-  gap: 8px;
-}
-
-.headerTitle {
-  grid-area: tt;
-  font-size: 32px;
-  font-weight: bold;
-  text-align: center;
-}
-
-.headerImage {
-  grid-area: im;
-
-  @media (max-width: 425px) {
-    & {
-      display: none;
-    }
-  }
-}
-
-.headerMenu {
-  grid-area: mn;
-}
-
 //CONTENT
 .contentSection {
   margin-right: 20px;
-  border: 1px solid black;
   border-radius: 20px;
   padding: 20px;
   box-shadow: inset 0 0 10px rgba(0 0 0 /70%);
+  background: var(--color-gray-4);
 
-  display: grid;
-  grid-gap: 20px;
-  grid-template:
-    "pg in"
-    "pg rn" / auto 250px;
+  display: flex;
+  gap: 20px;
 
-  @media (max-width: 1024px) {
-    grid-template:
-    "pg in"
-    "pg rn" / auto 150px;
-  }
+  @media (max-width: 586px) {
+    flex-direction: column;
 
-  @media (max-width: 578px) {
-    grid-template:
-    "in"
-    "rn"
-    "pg" / auto;
+    .rightSection {
+      order: 1;
+      width: 100%;
+    }
+
+    .pageContent {
+      order: 2;
+    }
   }
 
   @media (max-width: 768px) {
@@ -201,23 +93,18 @@
   }
 }
 
+.pageContent, .rightSection {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
 .pageContent {
-  grid-area: pg;
+  flex-grow: 1;
 }
 
-.rightNavigation {
-  grid-area: rn;
-}
-
-.internactiveSection {
-  grid-area: in;
-}
-
-
-//OTHER
-
-.divider {
-  width: 100%;
-  background: black;
-  height: 1px;
+.rightSection {
+  @media (max-width: 1024px) {
+    width: 200px;
+  }
 }

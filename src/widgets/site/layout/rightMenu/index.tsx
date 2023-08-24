@@ -1,8 +1,9 @@
-import NextLink from "next/link";
 import NextImage from "next/image"
 import {NavigationLinkItem} from "@/widgets/site/layout/types";
 import classes from './styles.module.scss'
 import {Box} from "@/share/client/components/site";
+import {Text} from "@/share/client/components/site/text";
+import {Link} from "@/share/client/components/site/link";
 
 interface RightMenuProps {
     menuData: (NavigationLinkItem & {
@@ -18,22 +19,22 @@ export const RightMenu = ({menuData}: RightMenuProps) => {
         <Box className={classes.root}>
             <ul className={classes.list}>
                 {menuData.map((link) => (
-                    <NextLink
+                    <Link
                         key={link.id}
                         className={classes.link}
                         href={link.href}
                     >
-                        <li className={classes.item}>
+                        <li>
                             <NextImage
                                 className={classes.image}
                                 src={link.image.src}
                                 alt={link.image.alt}
-                                width="512"
-                                height="512"
+                                width="256"
+                                height="128"
                             />
-                            <span>{link.label}</span>
+                            <Text>{link.label}</Text>
                         </li>
-                    </NextLink>
+                    </Link>
                 ))}
             </ul>
         </Box>

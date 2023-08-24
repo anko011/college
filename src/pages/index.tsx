@@ -1,29 +1,29 @@
 import Head from 'next/head'
 import {News} from "@/entities/news";
-import {withNewSiteLayout} from "@/widgets/site/layout/newLayout";
-import {LastNews} from "@/widgets/site";
+import {withSiteLayout} from "@/widgets/site/layout/siteLayout";
+import {LastAnnouncement, LastNews} from "@/widgets/site";
 
 const news: News[] = [
     {
         id: 1,
-        label: 'Label',
+        label: 'Кредит на образование с господдержкой',
         href: '/',
         date: new Date(),
-        imageSrc: '/news1.jpg'
+        imageSrc: '/news/news1.jpg'
     },
     {
         id: 2,
-        label: 'Label',
+        label: 'Код будущего',
         href: '/',
         date: new Date(),
-        imageSrc: '/news1.jpg'
+        imageSrc: '/news/news2.jpg'
     },
     {
         id: 3,
-        label: 'Label',
+        label: 'Всероссийский Конкурс «Мастер года» 2023',
         href: '/',
         date: new Date(),
-        imageSrc: '/news1.jpg'
+        imageSrc: '/news/news3.jpg'
     },
 ]
 
@@ -37,11 +37,11 @@ const SiteHomePage = () => {
                 <meta name="viewport" content="width=device-width, initial-scale=1"/>
                 <link rel="icon" href="/favicon.ico"/>
             </Head>
-            <main>
-                <LastNews news={news}/>
-            </main>
+
+            <LastAnnouncement/>
+            <LastNews news={news}/>
         </>
     )
 }
 
-export default withNewSiteLayout(SiteHomePage)
+export default withSiteLayout(SiteHomePage)

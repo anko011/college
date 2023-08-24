@@ -178,7 +178,7 @@
   cursor: pointer;
 
   &:hover, &[data-state="open"] {
-    background: gray;
+    background: var(--color-peach-2);
   }
 
   svg {
@@ -188,12 +188,14 @@
 }
 
 .externalElement {
+  text-shadow: 0 0 4px rgba(0 0 0 /25%);
+
   svg {
     transform: rotate(0);
   }
 
   &:hover, &[data-state="open"] {
-    color: red;
+    color: var(--color-orange-5);
     background: transparent;
 
     svg {

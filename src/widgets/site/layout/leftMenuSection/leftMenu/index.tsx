@@ -4,6 +4,8 @@ import {isNavigationCategoryItem, isNavigationLinkItem} from "@/widgets/site/lay
 import {IconChevronRight} from "@tabler/icons-react";
 import {NavigationCategoryItem, NavigationLinkItem} from "@/widgets/site/layout/types";
 import cs from "classnames";
+import {Text} from "@/share/client/components/site/text";
+import {Link} from "@/share/client/components/site/link";
 
 interface NavigationLeftSideMenuProps {
     data: (NavigationCategoryItem | NavigationLinkItem)[]
@@ -28,8 +30,8 @@ export const LeftMenu = (
             <NavigationMenu.List className={classes.list}>
                 {categories.map((category) => (
                     <NavigationMenu.Item key={category.id} className={classes.item}>
-                        <NavigationMenu.Trigger className={cs(classes.element)}>
-                            <span>{category.label}</span>
+                        <NavigationMenu.Trigger className={cs(classes.element, !isInner && classes.externalElement)}>
+                            <Text>{category.label}</Text>
                             <IconChevronRight className={classes.svg}/>
                         </NavigationMenu.Trigger>
 
@@ -41,7 +43,16 @@ export const LeftMenu = (
 
                 {links.map((link) => (
                     <NavigationMenu.Item key={link.id} className={classes.item}>
-                        <NavigationMenu.Link className={classes.element}>{link.label}</NavigationMenu.Link>
+                        <NavigationMenu.Link
+                            className={cs(classes.element, !isInner && classes.externalElement)}
+                            asChild
+                        >
+                            <Link href={link.href}>
+                                <Text>
+                                    {link.label}
+                                </Text>
+                            </Link>
+                        </NavigationMenu.Link>
                     </NavigationMenu.Item>
                 ))}
 

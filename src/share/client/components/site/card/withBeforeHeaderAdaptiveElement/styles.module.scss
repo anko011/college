@@ -1,0 +1,40 @@
+.root {
+  [data-card-header], [data-card-footer] {
+    display: flex;
+    align-items: center;
+  }
+
+  [data-card-header] {
+    justify-content: space-between;
+  }
+
+  [data-card-footer] {
+    justify-content: center;
+  }
+
+  [data-card-divider-header], [data-card-divider-footer] {
+    margin: 8px 0;
+  }
+
+  @media (max-width: 425px) {
+    .headerBeforeElement {
+      display: none;
+    }
+
+    [data-card-header] {
+      justify-content: center;
+    }
+  }
+
+  @media (min-width: 425px) {
+    .footerBeforeElement {
+      display: none;
+    }
+
+    [data-card-divider-footer] {
+      display: none;
+      margin-top: -16px;
+    }
+  }
+}
+

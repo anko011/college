@@ -2,6 +2,7 @@ import NextLink from "next/link";
 import {ComponentType, CSSProperties, ReactNode} from "react";
 import cs from 'classnames'
 import classes from './styles.module.scss'
+import {Text} from "@/share/client/components/site/text";
 
 type ComponentProps<T extends object> = T extends ComponentType<infer R> ? R : never
 
@@ -20,7 +21,7 @@ export const ImageLink = ({src, href, label, className, style, ...props}: ImageL
             } as CSSProperties}
             {...props}
         >
-            <span>{label}</span>
+            <Text size="lg">{label}</Text>
         </NextLink>
     )
 }

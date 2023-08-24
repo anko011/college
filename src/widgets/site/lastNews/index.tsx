@@ -1,8 +1,12 @@
 import {News} from "@/entities/news";
-import {Card, ImageLink} from "@/share/client/components/site";
+import {Card, ImageLink, withBeforeAdaptiveElement} from "@/share/client/components/site";
 import classes from './styles.module.scss'
-import NextLink from "next/link";
 import {CSSProperties} from "react";
+import {Text} from "@/share/client/components/site/text";
+import {Title} from "@/share/client/components/site/title";
+import {Link} from "@/share/client/components/site/link";
+
+const CardWithBeforeElement = withBeforeAdaptiveElement(Card)
 
 interface LastNewsProps {
     news: News[]
@@ -11,15 +15,10 @@ interface LastNewsProps {
 export const LastNews = ({news}: LastNewsProps) => {
 
     return (
-        <Card
+        <CardWithBeforeElement
             className={classes.root}
-            header={(
-                <>
-                    <h3>Последние новости</h3>
-                    <NextLink className={classes.headerLink} href="/">Открыть все новости...</NextLink>
-                </>
-            )}
-            footer={<NextLink className={classes.footerLink} href="/">Открыть все новости...</NextLink>}
+            beforeElement={<Link underline href="/"><Text>Открыть все новости...</Text></Link>}
+            header={<Title size="md">Последние новости</Title>}
         >
             {news.map((item) => (
                 <ImageLink
@@ -27,12 +26,12 @@ export const LastNews = ({news}: LastNewsProps) => {
                     className={classes.imageLink}
                     href={item.href}
                     src={item.imageSrc}
-                    label={<span>{item.label}</span>}
+                    label={<Text size="lg">{item.label}</Text>}
                     style={{
                         ['--last-news-total-count']: news.length
                     } as CSSProperties}
                 />
             ))}
-        </Card>
+        </CardWithBeforeElement>
     )
 }

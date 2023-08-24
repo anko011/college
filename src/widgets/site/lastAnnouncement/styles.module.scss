@@ -1,0 +1,14 @@
+.root {
+  [data-card-content] {
+    & > * {
+      border-bottom-left-radius: 12px;
+      border-bottom-right-radius: 12px;
+      overflow: hidden;
+    }
+  }
+}
+
+.image {
+  width: 100%;
+  padding-top: 40%;
+}

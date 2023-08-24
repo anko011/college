@@ -60,18 +60,19 @@
 
 .item {
   position: relative;
-
 }
 
 .content {
-  background: antiquewhite;
+  background: white;
   position: absolute;
   right: 0;
   top: 0;
   transform: translate(100%);
+  z-index: 100;
 
   animation-duration: 300ms;
   animation-timing-function: ease;
+  transform-origin: right center;
 
   &[data-state="open"] {
     animation-name: scaleIn;
@@ -95,7 +96,14 @@
   text-align: start;
 
   &:hover, &[data-state="open"] {
-    background: orange;
+    background: var(--color-peach-2);
+  }
+}
+
+.externalElement {
+  &:hover, &[data-state="open"] {
+    border-left: 2px solid white;
+    margin-left: -2px;
   }
 }
 

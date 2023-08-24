@@ -2,6 +2,7 @@
   padding: 24px !important;
   padding-left: 0 !important;
   overflow: hidden !important;
+  background: var(--color-gray-3) !important;
 
   & * {
     margin: 0;
@@ -29,12 +30,18 @@
 
   span {
     position: relative;
+    transition: color 200ms ease, text-shadow 200ms ease;
     z-index: 1;
   }
 
   &:hover {
     .image {
       opacity: 1;
+    }
+
+    span {
+      color: white;
+      text-shadow: 0 0 4px black;
     }
   }
 }

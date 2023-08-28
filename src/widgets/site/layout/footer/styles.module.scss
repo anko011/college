@@ -2,11 +2,45 @@
   margin-top: 20px;
   padding: 12px 40px;
   background: var(--color-peach-3);
+
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  align-items: center;
+  gap: 14px;
+  align-items: start;
   justify-items: center;
+
+  @media (max-width: 768px) {
+    grid-template-columns: repeat(2, 1fr);
+
+    .logo {
+      justify-self: center;
+      grid-column: 1 / 3;
+    }
+
+    .column {
+      width: 230px;
+    }
+  }
+
+  @media (max-width: 586px) {
+    grid-template-columns: repeat(1, 1fr);
+    gap: 20px;
+
+    .logo {
+      grid-column: auto;
+    }
+
+    .column {
+      width: 100%;
+      align-items: center;
+    }
+  }
 }
+
+.logo{
+  align-self: center;
+}
+
 
 .column {
   display: flex;

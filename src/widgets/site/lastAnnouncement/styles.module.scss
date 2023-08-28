@@ -3,12 +3,11 @@
     & > * {
       border-bottom-left-radius: 12px;
       border-bottom-right-radius: 12px;
-      overflow: hidden;
     }
   }
 }
 
-.image {
-  width: 100%;
-  padding-top: 40%;
+.label {
+  color: white;
+  padding-left: 8px;
 }

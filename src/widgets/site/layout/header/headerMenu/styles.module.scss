@@ -72,7 +72,10 @@
 
     .content {
       position: relative;
-      transform: translateX(10%);
+      transform: translateX(0);
+      background: transparent;
+      margin-left: 8px;
+      border-left: 1px solid black;
 
       &[data-state="open"] {
         animation-name: collapseIn !important;
@@ -115,6 +118,7 @@
   display: flex;
   align-items: center;
   flex-wrap: wrap;
+  justify-content: space-around;
 }
 
 .item {
@@ -169,7 +173,7 @@
   justify-content: space-between;
   gap: 8px;
   text-align: start;
-  padding: 4px 8px;
+  padding: 8px;
   font-size: 14px;
   transition: color 300ms ease, background-color 300ms ease;
   cursor: pointer;
@@ -186,8 +190,6 @@
 }
 
 .externalElement {
-  text-shadow: 0 0 4px rgba(0 0 0 /25%);
-
   svg {
     transform: rotate(0);
   }
@@ -200,5 +202,12 @@
       transform: rotate(180deg);
     }
   }
+}
+
+.svg {
+  min-width: 24px;
+  min-height: 24px;
+  max-width: 24px;
+  max-width: 24px;
 }
 

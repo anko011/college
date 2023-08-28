@@ -29,10 +29,10 @@ export const HeaderMenu = (
                             <NavigationMenu.Trigger
                                 className={cs(classes.element, !isInner && classes.externalElement)}
                             >
-                                <Text>
+                                <Text size="sm">
                                     {item.label}
                                 </Text>
-                                <IconChevronDown/>
+                                <IconChevronDown className={classes.svg}/>
                             </NavigationMenu.Trigger>
                             <NavigationMenu.Content
                                 className={cs(classes.content, isInner && classes.innerContent, isInner ? classes.contentInnerAnimation : classes.contentExternalAnimation)}>
@@ -46,7 +46,7 @@ export const HeaderMenu = (
                             <NavigationMenu.Link className={cs(classes.element, !isInner && classes.externalElement)}
                                                  asChild>
                                 <Link href={item.href}>
-                                    <Text>
+                                    <Text size="sm">
                                         {item.label}
                                     </Text>
                                 </Link>

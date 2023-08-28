@@ -1,4 +1,3 @@
-import {Bitter, Inter} from "next/font/google";
 import {ComponentType, PropsWithChildren, ReactElement, ReactNode} from "react";
 import cs from 'classnames'
 import {NavigationLinkItem, NavigationType} from "@/widgets/site/layout/types";
@@ -8,13 +7,9 @@ import {RightMenu} from "@/widgets/site/layout/rightMenu";
 import {InteractSection} from "@/widgets/site/layout/interactSection";
 import {Footer} from "@/widgets/site/layout/footer";
 import {SubFooter} from "@/widgets/site/layout/subFooter";
-import colors from './colors.module.scss'
 import {LeftMenuSection} from "@/widgets/site/layout/leftMenuSection";
 import {Header} from "@/widgets/site/layout/header";
-
-
-const inter = Inter({subsets: ['cyrillic']})
-const bitter = Bitter({subsets: ['cyrillic']})
+import colors from './colors.module.scss'
 
 
 const rightMenuData: (NavigationLinkItem & {
@@ -80,7 +75,7 @@ const rightMenuData: (NavigationLinkItem & {
 export function SiteLayout({children}: PropsWithChildren) {
 
     return (
-        <div className={cs(classes.root, colors.root)}>
+        <div className={cs(classes.root, colors.root)} id="site-context">
             <LeftMenuSection className={classes.leftNavigation}/>
             <Header className={classes.header}/>
 

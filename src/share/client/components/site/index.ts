@@ -2,3 +2,12 @@ export * from './box';
 export * from './card';
 export * from './divider';
 export * from './imageLink'
+export * from './link'
+export * from './text'
+export * from './title'
+export * from './button'
+export * from './transition'
+export * from './modal'
+export * from './actionButton'
+export * from './loader'
+export * from './overlay'

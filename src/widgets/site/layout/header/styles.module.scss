@@ -19,10 +19,8 @@
 .image {
   grid-area: im;
 
-  @media (max-width: 425px) {
-    & {
-      display: none;
-    }
+  @media (max-width: 586px) {
+    display: none;
   }
 }
 

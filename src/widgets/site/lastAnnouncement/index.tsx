@@ -1,21 +1,15 @@
-import {Card, ImageLink, withBeforeAdaptiveElement} from "@/share/client/components/site";
+import {Card, ImageLink, Link, Text, Title, withBeforeAdaptiveElement} from "@/share/client/components/site";
+import {Announcement} from "@/entities/announcements";
 import classes from './styles.module.scss'
-import {Link} from "@/share/client/components/site/link";
-import {Title} from "@/share/client/components/site/title";
-import {Text} from "@/share/client/components/site/text";
 
 const CardWithBeforeElement = withBeforeAdaptiveElement(Card)
 
-interface Announcement {
-
-}
-
-interface LasAnnouncementProps {
+interface LastAnnouncementProps {
     announcement: Announcement
 }
 
 
-export const LastAnnouncement = () => {
+export const LastAnnouncement = ({announcement}: LastAnnouncementProps) => {
     return (
         <CardWithBeforeElement
             className={classes.root}
@@ -27,10 +21,14 @@ export const LastAnnouncement = () => {
             header={<Title size="md">Последнее объявление</Title>}
         >
             <ImageLink
-                className={classes.image}
-                src="/announcement/students.jpg"
-                href="/"
-                label={<Title size="xl">Список зачисления студентов</Title>}
+                src={announcement.imageSrc}
+                href={announcement.href}
+                alt={announcement.alt}
+                width={200}
+                height={100}
+                sizes="(max-width: 1024px) 50vw, (max-width: 768) 60vw, (max-width: 586) 83vw,60vw"
+                priority
+                label={<Title className={classes.label} size="xl">{announcement.title}</Title>}
             />
         </CardWithBeforeElement>
     )

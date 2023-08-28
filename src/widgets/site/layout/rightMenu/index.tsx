@@ -32,7 +32,7 @@ export const RightMenu = ({menuData}: RightMenuProps) => {
                                 width="256"
                                 height="128"
                             />
-                            <Text>{link.label}</Text>
+                            <Text size="sm">{link.label}</Text>
                         </li>
                     </Link>
                 ))}

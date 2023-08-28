@@ -1,5 +1,5 @@
 import {getUsersListConfig} from "@/widgets/admin/user/list/config";
-import {useUpdatePaginationQuery} from "@/share/client/hooks/useUpdatePaginationQuery";
+import {useUpdatePaginationQuery} from "@/share/client/hooks";
 import {ParsedUrlQuery} from "querystring";
 import {getBackendMappedQuery} from "@/share/lib/queryService";
 

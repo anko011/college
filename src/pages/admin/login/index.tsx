@@ -1,11 +1,11 @@
 import {ReactNode} from "react";
 import {Flex} from "@mantine/core";
 import {Notifications} from "@mantine/notifications";
-import {AuthByCredentialForm} from "@/features/auth/";
+import {AdminAuthByCredentialsForm} from "@/features/auth/client/ui/admin";
 
 
 export default function AdminLoginPage() {
-    return (<AuthByCredentialForm/>)
+    return (<AdminAuthByCredentialsForm/>)
 }
 
 AdminLoginPage.getLayout = function (page: ReactNode) {

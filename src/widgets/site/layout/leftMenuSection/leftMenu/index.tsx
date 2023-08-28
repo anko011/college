@@ -6,6 +6,7 @@ import {NavigationCategoryItem, NavigationLinkItem} from "@/widgets/site/layout/
 import cs from "classnames";
 import {Text} from "@/share/client/components/site/text";
 import {Link} from "@/share/client/components/site/link";
+import {Divider} from "@/share/client/components/site";
 
 interface NavigationLeftSideMenuProps {
     data: (NavigationCategoryItem | NavigationLinkItem)[]
@@ -24,14 +25,13 @@ export const LeftMenu = (
     const categories = data.filter(isNavigationCategoryItem)
     const links = data.filter(isNavigationLinkItem)
 
-
     return (
         <Root className={cs(classes.root, isCompact && classes.compact)}>
             <NavigationMenu.List className={classes.list}>
                 {categories.map((category) => (
                     <NavigationMenu.Item key={category.id} className={classes.item}>
                         <NavigationMenu.Trigger className={cs(classes.element, !isInner && classes.externalElement)}>
-                            <Text>{category.label}</Text>
+                            <Text size="sm">{category.label}</Text>
                             <IconChevronRight className={classes.svg}/>
                         </NavigationMenu.Trigger>
 
@@ -40,7 +40,7 @@ export const LeftMenu = (
                         </NavigationMenu.Content>
                     </NavigationMenu.Item>
                 ))}
-
+                {!isInner && <Divider className={classes.divider}/>}
                 {links.map((link) => (
                     <NavigationMenu.Item key={link.id} className={classes.item}>
                         <NavigationMenu.Link
@@ -48,7 +48,7 @@ export const LeftMenu = (
                             asChild
                         >
                             <Link href={link.href}>
-                                <Text>
+                                <Text size="sm">
                                     {link.label}
                                 </Text>
                             </Link>

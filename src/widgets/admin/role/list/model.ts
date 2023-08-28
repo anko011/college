@@ -1,5 +1,5 @@
 import {ParsedUrlQuery} from "querystring";
-import {useUpdatePaginationQuery} from "@/share/client/hooks/useUpdatePaginationQuery";
+import {useUpdatePaginationQuery} from "@/share/client/hooks";
 import {getBackendMappedQuery} from "@/share/lib/queryService";
 import {getRolesListConfig} from "./config";
 

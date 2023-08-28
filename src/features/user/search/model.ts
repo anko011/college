@@ -4,14 +4,19 @@ import {useAppRouter} from "@/share/client/hooks";
 import {getSearchUserConfig} from "./config";
 import {getBackendMappedQuery} from "@/share/lib/queryService";
 
-const {searchUserLoginQueryKey, searchUserFirstNameQueryKey, searchUserSecondNameQueryKey, searchUserPatronymicNameQueryKey} = getSearchUserConfig()
+const {
+    searchUserLoginQueryKey,
+    searchUserFirstNameQueryKey,
+    searchUserSecondNameQueryKey,
+    searchUserPatronymicNameQueryKey
+} = getSearchUserConfig()
 
 export const useQuerySearchUsers = () => {
     const router = useAppRouter()
 
     return {
         search(values: ReturnType<typeof useSearchUsersForm>['values']) {
-            router.setQueries({
+            router.updateQueries({
                 [searchUserFirstNameQueryKey]: values.firstName,
                 [searchUserSecondNameQueryKey]: values.secondName,
                 [searchUserPatronymicNameQueryKey]: values.patronymic,

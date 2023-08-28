@@ -4,4 +4,5 @@ export interface News {
     label: string
     href: string
     imageSrc: string
+    imageAlt: string
 }

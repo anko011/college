@@ -2,6 +2,8 @@ import Head from 'next/head'
 import {News} from "@/entities/news";
 import {withSiteLayout} from "@/widgets/site/layout/siteLayout";
 import {LastAnnouncement, LastNews} from "@/widgets/site";
+import {Announcement} from "@/entities/announcements/types";
+import {appGetServerSideProps} from "@/widgets/appGetServerSideProps";
 
 const news: News[] = [
     {
@@ -9,23 +11,40 @@ const news: News[] = [
         label: 'Кредит на образование с господдержкой',
         href: '/',
         date: new Date(),
-        imageSrc: '/news/news1.jpg'
+        imageSrc: '/news/news1.jpg',
+        imageAlt: ''
     },
     {
         id: 2,
         label: 'Код будущего',
         href: '/',
         date: new Date(),
-        imageSrc: '/news/news2.jpg'
+        imageSrc: '/news/news2.jpg',
+        imageAlt: ''
     },
     {
         id: 3,
         label: 'Всероссийский Конкурс «Мастер года» 2023',
         href: '/',
         date: new Date(),
-        imageSrc: '/news/news3.jpg'
+        imageSrc: '/news/news3.jpg',
+        imageAlt: ''
     },
 ]
+
+const lastAnnouncement: Announcement = {
+    href: '/',
+    date: new Date(),
+    title: 'Список зачисления студентов',
+    alt: '',
+    imageSrc: '/announcement/students.jpg'
+}
+
+export const getServerSideProps = appGetServerSideProps(async ({user}) => {
+    return {
+        props: {user}
+    }
+})
 
 const SiteHomePage = () => {
 
@@ -37,8 +56,7 @@ const SiteHomePage = () => {
                 <meta name="viewport" content="width=device-width, initial-scale=1"/>
                 <link rel="icon" href="/favicon.ico"/>
             </Head>
-
-            <LastAnnouncement/>
+            <LastAnnouncement announcement={lastAnnouncement}/>
             <LastNews news={news}/>
         </>
     )

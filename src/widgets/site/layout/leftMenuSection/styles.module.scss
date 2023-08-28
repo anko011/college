@@ -1,3 +1,30 @@
+@keyframes shiftLeftOut {
+  from {
+    transform: translateX(0);
+  }
+  50% {
+    opacity: 1;
+  }
+  to {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+}
+
+@keyframes shiftLeftIn {
+  from {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
 .root {
   margin-top: 20px;
   max-width: 250px;
@@ -39,6 +66,7 @@
   animation-duration: 300ms;
   animation-timing-function: ease;
   animation-name: shiftLeftIn;
+  transform-origin: left top;
   animation-fill-mode: forwards;
 }
 
@@ -46,23 +74,25 @@
   animation-name: shiftLeftOut;
 }
 
-.closeDrawer {
+.closeDrawerButton {
   background: white;
-  width: 32px;
-  height: 32px;
+  min-width: 32px;
+  min-height: 32px;
+  padding: 0;
+  margin: 8px;
   border: 1px solid gray;
   align-self: end;
-  margin: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.burger {
+.openDrawerButton {
   display: none;
-
   background: white;
   width: 32px;
   height: 32px;
   border: 1px solid gray;
-  box-shadow: 0 0 4px 0 black;
 
 
   @media (max-width: 768px) {

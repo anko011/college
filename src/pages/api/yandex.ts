@@ -3,7 +3,6 @@ import {fetcher, getBackendHTTPConfig} from "@/share/lib/apiService";
 
 const {origin} = getBackendHTTPConfig()
 
-//req - YANDEX
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     if (req.method === 'GET') {

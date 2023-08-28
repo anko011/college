@@ -1,18 +1,15 @@
-import {Button, Input, LoadingOverlay, Paper, PasswordInput, Stack, TextInput} from "@mantine/core";
 import {useNotification} from "@/share/client/hooks";
 import {useState} from "react";
 import {useRouter} from "next/router";
 import {isNotEmpty, useForm} from "@mantine/form";
-import {signIn} from "@/features/auth/api";
+import {signIn} from "@/features/auth";
+import {Button, Input, LoadingOverlay, Paper, PasswordInput, Stack, TextInput} from "@mantine/core";
 import {getCommonDictionary} from "@/share/lib/i18nService";
 
 const commonDictionary = getCommonDictionary('ru')
-
 const REDIRECT_TIME = 1000
-
 const hasMessage = (data: any) => 'message' in data && typeof data.message === 'string'
-
-export const AuthByCredentialForm = () => {
+export const AdminAuthByCredentialsForm = () => {
     const notification = useNotification('Авторизация')
     const [isLoading, setIsLoading] = useState(false)
     const router = useRouter()

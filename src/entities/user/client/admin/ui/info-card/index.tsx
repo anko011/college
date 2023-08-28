@@ -2,7 +2,7 @@ import Link from "next/link";
 import {Flex, Text} from "@mantine/core";
 import {Logo} from "@/share/client/components";
 
-import {useUser} from "../../hooks";
+import {useUser} from "../../../hooks";
 import {getUserInfoCardDictionary} from "./i18n";
 
 const userInfoCardDictionary = getUserInfoCardDictionary('ru')

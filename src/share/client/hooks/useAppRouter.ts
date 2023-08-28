@@ -28,7 +28,7 @@ export const useAppRouter = (): AppRouter => {
         updateQuery(name: string, value: string) {
             const params = new URLSearchParams(this.query as Record<string, string>)
             removeEmptyQuery(params, name, value)
-            return this.replace({
+            return this.push({
                 pathname: this.pathname,
                 query: params.toString()
             })
@@ -40,14 +40,14 @@ export const useAppRouter = (): AppRouter => {
                 removeEmptyQuery(params, name, value)
             })
 
-            return this.replace({
+            return this.push({
                 pathname: this.pathname,
                 query: params.toString()
             })
         },
         setQuery(name: string, value: string): Promise<boolean> {
             const params = new URLSearchParams({[name]: value})
-            return this.replace({
+            return this.push({
                 pathname: this.pathname,
                 query: params.toString()
             })
@@ -59,7 +59,7 @@ export const useAppRouter = (): AppRouter => {
                 removeEmptyQuery(params, name, value)
             })
 
-            return this.replace({
+            return this.push({
                 pathname: this.pathname,
                 query: params.toString()
             })

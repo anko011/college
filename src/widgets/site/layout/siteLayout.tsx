@@ -9,7 +9,6 @@ import {SubFooter} from "@/widgets/site/layout/subFooter";
 import {LeftMenuSection} from "@/widgets/site/layout/leftMenuSection";
 import {Header} from "@/widgets/site/layout/header";
 import colors from './colors.module.scss'
-import {Notification} from "@/share/client/components/site";
 import {LeftMenu} from "@/widgets/site/layout/leftMenuSection/leftMenu";
 
 import {headerMenu, leftMenu, rightMenu} from "../../../../mock";
@@ -52,7 +51,6 @@ export const withSiteLayout = (Page: ComponentType<any>) => {
 
     PageWithLayout.getLayout = (page) => (
         <ErrorBoundary>
-            <Notification/>
             <SiteLayout>
                 {page}
             </SiteLayout>

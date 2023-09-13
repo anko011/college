@@ -32,9 +32,11 @@ declare global {
 
 export const notifications = {
     show(detail: NotificationDetail) {
+        if (typeof window === 'undefined') return
         window.dispatchEvent(new NotificationDetailEvent(SHOW_NOTIFICATION_EVENT_KEY, detail))
     },
     showSuccess(title: string, message: ReactNode) {
+        if (typeof window === 'undefined') return
         window.dispatchEvent(new NotificationDetailEvent(SHOW_NOTIFICATION_EVENT_KEY, {
             title: (
                 <>
@@ -48,6 +50,7 @@ export const notifications = {
         }))
     },
     showError(title: string, message: ReactNode) {
+        if (typeof window === 'undefined') return
         window.dispatchEvent(new NotificationDetailEvent(SHOW_NOTIFICATION_EVENT_KEY, {
             title: (
                 <>

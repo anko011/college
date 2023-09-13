@@ -1,5 +1,5 @@
 import {ChangeEvent, FormEvent, useEffect, useRef, useState} from "react";
-import {Button, Loader, notifications, Overlay, Text} from '@/share/client/components/site'
+import {Button, Loader, Overlay, Text} from '@/share/client/components/site'
 import classes from './styles.module.scss'
 import {signIn} from "@/features/auth";
 import {useAppRouter} from "@/share/client/hooks";
@@ -55,9 +55,9 @@ export const AuthByCredentialsForm = () => {
 
             if (!response.ok) {
                 const error = await response.json()
-                notifications.showError('Авторизация', error.detail)
+                // notifications.showError('Авторизация', error.detail)
             } else {
-                notifications.showSuccess('Авторизация', "Вход выполнен успешно")
+                // notifications.showSuccess('Авторизация', "Вход выполнен успешно")
                 setIsLoading(false)
                 router.reload()
             }

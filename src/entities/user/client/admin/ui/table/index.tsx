@@ -1,6 +1,5 @@
 import {ReactNode} from "react";
-import {getUserDictionary} from "../../../../i18n";
-import {User} from "@/entities/user";
+import {getUserDictionary, User} from "@/entities/user";
 
 interface UserRowProps {
     user: User

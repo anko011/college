@@ -1,17 +1,12 @@
 import NextImage from "next/image"
-import {NavigationLinkItem} from "@/widgets/site/layout/types";
 import classes from './styles.module.scss'
 import {Box} from "@/share/client/components/site";
 import {Text} from "@/share/client/components/site/text";
 import {Link} from "@/share/client/components/site/link";
+import {PageLinkWithImage} from "@/entities/pages";
 
 interface RightMenuProps {
-    menuData: (NavigationLinkItem & {
-        image: {
-            src: string,
-            alt: string
-        }
-    })[]
+    menuData: PageLinkWithImage[]
 }
 
 export const RightMenu = ({menuData}: RightMenuProps) => {
@@ -22,17 +17,17 @@ export const RightMenu = ({menuData}: RightMenuProps) => {
                     <Link
                         key={link.id}
                         className={classes.link}
-                        href={link.href}
+                        href={link.slug}
                     >
                         <li>
                             <NextImage
                                 className={classes.image}
-                                src={link.image.src}
-                                alt={link.image.alt}
+                                src={link.imageSrc}
+                                alt={link.imageAlt}
                                 width="256"
                                 height="128"
                             />
-                            <Text size="sm">{link.label}</Text>
+                            <Text size="sm">{link.title}</Text>
                         </li>
                     </Link>
                 ))}

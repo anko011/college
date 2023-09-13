@@ -1,10 +1,9 @@
 import {Box, createStyles, Text} from "@mantine/core";
-import {DirInfo} from "@/entities/files/types";
 import {IconFolder} from "@tabler/icons-react";
 import {ReactNode} from "react";
 
 interface DirInfoRowProps {
-    dir: DirInfo
+    dirName: string
     before?: ReactNode
     label?: ReactNode
 }
@@ -20,10 +19,10 @@ const useStyles = createStyles((theme) => ({
     }
 }))
 
-export const DirInfoRow = ({dir, before, label}: DirInfoRowProps) => {
+export const DirInfoRow = ({dirName, before, label}: DirInfoRowProps) => {
     const {classes} = useStyles()
 
-    label = label ? label : <Text>{dir.name}</Text>
+    label = label ? label : <Text>{dirName}</Text>
 
     return (
         <Box className={classes.root}>

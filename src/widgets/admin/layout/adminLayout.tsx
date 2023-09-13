@@ -1,6 +1,6 @@
 import {ComponentType, PropsWithChildren, ReactElement, ReactNode, useEffect, useState} from "react";
-import {AppShell, Container, Divider, Navbar, NavLink, Transition} from "@mantine/core";
-import {IconFiles, IconLogout, IconShieldLock, IconUsers} from "@tabler/icons-react";
+import {AppShell, Container, Divider, MantineColor, Navbar, NavLink, ThemeIcon, Transition} from "@mantine/core";
+import {IconFile, IconFiles, IconLogout, IconShieldLock, IconUsers} from "@tabler/icons-react";
 import NextLink from 'next/link'
 import {useRouter} from "next/router";
 import {MantineProvider} from "@/share/providers";
@@ -13,11 +13,14 @@ type Route = {
     label: string
 }
 
+const LIGHTEN_ICON_COLOR_KEY = 2
+const ACTIVE_ICON_COLOR_KEY = 5
 
-const navbarRoutes: Array<Route & { icon: ReactNode }> = [
-    {href: '/admin/users', label: 'Пользователи', icon: <IconUsers/>},
-    {href: '/admin/roles', label: 'Роли и права', icon: <IconShieldLock/>},
-    {href: '/admin/files', label: 'Файлы', icon: <IconFiles/>},
+const navbarRoutes: Array<Route & { icon: ComponentType, color: MantineColor }> = [
+    {href: '/admin/users', label: 'Пользователи', icon: IconUsers, color: 'red'},
+    {href: '/admin/roles', label: 'Роли и права', icon: IconShieldLock, color: 'green'},
+    {href: '/admin/files', label: 'Файлы', icon: IconFiles, color: 'pink'},
+    {href: '/admin/pages', label: 'Страницы', icon: IconFile, color: 'blue'},
 ]
 
 export function AdminLayout({children}: PropsWithChildren) {
@@ -64,7 +67,12 @@ export function AdminLayout({children}: PropsWithChildren) {
                                         component={NextLink}
                                         href={route.href}
                                         label={route.label}
-                                        icon={route.icon}
+                                        icon={(
+                                            <ThemeIcon
+                                                color={`${route.color}.${router.pathname === route.href ? ACTIVE_ICON_COLOR_KEY : LIGHTEN_ICON_COLOR_KEY}`}>
+                                                <route.icon/>
+                                            </ThemeIcon>
+                                        )}
                                         active={router.pathname === route.href}
                                     />
                                 ))}

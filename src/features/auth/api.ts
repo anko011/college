@@ -1,5 +1,7 @@
+import {fetcher} from "@/share/lib/apiService";
+
 export async function signIn(login: string, password: string) {
-    return await fetch('/api/auth/login/', {
+    return await fetcher('/api/auth/login/', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -10,7 +12,7 @@ export async function signIn(login: string, password: string) {
 
 
 export async function signOut() {
-    return await fetch('/api/auth/logout/', {
+    return await fetcher('/api/auth/logout/', {
         method: 'POST',
     })
 }

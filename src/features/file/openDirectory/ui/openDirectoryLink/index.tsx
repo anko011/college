@@ -1,14 +1,18 @@
 import {Anchor} from "@mantine/core";
-import {DirInfo} from "@/entities/files";
 import {useOpenDirectory} from "@/features/file";
+import {MouseEventHandler} from "react";
 
 interface OpenDirectoryLinkProps {
-    dir: DirInfo
+    path: string
+    name: string
 }
 
-export const OpenDirectoryLink = ({dir}: OpenDirectoryLinkProps) => {
-    const {open} = useOpenDirectory()
-    const handleClick = () => open(dir)
+export const OpenDirectoryLink = ({path, name}: OpenDirectoryLinkProps) => {
+    const {openByPath} = useOpenDirectory()
+    const handleClick: MouseEventHandler<HTMLAnchorElement> = (e) => {
+        e.stopPropagation()
+        openByPath(path)
+    }
 
-    return <Anchor onClick={handleClick}>{dir.name}</Anchor>
+    return <Anchor onClick={handleClick}>{name}</Anchor>
 }

@@ -8,7 +8,8 @@ export interface FileInfo {
     type: FileInfoType.FILE
     path: string
     extension: string
-    url: string
+    downloadUrl: string
+    displayUrl: string
 }
 
 export interface DirInfo {

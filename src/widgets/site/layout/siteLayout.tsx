@@ -1,6 +1,5 @@
 import {ComponentType, PropsWithChildren, ReactElement, ReactNode} from "react";
 import cs from 'classnames'
-import {NavigationLinkItem, NavigationType} from "@/widgets/site/layout/types";
 import ErrorBoundary from "@/share/client/components/error-boundary";
 import classes from './styles.module.scss'
 import {RightMenu} from "@/widgets/site/layout/rightMenu";
@@ -10,74 +9,22 @@ import {SubFooter} from "@/widgets/site/layout/subFooter";
 import {LeftMenuSection} from "@/widgets/site/layout/leftMenuSection";
 import {Header} from "@/widgets/site/layout/header";
 import colors from './colors.module.scss'
+import {Notification} from "@/share/client/components/site";
+import {LeftMenu} from "@/widgets/site/layout/leftMenuSection/leftMenu";
 
-
-const rightMenuData: (NavigationLinkItem & {
-    image: {
-        src: string,
-        alt: string,
-    }
-})[] =
-    [
-        {
-            id: 1,
-            label: 'Заявка справки об обучении',
-            type: NavigationType.Link,
-            href: '/',
-            image: {
-                src: '/rightMenu/document.jpg',
-                alt: 'Фоновое изображение пункта меню'
-            }
-        },
-        {
-            id: 2,
-            label: 'Расписание',
-            type: NavigationType.Link,
-            href: '/',
-            image: {
-                src: '/rightMenu/schedule.jpg',
-                alt: 'Фоновое изображение пункта меню'
-            }
-        },
-        {
-            id: 3,
-            label: 'Контакты',
-            type: NavigationType.Link,
-            href: '/',
-            image: {
-                src: '/rightMenu/contacts.jpg',
-                alt: 'Фоновое изображение пункта меню'
-            }
-        },
-        {
-            id: 4,
-            label: 'Корпаративная форма',
-            href: '/',
-            type: NavigationType.Link,
-            image: {
-                src: '/rightMenu/clothes.jpg',
-                alt: 'Фоновое изображение пункта меню'
-            }
-        },
-        {
-            id: 5,
-            label: 'Группа VK',
-            type: NavigationType.Link,
-            href: '/',
-            image: {
-                src: '/rightMenu/vk.jpg',
-                alt: 'Фоновое изображение пункта меню'
-            }
-        }
-    ]
-
+import {headerMenu, leftMenu, rightMenu} from "../../../../mock";
+import {HeaderMenu} from "@/widgets/site/layout/header/headerMenu";
 
 export function SiteLayout({children}: PropsWithChildren) {
 
     return (
         <div className={cs(classes.root, colors.root)} id="site-context">
-            <LeftMenuSection className={classes.leftNavigation}/>
-            <Header className={classes.header}/>
+            <LeftMenuSection className={classes.leftNavigation}>
+                {(isOpenDrawer) => <LeftMenu data={leftMenu} isCompact={isOpenDrawer}/>}
+            </LeftMenuSection>
+            <Header className={classes.header}>
+                <HeaderMenu navigationData={headerMenu}/>
+            </Header>
 
             <div className={cs(classes.content, classes.contentSection)}>
                 <main className={classes.pageContent}>
@@ -86,7 +33,7 @@ export function SiteLayout({children}: PropsWithChildren) {
 
                 <div className={classes.rightSection}>
                     <InteractSection/>
-                    <RightMenu menuData={rightMenuData}/>
+                    <RightMenu menuData={rightMenu}/>
                 </div>
             </div>
 
@@ -102,8 +49,10 @@ export function SiteLayout({children}: PropsWithChildren) {
 
 export const withSiteLayout = (Page: ComponentType<any>) => {
     const PageWithLayout = Page as ComponentType & { getLayout?: (page: ReactElement) => ReactNode }
+
     PageWithLayout.getLayout = (page) => (
         <ErrorBoundary>
+            <Notification/>
             <SiteLayout>
                 {page}
             </SiteLayout>

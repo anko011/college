@@ -1,7 +1,6 @@
 import {GetServerSidePropsContext, NextApiRequest} from "next";
 import {
     BackendResponse,
-    BodyWithMessage,
     fetcher,
     getBackendHTTPConfig,
     PaginatedData,
@@ -53,7 +52,7 @@ const updateUserFetcher = async (dto: UpdateUserDto, req?: NextApiRequest): Prom
 }
 export const fetchUpdateUser = withCheckData(withRisingError(updateUserFetcher), isUserWithRole)
 
-const deleteUserFetcher = async (userId: number, req?: NextApiRequest): Promise<BackendResponse<BodyWithMessage>> => {
+const deleteUserFetcher = async (userId: number, req?: NextApiRequest): Promise<BackendResponse> => {
     const prefix = req ? origin : '/api'
     const url = `${prefix}/admin/delete-user/${userId}`
     return await fetcher(url, withAuthHeader({

@@ -1,7 +1,7 @@
 import {useAppRouter} from "./useAppRouter";
 import {getNumberFromQuery} from "@/share/lib/queryService";
 
-export const useUpdatePaginationQuery = (pageQueryKey: string, limitQueryKey: string) => {
+export const useQueryPagination = (pageQueryKey: string, limitQueryKey: string) => {
     const router = useAppRouter()
 
     return {

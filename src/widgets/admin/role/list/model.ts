@@ -1,5 +1,5 @@
 import {ParsedUrlQuery} from "querystring";
-import {useUpdatePaginationQuery} from "@/share/client/hooks";
+import {useQueryPagination} from "@/share/client/hooks";
 import {getBackendMappedQuery} from "@/share/lib/queryService";
 import {getRolesListConfig} from "./config";
 
@@ -11,4 +11,4 @@ export const getPaginationRolesListQuery = (query: ParsedUrlQuery) => getBackend
 ], query)
 
 
-export const useRolesListPagination = () => useUpdatePaginationQuery(queryPageKey, queryLimitKey)
+export const useRolesListPagination = () => useQueryPagination(queryPageKey, queryLimitKey)

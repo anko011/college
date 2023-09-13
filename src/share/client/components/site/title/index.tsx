@@ -24,6 +24,6 @@ export const Title = ({order = 1, size = 'xs', className, ...props}: TitleProps)
     const Tag = `h${order}`
     return (
         // @ts-ignore
-        <Tag className={cs(bitter.className, sizeClasses[size], className)} {...props} />
+        <Tag className={cs(classes.root, bitter.className, sizeClasses[size], className)} {...props} />
     )
 }

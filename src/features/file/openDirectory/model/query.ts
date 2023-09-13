@@ -1,4 +1,3 @@
-import {DirInfo} from "@/entities/files";
 import {useAppRouter} from "@/share/client/hooks";
 import {getOpenFolderConfig} from "@/features/file/openDirectory/config";
 import {getBackendMappedQuery} from "@/share/lib/queryService";
@@ -10,8 +9,8 @@ export const useOpenDirectory = () => {
     const router = useAppRouter()
 
     return {
-        open(dir: DirInfo) {
-            router.updateQuery(openDirectoryQueryKey, `${dir.path}/${dir.name}`)
+        openByPath(path: string) {
+            router.setQuery(openDirectoryQueryKey, `${path}`)
         }
     }
 }

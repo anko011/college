@@ -1,16 +1,16 @@
 import {MutableRefObject, ReactNode, useRef, useState} from "react";
 
-interface TransitionProps {
+interface TransitionProps<T extends HTMLElement>{
     state: boolean
-    children: (ref: MutableRefObject<HTMLElement | null>) => ReactNode
+    children: (ref: MutableRefObject<T | null>) => ReactNode
     duration: number,
     classes: [string?, string?, string?, string?]
 }
 
 
-export const Transition = ({children, state, duration, classes}: TransitionProps) => {
+export const Transition = <T extends HTMLElement>({children, state, duration, classes}: TransitionProps<T>) => {
     const [isShow, setIsShow] = useState(false)
-    const ref = useRef<HTMLElement | null>(null)
+    const ref = useRef<T | null>(null)
 
     const toggleAnimateState = (from: string, forceClose: boolean = false) => {
         setTimeout(() => {

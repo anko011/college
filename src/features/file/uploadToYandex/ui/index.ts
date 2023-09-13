@@ -1,0 +1,1 @@
+export {UploadToYandexButton} from './uploadToYandexButton'

@@ -1,29 +1,31 @@
 import * as NavigationMenu from "@radix-ui/react-navigation-menu";
 import classes from './styles.module.scss'
-import {isNavigationCategoryItem, isNavigationLinkItem} from "@/widgets/site/layout/lib";
 import {IconChevronRight} from "@tabler/icons-react";
-import {NavigationCategoryItem, NavigationLinkItem} from "@/widgets/site/layout/types";
 import cs from "classnames";
 import {Text} from "@/share/client/components/site/text";
 import {Link} from "@/share/client/components/site/link";
 import {Divider} from "@/share/client/components/site";
+import {Category, isCategory} from "@/entities/categories";
+import {isPageLink, PageLink} from "@/entities/pages";
 
 interface NavigationLeftSideMenuProps {
-    data: (NavigationCategoryItem | NavigationLinkItem)[]
+    data: (Category | PageLink)[]
     isCompact?: boolean
     isInner?: boolean
+    rootPath?: string
 }
 
 export const LeftMenu = (
     {
         data,
         isInner = false,
-        isCompact = false
+        isCompact = false,
+        rootPath = '/'
     }: NavigationLeftSideMenuProps) => {
     const Root = isInner ? NavigationMenu.Sub : NavigationMenu.Root
 
-    const categories = data.filter(isNavigationCategoryItem)
-    const links = data.filter(isNavigationLinkItem)
+    const categories = data.filter(isCategory)
+    const pages = data.filter(isPageLink)
 
     return (
         <Root className={cs(classes.root, isCompact && classes.compact)}>
@@ -31,25 +33,30 @@ export const LeftMenu = (
                 {categories.map((category) => (
                     <NavigationMenu.Item key={category.id} className={classes.item}>
                         <NavigationMenu.Trigger className={cs(classes.element, !isInner && classes.externalElement)}>
-                            <Text size="sm">{category.label}</Text>
+                            <Text size="sm">{category.title}</Text>
                             <IconChevronRight className={classes.svg}/>
                         </NavigationMenu.Trigger>
 
                         <NavigationMenu.Content className={classes.content}>
-                            <LeftMenu data={category.children} isInner isCompact={isCompact}/>
+                            <LeftMenu
+                                isInner
+                                data={category.items}
+                                isCompact={isCompact}
+                                rootPath={`${rootPath}/${category.slug}`}
+                            />
                         </NavigationMenu.Content>
                     </NavigationMenu.Item>
                 ))}
                 {!isInner && <Divider className={classes.divider}/>}
-                {links.map((link) => (
-                    <NavigationMenu.Item key={link.id} className={classes.item}>
+                {pages.map((page) => (
+                    <NavigationMenu.Item key={page.id} className={classes.item}>
                         <NavigationMenu.Link
                             className={cs(classes.element, !isInner && classes.externalElement)}
                             asChild
                         >
-                            <Link href={link.href}>
+                            <Link href={`${rootPath}/${page.slug}`}>
                                 <Text size="sm">
-                                    {link.label}
+                                    {page.title}
                                 </Text>
                             </Link>
                         </NavigationMenu.Link>

@@ -1,4 +1,4 @@
-import {ReactNode} from "react";
+import {ForwardedRef, forwardRef, ReactNode} from "react";
 import {Box} from "../box";
 import {Divider} from "../divider";
 
@@ -11,9 +11,9 @@ export interface CardProps {
     className?: string
 }
 
-export const Card = ({className, header, footer, children}: CardProps) => {
+export const render = ({className, header, footer, children}: CardProps, ref: ForwardedRef<HTMLDivElement>) => {
     return (
-        <Box className={className}>
+        <Box className={className} ref={ref}>
             {header && <header data-card-header>{header}</header>}
             {header && (footer || children) && <Divider data-card-divider-header/>}
             {children && <div data-card-content>{children}</div>}
@@ -22,3 +22,5 @@ export const Card = ({className, header, footer, children}: CardProps) => {
         </Box>
     )
 }
+
+export const Card = forwardRef(render)

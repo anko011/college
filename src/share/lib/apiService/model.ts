@@ -11,22 +11,15 @@ export class AppError extends Error {
     }
 }
 
-export class NotAuthorizeError extends AppError {
-    constructor() {
-        super('Пользователь не авторизован', 401);
-    }
-}
-
-export const fetcher = <T extends object>(...args: Parameters<typeof fetch>) => fetch(...args) as Promise<BackendResponse<T>>
+export const fetcher = <T>(...args: Parameters<typeof fetch>) => fetch(...args) as Promise<BackendResponse<T>>
 
 
-export const withRisingError = <T extends object, A extends any[]>(fetcher: (...args: A) => Promise<BackendResponse<T>>) =>
+export const withRisingError = <T, A extends any[]>(fetcher: (...args: A) => Promise<BackendResponse<T>>) =>
     async (...args: A): Promise<SuccessBackendResponse<T>> => {
         const response = await fetcher(...args)
         if (!response.ok) {
-            if (response.status === 401) throw new NotAuthorizeError()
             const error = await response.json()
-            throw new AppError(error.message, response.status)
+            throw new AppError(error.detail, response.status)
         }
 
         return response
@@ -47,7 +40,9 @@ export const withHandleError = (getServerSideProps: GetServerSideProps) => async
     try {
         return await getServerSideProps(ctx)
     } catch (error) {
-        if (error instanceof NotAuthorizeError) return {
+        if (!(error instanceof AppError)) throw error
+
+        if (error.statusCode === 401) return {
             redirect: {
                 destination: '/',
                 permanent: false

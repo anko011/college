@@ -1,26 +1,29 @@
 import {appGetServerSideProps} from "@/widgets/appGetServerSideProps";
 import {withAdminLayout} from "@/widgets/admin";
 import {useUser} from "@/entities/user/client";
-import {fetchFiles, fetchIsAuthorizedYandex, FileItemInfo, isDirInfo, isFileInfo} from "@/entities/files";
-import {DirInfoRow, FileInfoRow} from "@/entities/files/client/admin";
+import {fetchFiles, fetchIsAuthorizedYandex, FileInfo, FileItemInfo, isDirInfo, isFileInfo} from "@/entities/files";
 import {
-    DeleteFileButton,
-    DownloadFileButton,
+    CreateDirectoryButton,
     getOpenDirectoryQuery,
-    OpenDirectoryLink,
-    OpenFileLink,
-    UploadMultiFilesInput
+    getSearchFileOrDirectoryConfig,
+    OpenDirectoryBreadcrumbs,
+    SearchFileOrDirectoryInput
 } from "@/features/file";
 import {ParsedUrlQuery} from "querystring";
-import {Alert, Anchor, Button, Divider, Group, ScrollArea, Stack} from "@mantine/core";
-import {useAppRouter} from "@/share/client/hooks";
+import {Alert, Anchor, Divider, Group, Stack, Text, Title} from "@mantine/core";
 import {IconAlertCircle} from "@tabler/icons-react";
 import {useState} from "react";
 import NextLink from "next/link";
+import {UploadMultiFilesButton} from "@/features/file/uploadFile/ui/uploadMultiFilesButton";
+import {getSearchFilesQuery} from "@/features/file/searchFileOrDirectory/model";
+import {DirectoriesInfoList, FilesInfoList, SearchedFilesInfoList} from "@/widgets/admin/files";
 
+const {backendSearchQuery} = getSearchFileOrDirectoryConfig()
 
 const parseFilesQueries = (query: ParsedUrlQuery) => {
-    return getOpenDirectoryQuery(query)
+    const searchDirectory = getSearchFilesQuery(query)
+    if (searchDirectory === '') return getOpenDirectoryQuery(query)
+    return searchDirectory
 }
 
 export const getServerSideProps = appGetServerSideProps(async ({user, req, query}) => {
@@ -30,51 +33,56 @@ export const getServerSideProps = appGetServerSideProps(async ({user, req, query
         }
     }
 
-    const isUserAuthorizedInYandex = await fetchIsAuthorizedYandex(user.id, req)
+    const authResponse = await fetchIsAuthorizedYandex(user.id, req)
+    const isUserAuthorizedInYandex = (await authResponse.json()).status
 
     const filesQuery = parseFilesQueries(query)
     const fileItems = await fetchFiles(filesQuery, req)
 
-    const isRootDirectory = filesQuery.length === 0
+    const params = new URLSearchParams(filesQuery)
+    const currentDirPath = params.get('path')
+    const searchParams = params.get(backendSearchQuery)
+
+    const isSearchMode = searchParams !== null && searchParams !== ''
+
 
     return {
-        props: {user, isUserAuthorizedInYandex, fileItems, isRootDirectory}
+        props: {user, isUserAuthorizedInYandex, fileItems, currentDirPath, isSearchMode}
     }
 })
 
 
-export const AdminFilesPage = ({isUserAuthorizedInYandex, fileItems, isRootDirectory}: {
+export const AdminFilesPage = ({isUserAuthorizedInYandex, fileItems, currentDirPath, isSearchMode}: {
     isUserAuthorizedInYandex: boolean,
     fileItems: FileItemInfo[],
-    isRootDirectory: boolean
+    currentDirPath: string | null,
+    isSearchMode: boolean
 }) => {
     const user = useUser()
-    const router = useAppRouter()
 
     const [isOpenAlert, setIsOpenAlert] = useState(!isUserAuthorizedInYandex)
 
-    const handleToYandex = (path: string, name: string) => async () => {
-        const query = path === '' ? name : `${path}/${name}`
-        const response = await fetch(`/api/yandex-disk/upload-to-yandex?path=${query}`, {
-            method: 'POST'
-        })
-        alert(await response.text())
-    }
 
-    const handleBackDirectory = () => {
-        router.back()
-    }
-
-    const handleCloseAlert = () => {
-        setIsOpenAlert(false)
-    }
+    const handleCloseAlert = () => setIsOpenAlert(false)
 
     const directories = fileItems.filter(isDirInfo)
     const files = fileItems.filter(isFileInfo)
 
+    const filesMap: { [key: string]: FileInfo[] } = {}
+
+    if (isSearchMode) {
+        files.forEach((file) => {
+            if (file.path in filesMap) {
+                filesMap[file.path] = [...filesMap[file.path], file]
+            } else {
+                filesMap[file.path] = [file]
+            }
+        })
+    }
+
     return (
         <>
-
+            {isSearchMode}
             {isOpenAlert && !isUserAuthorizedInYandex && (
                 <Alert
                     icon={<IconAlertCircle size="1rem"/>}
@@ -94,37 +102,40 @@ export const AdminFilesPage = ({isUserAuthorizedInYandex, fileItems, isRootDirec
                 </Alert>)
             }
 
-            {!isRootDirectory && <Button mt="xs" onClick={handleBackDirectory}>Назад</Button>}
+            {currentDirPath && <OpenDirectoryBreadcrumbs currentDirPath={currentDirPath}/>}
 
-            {(!isRootDirectory || isOpenAlert) && <Divider my="xs"/>}
+            {(currentDirPath || isOpenAlert) && <Divider my="xs"/>}
 
-            <UploadMultiFilesInput/>
+            <Group mb="xs" position="apart">
+                <Group>
+                    <UploadMultiFilesButton currentPathDir={currentDirPath ?? ''}/>
+                    <CreateDirectoryButton currentDirPath={currentDirPath ?? ''}/>
+                </Group>
+                {!currentDirPath && <SearchFileOrDirectoryInput/>}
+            </Group>
 
-            <ScrollArea>
-                <Stack spacing="xs">
-                    {directories.map((dir) => (
-                        <DirInfoRow
-                            key={`${dir.path}/${dir.name}`}
-                            dir={dir}
-                            label={<OpenDirectoryLink dir={dir}/>}
-                        />
-                    ))}
+            <Divider my="xs"/>
 
-                    {files.map((file) => (
-                        <FileInfoRow
-                            key={`${file.path}/${file.name}`}
-                            file={file}
-                            label={<OpenFileLink file={file}/>}
-                            before={(
-                                <Group>
-                                    <DownloadFileButton file={file}/>
-                                    <DeleteFileButton file={file}/>
-                                </Group>
-                            )}
-                        />
-                    ))}
-                </Stack>
-            </ScrollArea>
+            <Stack spacing="xs">
+                {isSearchMode && directories.length !== 0 && <Title order={4}>Найденные папки:</Title>}
+                <DirectoriesInfoList directories={directories}/>
+
+                {isSearchMode
+                    ? Object.keys(filesMap).length !== 0 && (
+                    <>
+                        <Title order={4}>Найденные файлы:</Title>
+                        <SearchedFilesInfoList filesMap={filesMap}/>
+                    </>
+                )
+                    : <FilesInfoList files={files}/>
+                }
+
+                {isSearchMode && Object.keys(filesMap).length === 0 && directories.length === 0 && (
+                    <>
+                        <Text>Ничего не найдено...</Text>
+                    </>
+                )}
+            </Stack>
         </>
     )
 }

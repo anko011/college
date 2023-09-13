@@ -11,7 +11,7 @@ export interface CardProps {
     className?: string
 }
 
-export const render = ({className, header, footer, children}: CardProps, ref: ForwardedRef<HTMLDivElement>) => {
+const render = ({className, header, footer, children}: CardProps, ref: ForwardedRef<HTMLDivElement>) => {
     return (
         <Box className={className} ref={ref}>
             {header && <header data-card-header>{header}</header>}

@@ -6,6 +6,8 @@ import {signIn} from "@/features/auth";
 import {Button, Input, LoadingOverlay, Paper, PasswordInput, Stack, TextInput} from "@mantine/core";
 import {getCommonDictionary} from "@/share/lib/i18nService";
 
+//TODO: Сообщения об ошибки авторизации
+
 const commonDictionary = getCommonDictionary('ru')
 const REDIRECT_TIME = 1000
 const hasMessage = (data: any) => 'message' in data && typeof data.message === 'string'
@@ -30,16 +32,12 @@ export const AdminAuthByCredentialsForm = () => {
         setIsLoading(true)
 
         const response = await signIn(values.username, values.password)
-        const data = await response.json()
-
-        if (!hasMessage(data)) throw new Error('Ошибка авторизации')
-
 
         if (response.ok) {
-            notification.successNotify(data.message)
+            notification.successNotify("Вы успешно авторизованы")
             setTimeout(() => router.push('/admin'), REDIRECT_TIME)
         } else {
-            notification.errorNotify(data.message)
+            notification.errorNotify("Не удалось авторизоваться")
             setIsLoading(false)
             form.reset()
         }

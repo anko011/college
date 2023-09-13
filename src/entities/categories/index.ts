@@ -1,2 +1,2 @@
-export type {Category, CategoryWithPages} from './types'
-export {isCategory, isCategoryWithPages} from './lib'
+export type {Category} from './types'
+export {isCategory} from './lib'
